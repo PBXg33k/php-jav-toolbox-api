@@ -59,7 +59,6 @@ class JAVProcessorService
             return $titleInfo;
         }
 
-        var_dump(false, $fileName);
         return null;
     }
 

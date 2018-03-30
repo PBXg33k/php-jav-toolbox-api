@@ -66,8 +66,6 @@ class FileScanService
         $this->rootPath = $directory;
         $this->logger->debug('Starting scan for videofiles', [$this->rootPath]);
 
-//        $this->scanWithFinder($directory);
-//        $this->scanCustom($directory);
         $this->scanRecursiveIterator($directory);
 
         return $this;
@@ -75,10 +73,6 @@ class FileScanService
 
     protected function scanRecursiveIterator(string $path)
     {
-//        $directory = new \RecursiveDirectoryIterator($path);
-//        $iterator = new \RecursiveIteratorIterator($directory);
-//        $regex = new \RegexIterator($iterator, $this->extensionRegex, \RecursiveRegexIterator::GET_MATCH);
-
         $items = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path), \RecursiveIteratorIterator::SELF_FIRST);
 
 
@@ -102,72 +96,13 @@ class FileScanService
                 if (JAVProcessorService::filenameContainsID($finfo->getPathname())) {
                     $this->processFile($finfo);
                 } else {
-                    $this->logger->notice("NO JAV ID FOUND: {$finfo->getPathname()}");
+                    $this->logger->error("NO JAV ID FOUND: {$finfo->getPathname()}");
                 }
             }
-        }
-    }
-
-    protected function scanCustom(string $path)
-    {
-        if($handle = opendir($path)) {
-            $this->logger->debug("Opened handle");
-            while(false !== ($entry = readdir($handle))) {
-                $absPath = $path.DIRECTORY_SEPARATOR.$entry;
-                if(!in_array($entry, $this->ignoredNames)) {
-                    $this->logger->debug("Processing entry: {$entry}");
-                    if(is_file($absPath)) {
-                        $this->logger->debug("{$entry} is file");
-                        if (preg_match($this->extensionRegex, $entry)) {
-
-                            $finfo = new SplFileInfo(
-                                $absPath,
-                                ltrim($path, $this->rootPath . DIRECTORY_SEPARATOR),
-                                ltrim($absPath, $this->rootPath . DIRECTORY_SEPARATOR)
-                            );
-
-                            if($finfo->getSize() >= 500000000) {
-                                if (JAVProcessorService::filenameContainsID($entry)) {
-                                    $this->processFile($finfo);
-                                } else {
-                                    $this->logger->notice("NO JAV ID FOUND: {$entry}");
-                                }
-                            }
-                        }
-                    } elseif(is_dir($absPath)) {
-                        $this->logger->info("About to scan {$absPath}");
-                        $this->scanCustom($absPath);
-                    }
-                }
+            elseif($iv->isDir()) {
+                $this->logger->info("OPENING {$iv->getPathname()}");
             }
-
-            closedir($handle);
-        } else {
-            $this->logger->error("Unable to open dir: {$path}");
         }
-    }
-
-    protected function scanWithFinder(string $path)
-    {
-        $extensionRegex = sprintf('/.%s$/', implode('|.', $this->videoExtensions));
-
-        /** @var $files Finder */
-        $files = (new Finder())
-            ->files()
-            ->ignoreUnreadableDirs(true)
-            ->in($path)
-            ->size('>= 50M')
-            ->name($extensionRegex)
-            ->followLinks();
-
-        $this->logger->debug(sprintf('found %s files', $files->count()));
-
-        foreach($files as $file) {
-            var_dump($file);die();
-            $this->processFile($file);
-        }
-
-        return $this;
     }
 
     protected function processFile(SplFileInfo $file) {
