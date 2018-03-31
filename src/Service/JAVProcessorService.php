@@ -35,12 +35,15 @@ class JAVProcessorService
 
     public function preProcessFile(SplFileInfo $file)
     {
-        $this->logger->info('PREPROCESSING FILE '. $file->getPathname());
-        $javTitleInfo = self::extractIDFromFilename($file);
+        $javTitleInfo = self::extractIDFromFilename($file->getFilename());
         $javTitleInfo->setFile($file);
 
         if($javTitleInfo instanceof JAVTitle) {
-            $this->logger->info("DISPATCHING PREPROCESSEDEVENT FOR {$javTitleInfo->getLabel()}-{$javTitleInfo->getRelease()} | {$javTitleInfo->getFile()->getFilename()}");
+            $parsedname = "{$javTitleInfo->getLabel()}-{$javTitleInfo->getRelease()}";
+            if($javTitleInfo->getPart()) {
+                $parsedname .= "-{$javTitleInfo->getPart()}";
+            }
+            $this->logger->info("DISPATCHING PREPROCESSEDEVENT FOR {$parsedname} | {$javTitleInfo->getFile()->getFilename()}");
             $javTitleInfo->setFile($file);
             $this->dispatcher->dispatch(JAVTitlePreProcessedEvent::NAME, new JAVTitlePreProcessedEvent($javTitleInfo));
         }
@@ -48,7 +51,9 @@ class JAVProcessorService
 
     public static function extractIDFromFilename(string $fileName)
     {
-        if(preg_match("~((?<label>[a-z]{1,6})(?:[-\.]+)?(?<release>[0-9]{2,7})(?:[-_\]]+)?(?<part>[abcdef]|[0-9]{0,3}|cd[-_][0-9])?)~i", $fileName, $matches)) {
+        $fileName = self::cleanupFilename($fileName);
+
+        if(preg_match("~^(?:.*?)((?<label>[a-z]{1,6})(?:[-\.]+)?(?<release>[0-9]{2,7})(?:[-_\]]+)?(?:.*?)?(?<part>[abcdef]|[0-9]{0,3}|cd[-_][0-9])?)(?:.{4})$~i", $fileName, $matches)) {
 
             $titleInfo = new JAVTitle();
             $titleInfo
@@ -56,10 +61,71 @@ class JAVProcessorService
                 ->setLabel($matches['label'])
                 ->setRelease($matches['release']);
 
+            if($matches['part'] !== '') {
+                if(!is_numeric($matches['part'])) {
+                    // Convert letter to number (a = 1, b = 2)
+                    $matches['part'] = ord(strtolower($matches['part'])) - 96;
+                }
+                $titleInfo->setPart($matches['part']);
+            }
+
             return $titleInfo;
         }
 
         return null;
+    }
+
+    public static function cleanupFilename(string $filename) : string
+    {
+        if(preg_match("~^.+?\.(.*)$~", $filename, $matches)) {
+            $fileExtension = $matches[1];
+        } else {
+            throw new \Exception('Unable to extract file extension');
+        }
+
+        $filename = str_replace(".{$fileExtension}", '', $filename);
+
+        $leftTrim = [
+            'hjd2048.com-',
+        ];
+
+        $rightTrim = [
+            'h264',
+            '1080p',
+            '1080',
+            '108',
+            '1920',
+            '108',
+            'hhb',
+            'fhd',
+            '[hd]',
+            'hd',
+            'sd',
+            'mp4',
+        ];
+
+        foreach ($leftTrim as $trim) {
+            if(stripos($filename, $trim) === 0) {
+                $filename = substr($filename, 0, strlen($trim));
+            }
+        }
+
+        $filename = static::rtrim($filename, $rightTrim);
+
+        return $filename.'.'.$fileExtension;
+    }
+
+    private static function rtrim(string $filename, array $rightTrim): string
+    {
+        foreach ($rightTrim as $trim) {
+            if(stripos($filename, $trim) === strlen($filename) - strlen($trim)) {
+                $filename = substr($filename, 0, -1 * abs(strlen($trim)));
+                $filename = rtrim($filename, '-');
+                $filename = self::rtrim($filename, $rightTrim);
+            }
+        }
+
+        return $filename;
     }
 
     public static function filenameContainsID(string $filename): bool
