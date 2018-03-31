@@ -53,7 +53,7 @@ class JAVProcessorService
     {
         $fileName = self::cleanupFilename($fileName);
 
-        if(preg_match("~^(?:.*?)((?<label>[a-z]{1,6})(?:[-\.]+)?(?<release>[0-9]{2,7})(?:[-_\]]+)?(?:.*?)?(?<part>[abcdef]|[0-9]{0,3}|cd[-_][0-9])?)(?:.{4})$~i", $fileName, $matches)) {
+        if(preg_match("~^(?:.*?)((?<label>[a-z]{1,6})(?:[-\.]+)?(?<release>[0-9]{2,7})(?:[-_\]]+)?(?:.*?)?(?<part>\W[abcdef]|[0-9]{0,3}|cd[-_][0-9])?)(?:.{4})$~i", $fileName, $matches)) {
 
             $titleInfo = new JAVTitle();
             $titleInfo
@@ -77,7 +77,7 @@ class JAVProcessorService
 
     public static function cleanupFilename(string $filename) : string
     {
-        if(preg_match("~^.+?\.(.*)$~", $filename, $matches)) {
+        if(preg_match("~^.+\.(.*)$~", $filename, $matches)) {
             $fileExtension = $matches[1];
         } else {
             throw new \Exception('Unable to extract file extension');
@@ -87,6 +87,7 @@ class JAVProcessorService
 
         $leftTrim = [
             'hjd2048.com-',
+            'hjd2048.com'
         ];
 
         $rightTrim = [
@@ -102,17 +103,24 @@ class JAVProcessorService
             'hd',
             'sd',
             'mp4',
+            '-f'
         ];
 
+        $filename = self::rtrim(self::ltrim($filename, $leftTrim), $rightTrim);
+
+        return $filename.'.'.$fileExtension;
+    }
+
+    private static function ltrim(string $filename, array $leftTrim): string
+    {
         foreach ($leftTrim as $trim) {
-            if(stripos($filename, $trim) === 0) {
-                $filename = substr($filename, 0, strlen($trim));
+            if(stripos(strtolower($filename), $trim) === 0) {
+                $filename = substr($filename, strlen($trim));
+                $filename = self::ltrim($filename, $leftTrim);
             }
         }
 
-        $filename = static::rtrim($filename, $rightTrim);
-
-        return $filename.'.'.$fileExtension;
+        return $filename;
     }
 
     private static function rtrim(string $filename, array $rightTrim): string
