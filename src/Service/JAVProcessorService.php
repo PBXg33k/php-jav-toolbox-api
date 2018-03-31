@@ -52,7 +52,11 @@ class JAVProcessorService
     public static function extractIDFromFilename(string $fileName)
     {
         $fileName = self::cleanupFilename($fileName);
+        return self::extractID($fileName);
+    }
 
+    private static function extractID(string $fileName)
+    {
         if(preg_match("~^(?:.*?)((?<label>[a-z]{1,6})(?:[-\.]+)?(?<release>[0-9]{2,7})(?:[-_\]]+)?(?:.*?)?(?<part>\W[abcdef]|[0-9]{0,3}|cd[-_][0-9])?)(?:.{4})$~i", $fileName, $matches)) {
 
             $titleInfo = new JAVTitle();
@@ -125,7 +129,14 @@ class JAVProcessorService
 
     private static function rtrim(string $filename, array $rightTrim): string
     {
+        // Parse filename to exclude exces filtering if filtered word is part of release
+        $parsed = self::extractID("{$filename}.mp4");
+
         foreach ($rightTrim as $trim) {
+            if($trim == $parsed->getRelease()) {
+                return $filename;
+            }
+
             if(stripos($filename, $trim) === strlen($filename) - strlen($trim)) {
                 $filename = substr($filename, 0, -1 * abs(strlen($trim)));
                 $filename = rtrim($filename, '-');
