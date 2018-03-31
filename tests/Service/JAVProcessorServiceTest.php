@@ -39,6 +39,9 @@ class JAVProcessorServiceTest extends TestCase
             "ABC-123.mp4",
             "A fancy title with ID worked in title ABC-123.wmv",
             "ABC-123 kek.mp4",
+            "0302abc-123-h264.mp4",
+            "[NoDRM]-abc123.mkv",
+            "[Thz.la]abc-123.wmv"
         ];
 
         $successObj

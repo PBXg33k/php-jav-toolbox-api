@@ -7,7 +7,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
-use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
 
 class FileScanService
@@ -37,11 +36,6 @@ class FileScanService
 
     /** @var Filesystem */
     private $filesystem;
-
-    private $ignoredNames = [
-        '.',
-        '..'
-    ];
 
     private $rootPath;
 
@@ -75,7 +69,6 @@ class FileScanService
     {
         $items = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path), \RecursiveIteratorIterator::SELF_FIRST);
 
-
         /**
          * @var $iv \SplFileInfo
          */
@@ -93,14 +86,11 @@ class FileScanService
                     ltrim($iv->getPathname(), $this->rootPath)
                 );
 
-                if (JAVProcessorService::filenameContainsID($finfo->getPathname())) {
+                if (JAVProcessorService::filenameContainsID($finfo->getFilename())) {
                     $this->processFile($finfo);
                 } else {
                     $this->logger->error("NO JAV ID FOUND: {$finfo->getPathname()}");
                 }
-            }
-            elseif($iv->isDir()) {
-                $this->logger->info("OPENING {$iv->getPathname()}");
             }
         }
     }

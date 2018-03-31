@@ -34,16 +34,6 @@ class ScanCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-//        $verbosityLevelMap = array(
-//            LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
-//            LogLevel::INFO   => OutputInterface::VERBOSITY_NORMAL,
-//            LogLevel::ERROR   => OutputInterface::VERBOSITY_NORMAL
-//        );
-
-//        $logger = new ConsoleLogger($output, $verbosityLevelMap);
-//
-//        $this->fileScanService->setLogger($logger);
-
         $path = $input->getArgument('path');
 
         $this->logger->info("Starting scan for {$path}");
