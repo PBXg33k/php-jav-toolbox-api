@@ -34,6 +34,11 @@ class JAVTitle
     /**
      * @var int
      */
+    protected $part;
+
+    /**
+     * @var int
+     */
     protected $length;
 
     /**
@@ -103,7 +108,7 @@ class JAVTitle
      */
     public function setLabel(string $label): JAVTitle
     {
-        $this->label = $label;
+        $this->label = strtoupper($label);
         return $this;
     }
 
@@ -122,6 +127,24 @@ class JAVTitle
     public function setRelease(int $release): JAVTitle
     {
         $this->release = $release;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPart()
+    {
+        return $this->part;
+    }
+
+    /**
+     * @param int $part
+     * @return JAVTitle
+     */
+    public function setPart(int $part): JAVTitle
+    {
+        $this->part = $part;
         return $this;
     }
 
