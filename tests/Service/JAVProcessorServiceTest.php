@@ -1,6 +1,7 @@
 <?php
 namespace App\Tests\Service;
 
+use App\Model\JAVFile;
 use App\Model\JAVTitle;
 use App\Service\JAVProcessorService;
 use PHPUnit\Framework\TestCase;
@@ -49,13 +50,17 @@ class JAVProcessorServiceTest extends TestCase
             ->setRelease("123");
 
         foreach($filenameVariations as $filenameVariation) {
-            $successObj->setFilename($filenameVariation);
+            $file = (new JAVFile())->setFilename($filenameVariation);
+            $successObj->addFile($file);
+//            $successObj->getFiles()->first()->setFilename($filenameVariation);
 
-            $processedFilenameResult = JAVProcessorService::extractIDFromFilename($successObj->getFilename());
+            $processedFilenameResult = JAVProcessorService::extractIDFromFilename($successObj->getFiles()->first()->getFilename());
 
             $this->assertSame($successObj->getRelease(), $processedFilenameResult->getRelease());
             $this->assertSame($successObj->getLabel(), $processedFilenameResult->getLabel());
-            $this->assertSame($successObj->getFilename(), $processedFilenameResult->getFilename());
+            $this->assertSame(
+                $successObj->getFiles()->first()->getFilename(),
+                $processedFilenameResult->getFiles()->first()->getFilename());
         }
 
     }
