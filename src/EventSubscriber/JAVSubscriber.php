@@ -2,6 +2,7 @@
 namespace App\EventSubscriber;
 
 
+use App\Event\JAVTitlePreProcessedEvent;
 use App\Event\VideoFileFoundEvent;
 use App\Service\JAVProcessorService;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
@@ -25,5 +26,10 @@ class JAVSubscriber implements EventSubscriberInterface
     public function onVideoFileFoundEvent(VideoFileFoundEvent $event)
     {
         $this->JAVProcessorService->preProcessFile($event->getFile());
+    }
+
+    public function onJAVTitlePreProcessedEvent(JAVTitlePreProcessedEvent $event)
+    {
+
     }
 }

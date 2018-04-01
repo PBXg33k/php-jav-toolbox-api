@@ -1,6 +1,7 @@
 <?php
 namespace App\Service;
 use App\Event\JAVTitlePreProcessedEvent;
+use App\Model\JAVFile;
 use App\Model\JAVTitle;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -36,15 +37,14 @@ class JAVProcessorService
     public function preProcessFile(SplFileInfo $file)
     {
         $javTitleInfo = self::extractIDFromFilename($file->getFilename());
-        $javTitleInfo->setFile($file);
 
         if($javTitleInfo instanceof JAVTitle) {
             $parsedname = "{$javTitleInfo->getLabel()}-{$javTitleInfo->getRelease()}";
-            if($javTitleInfo->getPart()) {
-                $parsedname .= "-{$javTitleInfo->getPart()}";
+            if($javTitleInfo->getFiles()->first()->getPart()) {
+                $parsedname .= "-{$javTitleInfo->getFiles()->first()->getPart()}";
             }
-            $this->logger->info("DISPATCHING PREPROCESSEDEVENT FOR {$parsedname} | {$javTitleInfo->getFile()->getFilename()}");
-            $javTitleInfo->setFile($file);
+            $this->logger->info("DISPATCHING PREPROCESSEDEVENT FOR {$parsedname} | {$javTitleInfo->getFiles()->first()->getFilename()}");
+            $javTitleInfo->getFiles()->first()->setFile($file);
             $this->dispatcher->dispatch(JAVTitlePreProcessedEvent::NAME, new JAVTitlePreProcessedEvent($javTitleInfo));
         }
     }
@@ -61,17 +61,21 @@ class JAVProcessorService
 
             $titleInfo = new JAVTitle();
             $titleInfo
-                ->setFilename($fileName)
                 ->setLabel($matches['label'])
                 ->setRelease($matches['release']);
+
+            $javFile = (new JAVFile())
+                ->setFilename($fileName);
 
             if($matches['part'] !== '') {
                 if(!is_numeric($matches['part'])) {
                     // Convert letter to number (a = 1, b = 2)
                     $matches['part'] = ord(strtolower($matches['part'])) - 96;
                 }
-                $titleInfo->setPart($matches['part']);
+                $javFile->setPart($matches['part']);
             }
+
+            $titleInfo->addFile($javFile);
 
             return $titleInfo;
         }
@@ -133,7 +137,7 @@ class JAVProcessorService
         $parsed = self::extractID("{$filename}.mp4");
 
         foreach ($rightTrim as $trim) {
-            if($trim == $parsed->getRelease()) {
+            if($parsed !== null && $trim == $parsed->getRelease()) {
                 return $filename;
             }
 

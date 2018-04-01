@@ -79,7 +79,6 @@ class FileScanService
                 \in_array($iv->getExtension(), $this->videoExtensions, false) &&
                 $iv->getSize() >= 500000000
             ) {
-
                 $finfo = new SplFileInfo(
                     $iv->getPathname(),
                     ltrim($iv->getPath(), $this->rootPath),
