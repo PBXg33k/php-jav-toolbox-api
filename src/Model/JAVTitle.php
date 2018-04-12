@@ -8,6 +8,7 @@
 
 namespace App\Model;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Config\Definition\Exception\DuplicateKeyException;
 use Symfony\Component\Finder\SplFileInfo;
 
 
@@ -31,6 +32,11 @@ class JAVTitle
      * @var ArrayCollection
      */
     protected $files;
+
+    /**
+     * @var bool
+     */
+    protected $multipart = false;
 
     public function __construct()
     {
@@ -80,6 +86,16 @@ class JAVTitle
         return $this;
     }
 
+    public function setFile($key, JAVFile $file): JAVTitle
+    {
+        if($this->files->get($key))
+            throw new DuplicateKeyException("{$key} already exists");
+
+        $this->files->set($key, $file);
+
+        return $this;
+    }
+
     public function removeFile(JAVFile $file) : JAVTitle
     {
         $this->files->removeElement($file);
@@ -91,4 +107,24 @@ class JAVTitle
     {
         return $this->files;
     }
+
+    /**
+     * @return bool
+     */
+    public function isMultipart(): bool
+    {
+        return $this->multipart;
+    }
+
+    /**
+     * @param bool $multipart
+     * @return JAVTitle
+     */
+    public function setMultipart(bool $multipart): JAVTitle
+    {
+        $this->multipart = $multipart;
+        return $this;
+    }
+
+
 }

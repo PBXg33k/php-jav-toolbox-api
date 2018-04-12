@@ -1,9 +1,12 @@
 <?php
 namespace App\Service;
+use App\Event\DuplicateTitleFoundEvent;
 use App\Event\JAVTitlePreProcessedEvent;
 use App\Model\JAVFile;
 use App\Model\JAVTitle;
+use Doctrine\Common\Collections\ArrayCollection;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Config\Definition\Exception\DuplicateKeyException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -23,10 +26,16 @@ class JAVProcessorService
 
     private $dispatcher;
 
+    /**
+     * @var ArrayCollection
+     */
+    private $titles;
+
     public function __construct(LoggerInterface $logger, EventDispatcherInterface $dispatcher)
     {
         $this->logger = $logger;
         $this->dispatcher = $dispatcher;
+        $this->titles = new ArrayCollection();
     }
 
     public function processFile(SplFileInfo $file)
@@ -39,14 +48,66 @@ class JAVProcessorService
         $javTitleInfo = self::extractIDFromFilename($file->getFilename());
 
         if($javTitleInfo instanceof JAVTitle) {
+
             $parsedname = "{$javTitleInfo->getLabel()}-{$javTitleInfo->getRelease()}";
-            if($javTitleInfo->getFiles()->first()->getPart()) {
-                $parsedname .= "-{$javTitleInfo->getFiles()->first()->getPart()}";
-            }
-            $this->logger->info("DISPATCHING PREPROCESSEDEVENT FOR {$parsedname} | {$javTitleInfo->getFiles()->first()->getFilename()}");
             $javTitleInfo->getFiles()->first()->setFile($file);
-            $this->dispatcher->dispatch(JAVTitlePreProcessedEvent::NAME, new JAVTitlePreProcessedEvent($javTitleInfo));
+
+            /** @var JAVTitle $existingRecord */
+            $existingRecord = $this->titles->get(self::getMapKey($javTitleInfo));
+
+            if(!$javTitleInfo->isMultipart()) {
+
+                if($existingRecord) {
+                    $this->logger->error(
+                        sprintf(
+                            "DUPLICATE TITLE FOUND | %s-%s | %s : %s ",
+                            $javTitleInfo->getLabel(),
+                            $javTitleInfo->getRelease(),
+                            $javTitleInfo->getFiles()->first()->getFilename(),
+                            $existingRecord->getFiles()->first()->getFilename()
+                            )
+                    );
+
+                    $this->dispatcher->dispatch(DuplicateTitleFoundEvent::NAME, new DuplicateTitleFoundEvent($existingRecord, $javTitleInfo));
+                }
+
+                $this->logger->notice("DISPATCHING PREPROCESSEDEVENT FOR {$parsedname} | {$javTitleInfo->getFiles()->first()->getFilename()}");
+                $this->dispatcher->dispatch(JAVTitlePreProcessedEvent::NAME, new JAVTitlePreProcessedEvent($javTitleInfo));
+            } else {
+
+                if($existingRecord) {
+                    /** @var JAVFile $file */
+                    $file = $javTitleInfo->getFiles()->first();
+
+                    try {
+                        $existingRecord->setFile($file->getPart(), $file);
+                    } catch (DuplicateKeyException $exception) {
+                        $this->logger->error(
+                            sprintf(
+                                "TITLE ALREADY HAS PARTFILE | %s-%s | PART: %s | %s | %s",
+                                $existingRecord->getLabel(),
+                                $existingRecord->getRelease(),
+                                $file->getPart(),
+                                $existingRecord->getFiles()->get($file->getPart())->getFilename(),
+                                $file->getFilename()
+                            )
+                        );
+                    }
+
+                    $javTitleInfo = $existingRecord;
+                }
+
+                if($javTitleInfo->getFiles()->first()->getPart()) {
+                    $parsedname .= "-{$javTitleInfo->getFiles()->first()->getPart()}";
+                }
+
+            }
+            $this->titles->set(self::getMapKey($javTitleInfo), $javTitleInfo);
         }
+    }
+
+    protected static function getMapKey(JAVTitle $title) {
+        return sprintf('%s-%s', $title->getLabel(), $title->getRelease());
     }
 
     public static function extractIDFromFilename(string $fileName)
@@ -57,7 +118,7 @@ class JAVProcessorService
 
     private static function extractID(string $fileName)
     {
-        if(preg_match("~^(?:.*?)((?<label>[a-z]{1,6})(?:[-\.]+)?(?<release>[0-9]{2,7})(?:[-_\]]+)?(?:.*?)?(?<part>\W[abcdef]|[0-9]{0,3}|cd[-_][0-9])?)(?:.{4})$~i", $fileName, $matches)) {
+        if(preg_match("~^(?:.*?)((?<label>[a-z]{1,6})(?:[-\.]+)?(?<release>[0-9]{2,7})(?:[-_\]]+)?(?:.*?)?(?:0|hd|fhd|cd[-_]?)?(?<part>[1-9]|\W?[abcdef]|[0-9]{0,3})?).*?.{4,5}$~i", $fileName, $matches)) {
 
             $titleInfo = new JAVTitle();
             $titleInfo
@@ -73,9 +134,12 @@ class JAVProcessorService
                     $matches['part'] = ord(strtolower($matches['part'])) - 96;
                 }
                 $javFile->setPart($matches['part']);
-            }
+                $titleInfo->setFile($javFile->getPart(), $javFile);
 
-            $titleInfo->addFile($javFile);
+                $titleInfo->setMultipart(true);
+            } else {
+                $titleInfo->addFile($javFile);
+            }
 
             return $titleInfo;
         }
