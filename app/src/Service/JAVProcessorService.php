@@ -50,9 +50,9 @@ class JAVProcessorService
         $this->entityManager = $entityManager;
     }
 
-    public function processFile(SplFileInfo $file)
+    public function processFile(JavFile $file)
     {
-        $this->logger->info('PROCESSING FILE '. $file->getPathname());
+        $this->logger->info('PROCESSING FILE '. $file->getFilename());
     }
 
     public function preProcessFile(SplFileInfo $file)
