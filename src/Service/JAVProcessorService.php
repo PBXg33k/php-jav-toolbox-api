@@ -1,12 +1,12 @@
 <?php
 namespace App\Service;
-use App\Event\DuplicateTitleFoundEvent;
-use App\Event\JAVTitlePreProcessedEvent;
-use App\Model\JAVFile;
-use App\Model\JAVTitle;
+
+use App\Entity\Title;
+use App\Entity\JavFile;
+use App\Exception\PreProcessFileException;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Config\Definition\Exception\DuplicateKeyException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -22,8 +22,14 @@ use Symfony\Component\Finder\SplFileInfo;
  */
 class JAVProcessorService
 {
+    /**
+     * @var LoggerInterface
+     */
     private $logger;
 
+    /**
+     * @var EventDispatcherInterface
+     */
     private $dispatcher;
 
     /**
@@ -31,11 +37,17 @@ class JAVProcessorService
      */
     private $titles;
 
-    public function __construct(LoggerInterface $logger, EventDispatcherInterface $dispatcher)
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    public function __construct(LoggerInterface $logger, EventDispatcherInterface $dispatcher, EntityManagerInterface $entityManager)
     {
         $this->logger = $logger;
         $this->dispatcher = $dispatcher;
         $this->titles = new ArrayCollection();
+        $this->entityManager = $entityManager;
     }
 
     public function processFile(SplFileInfo $file)
@@ -45,106 +57,86 @@ class JAVProcessorService
 
     public function preProcessFile(SplFileInfo $file)
     {
-        $javTitleInfo = self::extractIDFromFilename($file->getFilename());
+        /** @var \App\Entity\JavFile $existingFile */
+        $existingFile = $this->entityManager->getRepository(JavFile::class)
+            ->findOneBy([
+                'path' => $file->getPathname()
+            ]);
 
-        if($javTitleInfo instanceof JAVTitle) {
+        if(!$existingFile) {
+            try {
+                /** @var Title $javTitleInfo */
+                $javTitleInfo = self::extractIDFromFilename($file->getFilename());
 
-            $parsedname = "{$javTitleInfo->getLabel()}-{$javTitleInfo->getRelease()}";
-            $javTitleInfo->getFiles()->first()->setFile($file);
+                /** @var \App\Entity\JavFile $javFile */
+                $javFile = $javTitleInfo->getFiles()->first();
+                $javFile->setPath($file->getPathname());
+                $javFile->setFilesize($file->getSize());
 
-            /** @var JAVTitle $existingRecord */
-            $existingRecord = $this->titles->get(self::getMapKey($javTitleInfo));
+                // Check if Title already exists, if so append file to existing record
+                /** @var Title $title */
+                $title = $this->entityManager->getRepository(Title::class)
+                    ->findOneBy(['catalognumber' => $javTitleInfo->getCatalognumber()]);
 
-            if(!$javTitleInfo->isMultipart()) {
-
-                if($existingRecord) {
-                    $this->logger->error(
-                        sprintf(
-                            "DUPLICATE TITLE FOUND | %s-%s | %s : %s ",
-                            $javTitleInfo->getLabel(),
-                            $javTitleInfo->getRelease(),
-                            $javTitleInfo->getFiles()->first()->getFilename(),
-                            $existingRecord->getFiles()->first()->getFilename()
-                            )
-                    );
-
-                    $this->dispatcher->dispatch(DuplicateTitleFoundEvent::NAME, new DuplicateTitleFoundEvent($existingRecord, $javTitleInfo));
+                if ($title) {
+                    $this->logger->debug('Found existing title: ' . $title->getCatalognumber());
+                    $title->addFile($javTitleInfo->getFiles()->first());
+                } else {
+                    $this->logger->debug('New title: ' . $javTitleInfo->getCatalognumber());
+                    $title = $javTitleInfo;
                 }
 
-                $this->logger->notice("DISPATCHING PREPROCESSEDEVENT FOR {$parsedname} | {$javTitleInfo->getFiles()->first()->getFilename()}");
-                $this->dispatcher->dispatch(JAVTitlePreProcessedEvent::NAME, new JAVTitlePreProcessedEvent($javTitleInfo));
-            } else {
-
-                if($existingRecord) {
-                    /** @var JAVFile $file */
-                    $file = $javTitleInfo->getFiles()->first();
-
-                    try {
-                        $existingRecord->setFile($file->getPart(), $file);
-                    } catch (DuplicateKeyException $exception) {
-                        $this->logger->error(
-                            sprintf(
-                                "TITLE ALREADY HAS PARTFILE | %s-%s | PART: %s | %s | %s",
-                                $existingRecord->getLabel(),
-                                $existingRecord->getRelease(),
-                                $file->getPart(),
-                                $existingRecord->getFiles()->get($file->getPart())->getFilename(),
-                                $file->getFilename()
-                            )
-                        );
-                    }
-
-                    $javTitleInfo = $existingRecord;
-                }
-
-                if($javTitleInfo->getFiles()->first()->getPart()) {
-                    $parsedname .= "-{$javTitleInfo->getFiles()->first()->getPart()}";
-                }
-
+                $this->entityManager->persist($title);
+                $this->entityManager->persist($javFile);
+                $this->entityManager->flush();
+                $this->logger->info('STORED TITLE: ' . $title->getCatalognumber());
+            } catch (\Exception $exception) {
+                $this->logger->error($exception->getMessage());
             }
-            $this->titles->set(self::getMapKey($javTitleInfo), $javTitleInfo);
+        } else {
+            $this->logger->info('PATH ALREADY PROCESSED. CONTINUEING: '. $existingFile->getFilename());
         }
-    }
-
-    protected static function getMapKey(JAVTitle $title) {
-        return sprintf('%s-%s', $title->getLabel(), $title->getRelease());
     }
 
     public static function extractIDFromFilename(string $fileName)
     {
-        $fileName = self::cleanupFilename($fileName);
-        return self::extractID($fileName);
+        return self::extractID(self::cleanupFilename($fileName));
     }
 
+    /**
+     * @param string $fileName
+     * @return Title
+     * @throws PreProcessFileException
+     */
     private static function extractID(string $fileName)
     {
         if(preg_match("~^(?:.*?)((?<label>[a-z]{1,6})(?:[-\.]+)?(?<release>[0-9]{2,7})(?:[-_\]]+)?(?:.*?)?(?:0|hd|fhd|cd[-_]?)?(?<part>[1-9]|\W?[abcdef]|[0-9]{0,3})?).*?.{4,5}$~i", $fileName, $matches)) {
 
-            $titleInfo = new JAVTitle();
-            $titleInfo
-                ->setLabel($matches['label'])
-                ->setRelease($matches['release']);
+            $title = (new Title())
+                ->setCatalognumber(sprintf('%s-%s', $matches['label'], $matches['release']));
 
-            $javFile = (new JAVFile())
-                ->setFilename($fileName);
+            $filePart = 1;
 
             if($matches['part'] !== '') {
                 if(!is_numeric($matches['part'])) {
                     // Convert letter to number (a = 1, b = 2)
                     $matches['part'] = ord(strtolower($matches['part'])) - 96;
                 }
-                $javFile->setPart($matches['part']);
-                $titleInfo->setFile($javFile->getPart(), $javFile);
 
-                $titleInfo->setMultipart(true);
-            } else {
-                $titleInfo->addFile($javFile);
+                $filePart = $matches['part'];
             }
 
-            return $titleInfo;
+            $title->addFile(
+                (new JavFile())
+                    ->setFilename($fileName)
+                    ->setPart($filePart)
+                    ->setProcessed(false)
+            );
+
+            return $title;
         }
 
-        return null;
+        throw new PreProcessFileException("Unable to extract ID {$fileName}", 1, null, $fileName);
     }
 
     public static function cleanupFilename(string $filename) : string
@@ -168,6 +160,7 @@ class JAVProcessorService
             '1080',
             '108',
             '1920',
+            '720',
             '108',
             'hhb',
             'fhd',
@@ -175,7 +168,8 @@ class JAVProcessorService
             'hd',
             'sd',
             'mp4',
-            '-f'
+            '-f',
+            '-5'
         ];
 
         $filename = self::rtrim(self::ltrim($filename, $leftTrim), $rightTrim);
@@ -201,7 +195,7 @@ class JAVProcessorService
         $parsed = self::extractID("{$filename}.mp4");
 
         foreach ($rightTrim as $trim) {
-            if($parsed !== null && $trim == $parsed->getRelease()) {
+            if($parsed !== null && $trim == explode('-', $parsed->getCatalognumber())[1]) {
                 return $filename;
             }
 
@@ -217,6 +211,6 @@ class JAVProcessorService
 
     public static function filenameContainsID(string $filename): bool
     {
-        return self::extractIDFromFilename($filename) instanceof JAVTitle;
+        return self::extractIDFromFilename($filename) instanceof Title;
     }
 }

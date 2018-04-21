@@ -19,7 +19,7 @@ class JAVSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents()
     {
         return [
-            VideoFileFoundEvent::NAME => 'onVideoFileFoundEvent'
+            VideoFileFoundEvent::NAME => 'onVideoFileFoundEvent',
         ];
     }
 

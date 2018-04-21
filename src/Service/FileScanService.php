@@ -1,7 +1,6 @@
 <?php
 namespace App\Service;
 
-
 use App\Event\VideoFileFoundEvent;
 use Doctrine\Common\Collections\ArrayCollection;
 use Psr\Log\LoggerInterface;
@@ -85,10 +84,12 @@ class FileScanService
                     ltrim($iv->getPathname(), $this->rootPath)
                 );
 
-                if (JAVProcessorService::filenameContainsID($finfo->getFilename())) {
-                    $this->processFile($finfo);
-                } else {
-                    $this->logger->error("NO JAV ID FOUND: {$finfo->getPathname()}");
+                try {
+                    if (JAVProcessorService::filenameContainsID($finfo->getFilename())) {
+                        $this->processFile($finfo);
+                    }
+                } catch (\Exception $exception) {
+                    $this->logger->error($exception->getMessage());
                 }
             }
         }
