@@ -31,11 +31,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cd310f44-846f-4c9a-a947-dc35a20271f5" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.docker/config/nginx/vhost/sf4_vhost" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.docker/config/php/php.ini" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/docker-compose.yaml.dist" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yaml.dist" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yaml.dist" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -59,11 +57,29 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="docker-compose.yaml.dist" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/docker-compose.yaml.dist">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="391">
+              <caret line="23" column="18" lean-forward="true" selection-end-line="48" selection-end-column="21" />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="docker-compose.yaml" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/docker-compose.yaml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="204">
-              <caret line="12" column="12" lean-forward="true" selection-start-line="12" selection-start-column="12" selection-end-line="12" selection-end-column="12" />
+            <state relative-caret-position="612">
+              <caret line="48" column="21" selection-start-line="48" selection-start-column="21" selection-end-line="48" selection-end-column="21" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="187">
+              <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
             </state>
           </provider>
         </entry>
@@ -126,6 +142,7 @@
         <option value="$PROJECT_DIR$/.docker/config/php/php.ini" />
         <option value="$PROJECT_DIR$/Dockerfile" />
         <option value="$PROJECT_DIR$/.docker/config/nginx/vhost/sf4_vhost" />
+        <option value="$PROJECT_DIR$/docker-compose.yaml.dist" />
         <option value="$PROJECT_DIR$/docker-compose.yaml" />
       </list>
     </option>
@@ -315,7 +332,7 @@
       <workItem from="1524343597445" duration="808000" />
       <workItem from="1524345802745" duration="5607000" />
       <workItem from="1524356017033" duration="266000" />
-      <workItem from="1524356301434" duration="1402000" />
+      <workItem from="1524356301434" duration="1767000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <created>1522401235904</created>
@@ -342,7 +359,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="80832000" />
+    <option name="totallyTimeSpent" value="81197000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-1928" y="-8" width="1936" height="1056" extended-state="6" />
@@ -353,8 +370,8 @@
       <window_info anchor="bottom" id="Database Changes" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.32943678" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="7" visible="true" weight="0.24400872" />
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15298508" />
+      <window_info anchor="bottom" id="Terminal" order="7" visible="true" weight="0.24400872" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.15298508" />
       <window_info anchor="bottom" id="Docker" order="7" weight="0.32897604" />
       <window_info anchor="bottom" id="TeamCity" order="9" weight="0.32897604" />
       <window_info anchor="right" id="Database" order="3" />
@@ -382,20 +399,6 @@
     <option name="LAST_COMMIT_MESSAGE" value="Initial commit" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/.docker/config/nginx/vhost/sf4_vhost">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="18" column="44" lean-forward="true" selection-start-line="18" selection-start-column="44" selection-end-line="18" selection-end-column="44" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Dockerfile">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="24" column="38" lean-forward="true" selection-start-line="24" selection-start-column="38" selection-end-line="24" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/docker-compose.yaml">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="527">
@@ -486,10 +489,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/app/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="11" lean-forward="true" selection-start-line="11" selection-end-line="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/docker-compose.yaml.dist">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="23" column="18" lean-forward="true" selection-end-line="48" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/docker-compose.yaml">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="12" column="12" lean-forward="true" selection-start-line="12" selection-start-column="12" selection-end-line="12" selection-end-column="12" />
+        <state relative-caret-position="612">
+          <caret line="48" column="21" selection-start-line="48" selection-start-column="21" selection-end-line="48" selection-end-column="21" />
         </state>
       </provider>
     </entry>

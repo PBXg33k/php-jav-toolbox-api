@@ -7,8 +7,8 @@ services:
       links:
         - aya_app
       volumes:
-        - "./app:/var/www"
-        - "./.docker/config/nginx/vhost/sf4_vhost:/etc/nginx/conf.d/030-sf4.conf:ro"
+        - "./app:/var/www/app"
+        - "./.docker/config/nginx/vhost/sf4_vhost:/etc/nginx/conf.d/default.conf:ro"
 
     aya_app:
       build: .
@@ -17,7 +17,8 @@ services:
         - aya_elasticsearch
       volumes:
         - "./.docker/config/php/php.ini:/usr/local/etc/php/conf.d/030-custom.ini:ro"
-        - "./app:/var/www"
+        - "./app:/var/www/app"
+        - "./files:/files"
       ports:
         - "9000:9000"
       environment:
@@ -29,7 +30,7 @@ services:
         - DATABASE_PASSWORD=userPass
         - DATABASE_NAME=sf4
         - DATABASE_PORT=3306
-      working_dir: "/var/www"
+      working_dir: "/var/www/app"
 
     aya_mariadb:
       image: mariadb
