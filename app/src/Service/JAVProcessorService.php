@@ -1,0 +1,216 @@
+<?php
+namespace App\Service;
+
+use App\Entity\Title;
+use App\Entity\JavFile;
+use App\Exception\PreProcessFileException;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Finder\SplFileInfo;
+
+/**
+ * Class JAVProcessorService
+ *
+ * Service which processes videofiles which could contain JAV.
+ *
+ * It processes filenames and tries to extract JAV Titles.
+ * Calculate hashes to create a fingerprint
+ *
+ * @package App\Service
+ */
+class JAVProcessorService
+{
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
+    /**
+     * @var EventDispatcherInterface
+     */
+    private $dispatcher;
+
+    /**
+     * @var ArrayCollection
+     */
+    private $titles;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    public function __construct(LoggerInterface $logger, EventDispatcherInterface $dispatcher, EntityManagerInterface $entityManager)
+    {
+        $this->logger = $logger;
+        $this->dispatcher = $dispatcher;
+        $this->titles = new ArrayCollection();
+        $this->entityManager = $entityManager;
+    }
+
+    public function processFile(JavFile $file)
+    {
+        $this->logger->info('PROCESSING FILE '. $file->getFilename());
+    }
+
+    public function preProcessFile(SplFileInfo $file)
+    {
+        /** @var \App\Entity\JavFile $existingFile */
+        $existingFile = $this->entityManager->getRepository(JavFile::class)
+            ->findOneBy([
+                'path' => $file->getPathname()
+            ]);
+
+        if(!$existingFile) {
+            try {
+                /** @var Title $javTitleInfo */
+                $javTitleInfo = self::extractIDFromFilename($file->getFilename());
+
+                /** @var \App\Entity\JavFile $javFile */
+                $javFile = $javTitleInfo->getFiles()->first();
+                $javFile->setPath($file->getPathname());
+                $javFile->setFilesize($file->getSize());
+
+                // Check if Title already exists, if so append file to existing record
+                /** @var Title $title */
+                $title = $this->entityManager->getRepository(Title::class)
+                    ->findOneBy(['catalognumber' => $javTitleInfo->getCatalognumber()]);
+
+                if ($title) {
+                    $this->logger->debug('Found existing title: ' . $title->getCatalognumber());
+                    $title->addFile($javTitleInfo->getFiles()->first());
+                } else {
+                    $this->logger->debug('New title: ' . $javTitleInfo->getCatalognumber());
+                    $title = $javTitleInfo;
+                }
+
+                $this->entityManager->persist($title);
+                $this->entityManager->persist($javFile);
+                $this->entityManager->flush();
+                $this->logger->info('STORED TITLE: ' . $title->getCatalognumber());
+            } catch (\Exception $exception) {
+                $this->logger->error($exception->getMessage());
+            }
+        } else {
+            $this->logger->info('PATH ALREADY PROCESSED. CONTINUEING: '. $existingFile->getFilename());
+        }
+    }
+
+    public static function extractIDFromFilename(string $fileName)
+    {
+        return self::extractID(self::cleanupFilename($fileName));
+    }
+
+    /**
+     * @param string $fileName
+     * @return Title
+     * @throws PreProcessFileException
+     */
+    private static function extractID(string $fileName)
+    {
+        if(preg_match("~^(?:.*?)((?<label>[a-z]{1,6})(?:[-\.]+)?(?<release>[0-9]{2,7})(?:[-_\]]+)?(?:.*?)?(?:0|hd|fhd|cd[-_]?)?(?<part>[1-9]|\W?[abcdef]|[0-9]{0,3})?).*?.{4,5}$~i", $fileName, $matches)) {
+
+            $title = (new Title())
+                ->setCatalognumber(sprintf('%s-%s', $matches['label'], $matches['release']));
+
+            $filePart = 1;
+
+            if($matches['part'] !== '') {
+                if(!is_numeric($matches['part'])) {
+                    // Convert letter to number (a = 1, b = 2)
+                    $matches['part'] = ord(strtolower($matches['part'])) - 96;
+                }
+
+                $filePart = $matches['part'];
+            }
+
+            $title->addFile(
+                (new JavFile())
+                    ->setFilename($fileName)
+                    ->setPart($filePart)
+                    ->setProcessed(false)
+            );
+
+            return $title;
+        }
+
+        throw new PreProcessFileException("Unable to extract ID {$fileName}", 1, null, $fileName);
+    }
+
+    public static function cleanupFilename(string $filename) : string
+    {
+        if(preg_match("~^.+\.(.*)$~", $filename, $matches)) {
+            $fileExtension = $matches[1];
+        } else {
+            throw new \Exception('Unable to extract file extension');
+        }
+
+        $filename = str_replace(".{$fileExtension}", '', $filename);
+
+        $leftTrim = [
+            'hjd2048.com-',
+            'hjd2048.com'
+        ];
+
+        $rightTrim = [
+            'h264',
+            '1080p',
+            '1080',
+            '108',
+            '1920',
+            '720',
+            '108',
+            'hhb',
+            'fhd',
+            '[hd]',
+            'hd',
+            'sd',
+            'mp4',
+            '-f',
+            '-5'
+        ];
+
+        $filename = self::rtrim(self::ltrim($filename, $leftTrim), $rightTrim);
+
+        return $filename.'.'.$fileExtension;
+    }
+
+    private static function ltrim(string $filename, array $leftTrim): string
+    {
+        foreach ($leftTrim as $trim) {
+            if(stripos(strtolower($filename), $trim) === 0) {
+                $filename = substr($filename, strlen($trim));
+                $filename = self::ltrim($filename, $leftTrim);
+            }
+        }
+
+        return $filename;
+    }
+
+    private static function rtrim(string $filename, array $rightTrim): string
+    {
+        // Parse filename to exclude exces filtering if filtered word is part of release
+        $parsed = self::extractID("{$filename}.mp4");
+
+        foreach ($rightTrim as $trim) {
+            if($parsed !== null && $trim == explode('-', $parsed->getCatalognumber())[1]) {
+                return $filename;
+            }
+
+            if(stripos($filename, $trim) === strlen($filename) - strlen($trim)) {
+                $filename = substr($filename, 0, -1 * abs(strlen($trim)));
+                $filename = rtrim($filename, '-');
+                $filename = self::rtrim($filename, $rightTrim);
+            }
+        }
+
+        return $filename;
+    }
+
+    public static function filenameContainsID(string $filename): bool
+    {
+        return self::extractIDFromFilename($filename) instanceof Title;
+    }
+}
