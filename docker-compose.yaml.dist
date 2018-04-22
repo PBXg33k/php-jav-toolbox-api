@@ -1,20 +1,20 @@
 version: '2'
 services:
-    aya_front:
+    web:
       image: nginx
       ports:
         - "80:80"
       links:
-        - aya_app
+        - app
       volumes:
         - "./app:/var/www/app"
         - "./.docker/config/nginx/vhost/sf4_vhost:/etc/nginx/conf.d/default.conf:ro"
 
-    aya_app:
+    app:
       build: .
       links:
-        - aya_mariadb
-        - aya_elasticsearch
+        - mariadb
+        - elasticsearch
       volumes:
         - "./.docker/config/php/php.ini:/usr/local/etc/php/conf.d/030-custom.ini:ro"
         - "./app:/var/www/app"
@@ -25,14 +25,13 @@ services:
         - APP_ENV=dev
         - APP_DEBUG=1
         - APP_SECRET=83512d52ee8797e6e9de2322dc781885
-        - DATABASE_HOST=aya_mariadb
-        - DATABASE_USER=appuser
-        - DATABASE_PASSWORD=userPass
-        - DATABASE_NAME=sf4
-        - DATABASE_PORT=3306
+        - DATABASE_URL=mysql://appuser:userPass@mariadb:3306/sf4
+        - MEDIA_DIR=/media
+        - THUMB_DIR=/media/thumbs
+        - MT_CONF_FILE=/var/www/app/config/mt.json
       working_dir: "/var/www/app"
 
-    aya_mariadb:
+    mariadb:
       image: mariadb
       command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
       environment:
@@ -43,7 +42,7 @@ services:
       ports:
         - "3306:3306"
 
-    aya_elasticsearch:
+    elasticsearch:
       image: elasticsearch
       ports:
         - "9200:9200"

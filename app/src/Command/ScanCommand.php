@@ -3,14 +3,12 @@ namespace App\Command;
 
 use App\Service\FileScanService;
 use Psr\Log\LoggerInterface;
-use Psr\Log\LogLevel;
-use Symfony\Component\Console\Command\Command;
+use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class ScanCommand extends Command
+class ScanCommand extends ContainerAwareCommand
 {
     private $fileScanService;
 
@@ -29,12 +27,12 @@ class ScanCommand extends Command
         $this
             ->setName('jav:scan')
             ->setDescription('Scan for JAV titles locally')
-            ->addArgument('path', InputArgument::REQUIRED,'Root path');
+            ->addArgument('path', InputArgument::OPTIONAL,'Root path');
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $path = $input->getArgument('path');
+        $path = $input->getArgument('path') ?: $this->getContainer()->getParameter('jav_media_file_location');
 
         $this->logger->info("Starting scan for {$path}");
         $this->fileScanService->scanDir($path);

@@ -3,12 +3,16 @@ namespace App\Service;
 
 use App\Entity\Title;
 use App\Entity\JavFile;
+use App\Event\JAVTitlePreProcessedEvent;
 use App\Exception\PreProcessFileException;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Mhor\MediaInfo\Container\MediaInfoContainer;
+use Mhor\MediaInfo\MediaInfo;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\Process\Process;
 
 /**
  * Class JAVProcessorService
@@ -42,17 +46,52 @@ class JAVProcessorService
      */
     private $entityManager;
 
-    public function __construct(LoggerInterface $logger, EventDispatcherInterface $dispatcher, EntityManagerInterface $entityManager)
+    /**
+     * @var MediaInfo
+     */
+    private $mediaInfo;
+
+    /**
+     * @var string
+     */
+    private $thumbnailDirectory;
+
+    /**
+     * @var string
+     */
+    private $mtConfigPath;
+
+    public function __construct(
+        LoggerInterface $logger,
+        EventDispatcherInterface $dispatcher,
+        EntityManagerInterface $entityManager,
+        $javToolboxMediaThumbDirectory,
+        $javToolboxMtConfigPath
+    )
     {
         $this->logger = $logger;
         $this->dispatcher = $dispatcher;
         $this->titles = new ArrayCollection();
         $this->entityManager = $entityManager;
+        $this->mediaInfo = new MediaInfo();
+
+        $this->thumbnailDirectory = $javToolboxMediaThumbDirectory;
+        $this->mtConfigPath = $javToolboxMtConfigPath;
     }
 
     public function processFile(JavFile $file)
     {
         $this->logger->info('PROCESSING FILE '. $file->getFilename());
+
+        // Start thumbnail generation (async) first because this takes longer
+//        $thumbnailProcess = new Process('')
+
+
+        // Start Mediainfo command to get media data
+        /** @var MediaInfoContainer $mediaInfoContainer */
+        $mediaInfoContainer = $this->mediaInfo->getInfo($file->getPath());
+
+        var_dump($mediaInfoContainer);die();
     }
 
     public function preProcessFile(SplFileInfo $file)
@@ -86,6 +125,8 @@ class JAVProcessorService
                     $title = $javTitleInfo;
                 }
 
+                $this->dispatcher->dispatch(JAVTitlePreProcessedEvent::NAME, new JAVTitlePreProcessedEvent($title, $javFile));
+
                 $this->entityManager->persist($title);
                 $this->entityManager->persist($javFile);
                 $this->entityManager->flush();
@@ -110,6 +151,7 @@ class JAVProcessorService
      */
     private static function extractID(string $fileName)
     {
+        //^(?:.*?)(?:(?<label>[a-z]{1,6})(?:[-\.]+)?(?<release>[0-9]{2,7})(?:[-_\]]+)?(?:.*?)?(?:0|hd|fhd|cd?)?(?:[-_]?)?(?<part>[1-9]|\W[abcdef]|[0-9]{0,3})?\.)(\w{2,5}?)$
         if(preg_match("~^(?:.*?)((?<label>[a-z]{1,6})(?:[-\.]+)?(?<release>[0-9]{2,7})(?:[-_\]]+)?(?:.*?)?(?:0|hd|fhd|cd[-_]?)?(?<part>[1-9]|\W?[abcdef]|[0-9]{0,3})?).*?.{4,5}$~i", $fileName, $matches)) {
 
             $title = (new Title())

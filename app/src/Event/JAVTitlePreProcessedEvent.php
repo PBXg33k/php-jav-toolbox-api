@@ -2,7 +2,8 @@
 namespace App\Event;
 
 
-use App\Model\JAVTitle;
+use App\Entity\JavFile;
+use App\Entity\Title;
 use Symfony\Component\EventDispatcher\Event;
 
 class JAVTitlePreProcessedEvent extends Event
@@ -10,20 +11,34 @@ class JAVTitlePreProcessedEvent extends Event
     const NAME = 'jav.title.preprocessed';
 
     /**
-     * @var JAVTitle
+     * @var Title
      */
     protected $title;
 
-    public function __construct(JAVTitle $title)
+    /**
+     * @var JavFile
+     */
+    protected $file;
+
+    public function __construct(Title $title, JavFile $javFile)
     {
         $this->title = $title;
+        $this->file = $javFile;
     }
 
     /**
-     * @return JAVTitle
+     * @return Title
      */
-    public function getTitle(): JAVTitle
+    public function getTitle(): Title
     {
         return $this->title;
+    }
+
+    /**
+     * @return JavFile
+     */
+    public function getFile(): JavFile
+    {
+        return $this->file;
     }
 }
