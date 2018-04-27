@@ -4,12 +4,14 @@ FROM base AS xxhbuild
 
 WORKDIR /tmp/workdir
 
-RUN apt-get update && apt-get install -y build-essential git
-
-RUN git clone https://github.com/Cyan4973/xxHash.git \
+RUN apt-get update \
+    && apt-get install -y build-essential git \
+    && git clone https://github.com/Cyan4973/xxHash.git \
     && cd xxHash \
     && make \
-    && make install
+    && make install \
+    && apt-get remove --auto-remove -y build-essential
+
 
 FROM base AS final
 MAINTAINER Oguzhan Uysal <development@oguzhanuysal.eu>
@@ -21,7 +23,7 @@ COPY --from=xxhbuild /usr/local /usr/local/
 
 # install PHP extensions & composer
 RUN apt-get update && apt-get install -y git \
-    zlib1g-dev libicu-dev libpq-dev imagemagick git mysql-client wget ffmpeg mediainfo \
+    zlib1g-dev libicu-dev libpq-dev imagemagick git mysql-client wget mediainfo \
     && pecl install redis-4.0.2 \
 	&& docker-php-ext-install opcache \
 	&& docker-php-ext-install intl \
@@ -55,5 +57,7 @@ RUN rm -rf /var/www/* \
 WORKDIR /var/www/app
 
 RUN composer install --no-dev --optimize-autoloader --prefer-dist --no-scripts
+
+RUN rm -rf /tmp/*
     
 EXPOSE 9000
