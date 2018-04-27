@@ -9,7 +9,11 @@ RUN apt-get update \
     && git clone https://github.com/Cyan4973/xxHash.git \
     && cd xxHash \
     && make \
-    && make install \
+    && make install
+
+WORKDIR /
+
+RUN rm -rf /tmp/* \
     && apt-get remove --auto-remove -y build-essential
 
 
@@ -38,7 +42,8 @@ RUN apt-get update && apt-get install -y git \
 RUN wget https://github.com/mutschler/mt/releases/download/1.0.8/mt-1.0.8-linux_amd64.tar.bz2 \
     && tar xvjf mt-1.0.8-linux_amd64.tar.bz2 \
     && mv mt-1.0.8-linux_amd64 /usr/local/bin/mt \
-    && chmod +x /usr/local/bin/mt
+    && chmod +x /usr/local/bin/mt \
+    && rm -f mt-1.0.8-linux_amd64.tar.bz2
 
 # Authorize SSH Host
 RUN mkdir -p /root/.ssh \
@@ -58,6 +63,8 @@ WORKDIR /var/www/app
 
 RUN composer install --no-dev --optimize-autoloader --prefer-dist --no-scripts
 
+# Cleanup
 RUN rm -rf /tmp/*
+RUN apt-get remove *-dev --auto-remove -y
     
 EXPOSE 9000
