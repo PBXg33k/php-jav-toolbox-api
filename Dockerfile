@@ -14,9 +14,6 @@ RUN git clone https://github.com/Cyan4973/xxHash.git \
 FROM base AS final
 MAINTAINER Oguzhan Uysal <development@oguzhanuysal.eu>
 
-ARG ssh_prv_key
-ARG ssh_pub_key
-
 WORKDIR /var/www
 
 # Copy compiled xxhsum from xxhbuild container
@@ -42,18 +39,18 @@ RUN wget https://github.com/mutschler/mt/releases/download/1.0.8/mt-1.0.8-linux_
     && chmod +x /usr/local/bin/mt
 
 # Authorize SSH Host
-RUN mkdir -p /root/.ssh && \
-    chmod 0700 /root/.ssh && \
-    ssh-keyscan github.com > /root/.ssh/known_hosts
+RUN mkdir -p /root/.ssh \
+    && chmod 0700 /root/.ssh \
+    && ssh-keyscan github.com > /root/.ssh/known_hosts
 
 # Add the keys and set permissions
-RUN echo "$ssh_prv_key" > /root/.ssh/id_rsa && \
-    echo "$ssh_pub_key" > /root/.ssh/id_rsa.pub && \
-    chmod 600 /root/.ssh/id_rsa && \
-    chmod 600 /root/.ssh/id_rsa.pub
+
+RUN ssh-keygen -q -t rsa -N '' -f /root/.ssh/id_rsa \
+    && chmod 600 /root/.ssh/id_rsa \
+    && chmod 600 /root/.ssh/id_rsa.pub
 
 RUN rm -rf /var/www/* \
-    && git clone git@github.com:PBXg33k/php-jav-toolbox-api.git /var/www
+    && git clone https://github.com/PBXg33k/php-jav-toolbox-api.git /var/www
 
 WORKDIR /var/www/app
 
