@@ -1,5 +1,3 @@
-#FROM jrottenberg/ffmpeg:ubuntu AS ffmpegbuild
-
 FROM php:7.2-fpm AS base
 
 FROM base AS xxhbuild
@@ -16,26 +14,49 @@ RUN git clone https://github.com/Cyan4973/xxHash.git \
 FROM base AS final
 MAINTAINER Oguzhan Uysal <development@oguzhanuysal.eu>
 
-ENV LD_LIBRARY_PATH=/usr/local/lib
+ARG ssh_prv_key
+ARG ssh_pub_key
 
+WORKDIR /var/www
+
+# Copy compiled xxhsum from xxhbuild container
 COPY --from=xxhbuild /usr/local /usr/local/
 
-RUN apt-get update && apt-get install -y git zlib1g-dev libicu-dev libpq-dev imagemagick git mysql-client wget ffmpeg mediainfo \
+# install PHP extensions & composer
+RUN apt-get update && apt-get install -y git \
+    zlib1g-dev libicu-dev libpq-dev imagemagick git mysql-client wget ffmpeg mediainfo \
+    && pecl install redis-4.0.2 \
 	&& docker-php-ext-install opcache \
 	&& docker-php-ext-install intl \
 	&& docker-php-ext-install mbstring \
 	&& docker-php-ext-install pdo_mysql \
+	&& docker-php-ext-install zip \
+	&& docker-php-ext-enable redis \
 	&& php -r "readfile('https://getcomposer.org/installer');" | php -- --install-dir=/usr/local/bin --filename=composer \
 	&& chmod +sx /usr/local/bin/composer
 
+# install MT (media thumbnails)
 RUN wget https://github.com/mutschler/mt/releases/download/1.0.8/mt-1.0.8-linux_amd64.tar.bz2 \
     && tar xvjf mt-1.0.8-linux_amd64.tar.bz2 \
     && mv mt-1.0.8-linux_amd64 /usr/local/bin/mt \
     && chmod +x /usr/local/bin/mt
 
-RUN rm -rf /var/www/* \
-    && git clone --no-checkout --depth=1 --no-tags \
-       git@github.com:PBXg33k/php-jav-toolbox-api.git /var/www \
-    && cd /var/www && composer install --no-dev --optimize-autoloader --prefer-dist
+# Authorize SSH Host
+RUN mkdir -p /root/.ssh && \
+    chmod 0700 /root/.ssh && \
+    ssh-keyscan github.com > /root/.ssh/known_hosts
 
+# Add the keys and set permissions
+RUN echo "$ssh_prv_key" > /root/.ssh/id_rsa && \
+    echo "$ssh_pub_key" > /root/.ssh/id_rsa.pub && \
+    chmod 600 /root/.ssh/id_rsa && \
+    chmod 600 /root/.ssh/id_rsa.pub
+
+RUN rm -rf /var/www/* \
+    && git clone git@github.com:PBXg33k/php-jav-toolbox-api.git /var/www
+
+WORKDIR /var/www/app
+
+RUN composer install --no-dev --optimize-autoloader --prefer-dist --no-scripts
+    
 EXPOSE 9000
