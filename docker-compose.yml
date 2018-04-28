@@ -19,14 +19,13 @@ services:
         - "./.docker/config/php/php.ini:/usr/local/etc/php/conf.d/030-custom.ini:ro"
         - "./app:/var/www/app"
         - "./files:/files"
-        - "./id_rsa:/root/.ssh/id_rsa:ro"
       ports:
         - "9000:9000"
       environment:
         - APP_ENV=dev
         - APP_DEBUG=1
         - APP_SECRET=83512d52ee8797e6e9de2322dc781885
-        - DATABASE_URL=mysql://appuser:userPass@mariadb:3306/sf4
+        - DATABASE_URL=mysql://appuser:userPass@mariadb:3306/app
         - MEDIA_DIR=/media
         - THUMB_DIR=/media/thumbs
       working_dir: "/var/www/app"
