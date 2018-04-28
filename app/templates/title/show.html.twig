@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Title{% endblock %}
+
+{% block body %}
+    <h1>Title</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ title.id }}</td>
+            </tr>
+            <tr>
+                <th>Name_romaji</th>
+                <td>{{ title.name_romaji }}</td>
+            </tr>
+            <tr>
+                <th>Name_japanese</th>
+                <td>{{ title.name_japanese }}</td>
+            </tr>
+            <tr>
+                <th>Catalognumber</th>
+                <td>{{ title.catalognumber }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('title_index') }}">back to list</a>
+
+    <a href="{{ path('title_edit', {'id': title.id}) }}">edit</a>
+
+    {{ include('title/_delete_form.html.twig') }}
+{% endblock %}

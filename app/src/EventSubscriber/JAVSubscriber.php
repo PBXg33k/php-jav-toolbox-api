@@ -20,7 +20,7 @@ class JAVSubscriber implements EventSubscriberInterface
     {
         return [
             VideoFileFoundEvent::NAME => 'onVideoFileFoundEvent',
-            JAVTitlePreProcessedEvent::NAME => 'onJAVTitlePreProcessedEvent'
+//            JAVTitlePreProcessedEvent::NAME => 'onJAVTitlePreProcessedEvent'
         ];
     }
 
