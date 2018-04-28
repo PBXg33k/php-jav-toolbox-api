@@ -4,6 +4,7 @@ parameters:
     jav_media_file_location: '%env(resolve:MEDIA_DIR)%'
     mt_config_path: '%env(resolve:MT_CONF_FILE)%'
     jav_media_thumb_directory: '%env(resolve:THUMB_DIR)%'
+    locale: 'en'
 
 services:
     # default configuration for services in *this* file
@@ -32,3 +33,8 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    get_set_method_normalizer:
+#        class: Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer
+        class: App\Serializer\AppGetSetMethodNormalizer
+        public: false
+        tags: [serializer.normalizer]
