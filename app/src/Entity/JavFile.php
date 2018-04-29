@@ -52,7 +52,7 @@ class JavFile
     private $title;
 
     /**
-     * @ORM\Column(type="bigint", options={"unsigned"=true})
+     * @ORM\Column(type="bigint", nullable=true, unique=false, options={"unsigned"=true})
      */
     private $inode;
 
