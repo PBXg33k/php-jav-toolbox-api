@@ -22,12 +22,12 @@ class JavFile
     private $part;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="text")
      */
     private $filename;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="bigint", options={"unsigned"=true})
      */
     private $filesize;
 
@@ -50,6 +50,11 @@ class JavFile
      * @ORM\ManyToOne(targetEntity="App\Entity\Title", inversedBy="files")
      */
     private $title;
+
+    /**
+     * @ORM\Column(type="bigint", options={"unsigned"=true})
+     */
+    private $inode;
 
     public function getId()
     {
@@ -136,6 +141,18 @@ class JavFile
     public function setTitle(?Title $title): self
     {
         $this->title = $title;
+
+        return $this;
+    }
+
+    public function getInode(): ?int
+    {
+        return $this->inode;
+    }
+
+    public function setInode(int $inode): self
+    {
+        $this->inode = $inode;
 
         return $this;
     }

@@ -111,6 +111,7 @@ class JAVProcessorService
                 $javFile = $javTitleInfo->getFiles()->first();
                 $javFile->setPath($file->getPathname());
                 $javFile->setFilesize($file->getSize());
+                $javFile->setInode($file->getInode());
 
                 // Check if Title already exists, if so append file to existing record
                 /** @var Title $title */
