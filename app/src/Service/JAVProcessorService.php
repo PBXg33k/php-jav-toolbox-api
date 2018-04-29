@@ -174,6 +174,7 @@ class JAVProcessorService
                     ->setFilename($fileName)
                     ->setPart($filePart)
                     ->setProcessed(false)
+                    ->setInode(1)
             );
 
             return $title;
