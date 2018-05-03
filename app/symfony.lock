@@ -71,6 +71,9 @@
     "mhor/php-mediainfo": {
         "version": "4.1.0"
     },
+    "mikey179/vfsstream": {
+        "version": "2.0.x-dev"
+    },
     "monolog/monolog": {
         "version": "1.23.0"
     },

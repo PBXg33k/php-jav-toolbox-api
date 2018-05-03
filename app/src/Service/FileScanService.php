@@ -42,7 +42,7 @@ class FileScanService
 
     public function __construct(LoggerInterface $logger, EventDispatcherInterface $dispatcher)
     {
-        $this->logger = $logger;
+        $this->setLogger($logger);
         $this->dispatcher = $dispatcher;
         $this->files = new ArrayCollection();
         $this->filesystem = new Filesystem();

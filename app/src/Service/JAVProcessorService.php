@@ -94,6 +94,27 @@ class JAVProcessorService
         var_dump($mediaInfoContainer);die();
     }
 
+    public function getJavFileMetadata(JavFile $file)
+    {
+        $mediaInfoContainer = $this->mediaInfo->getInfo($file->getPath());
+
+
+    }
+
+    public function checkJAVFilesConsistency(Title $title)
+    {
+        /** @var JavFile $javFile */
+        foreach($title->getFiles() as $javFile)
+        {
+            $this->checkVideoConsistency($javFile);
+        }
+    }
+
+    public function checkVideoConsistency(JavFile $file)
+    {
+
+    }
+
     public function preProcessFile(SplFileInfo $file)
     {
         /** @var \App\Entity\JavFile $existingFile */

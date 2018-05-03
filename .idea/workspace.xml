@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BookmarkManager">
+    <bookmark url="file://$PROJECT_DIR$/app/src/Service/FileScanService.php" line="87" />
+  </component>
   <component name="BuildServerSettings">
     <option name="LOGIN" value="" />
     <option name="SERVER_URL" value="http://buildserver" />
@@ -31,18 +34,16 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="cd310f44-846f-4c9a-a947-dc35a20271f5" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/app/src/Serializer/AppGetSetMethodNormalizer.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/php-jav-toolbox-api.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php-jav-toolbox-api.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.travis.yml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/tests/Service/FileScanServiceTest.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/composer.json" beforeDir="false" afterPath="$PROJECT_DIR$/app/composer.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/composer.lock" beforeDir="false" afterPath="$PROJECT_DIR$/app/composer.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/config/bundles.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/config/bundles.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/config/services.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/app/config/services.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/EventSubscriber/JAVSubscriber.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/EventSubscriber/JAVSubscriber.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/Migrations/Version20180421162228.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/Migrations/Version20180421162228.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/logs/testdox.html" beforeDir="false" afterPath="$PROJECT_DIR$/app/logs/testdox.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/Service/FileScanService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/Service/FileScanService.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/Service/JAVProcessorService.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/Service/JAVProcessorService.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/symfony.lock" beforeDir="false" afterPath="$PROJECT_DIR$/app/symfony.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/tests/Service/JAVProcessorServiceTest.php" beforeDir="false" afterPath="$PROJECT_DIR$/app/tests/Service/JAVProcessorServiceTest.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -57,129 +58,47 @@
     <executablePath>composer</executablePath>
   </component>
   <component name="FileEditorManager">
-    <splitter split-orientation="horizontal" split-proportion="0.5">
-      <split-first>
-        <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-          <file leaf-file-name="composer.json" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/app/composer.json">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="340">
-                  <caret line="20" column="35" selection-start-line="20" selection-start-column="35" selection-end-line="20" selection-end-column="35" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="MediaController.php" pinned="false" current-in-tab="true">
-            <entry file="file://$PROJECT_DIR$/app/src/Controller/MediaController.php">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="323">
-                  <caret line="19" column="28" selection-start-line="19" selection-start-column="28" selection-end-line="19" selection-end-column="28" />
-                  <folding>
-                    <element signature="e#34#55#0#PHP" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="AppGetSetMethodNormalizer.php" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/app/src/Serializer/AppGetSetMethodNormalizer.php">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="255">
-                  <caret line="15" column="30" selection-start-line="15" selection-start-column="30" selection-end-line="15" selection-end-column="30" />
-                  <folding>
-                    <element signature="e#33#112#0#PHP" expanded="true" />
-                  </folding>
-                </state>
-              </provider>
-            </entry>
-          </file>
-          <file leaf-file-name="ObjectNormalizer.php" pinned="false" current-in-tab="false">
-            <entry file="file://$PROJECT_DIR$/app/vendor/symfony/serializer/Normalizer/ObjectNormalizer.php">
-              <provider selected="true" editor-type-id="text-editor">
-                <state relative-caret-position="223">
-                  <caret line="30" column="20" selection-start-line="30" selection-start-column="20" selection-end-line="30" selection-end-column="20" />
-                </state>
-              </provider>
-            </entry>
-          </file>
-        </leaf>
-      </split-first>
-      <split-second>
-        <splitter split-orientation="vertical" split-proportion="0.5">
-          <split-first>
-            <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-              <file leaf-file-name="ControllerTrait.php" pinned="false" current-in-tab="true">
-                <entry file="file://$PROJECT_DIR$/app/vendor/symfony/framework-bundle/Controller/ControllerTrait.php">
-                  <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="62">
-                      <caret line="117" column="23" selection-start-line="117" selection-start-column="23" selection-end-line="117" selection-end-column="23" />
-                    </state>
-                  </provider>
-                </entry>
-              </file>
-              <file leaf-file-name="AbstractObjectNormalizer.php" pinned="false" current-in-tab="false">
-                <entry file="file://$PROJECT_DIR$/app/vendor/symfony/serializer/Normalizer/AbstractObjectNormalizer.php">
-                  <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="-289">
-                      <caret line="17" column="73" selection-start-line="17" selection-start-column="73" selection-end-line="18" selection-end-column="66" />
-                    </state>
-                  </provider>
-                </entry>
-              </file>
-              <file leaf-file-name="FileScanService.php" pinned="false" current-in-tab="false">
-                <entry file="file://$PROJECT_DIR$/app/src/Service/FileScanService.php">
-                  <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="264">
-                      <caret line="23" column="27" selection-start-line="23" selection-start-column="27" selection-end-line="23" selection-end-column="27" />
-                    </state>
-                  </provider>
-                </entry>
-              </file>
-              <file leaf-file-name="services.yaml" pinned="false" current-in-tab="false">
-                <entry file="file://$PROJECT_DIR$/app/config/services.yaml">
-                  <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="165">
-                      <caret line="37" column="55" selection-start-line="37" selection-start-column="55" selection-end-line="37" selection-end-column="55" />
-                    </state>
-                  </provider>
-                </entry>
-              </file>
-              <file leaf-file-name="bundles.php" pinned="false" current-in-tab="false">
-                <entry file="file://$PROJECT_DIR$/app/config/bundles.php">
-                  <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="153">
-                      <caret line="9" column="7" selection-start-line="9" selection-start-column="7" selection-end-line="9" selection-end-column="7" />
-                    </state>
-                  </provider>
-                </entry>
-              </file>
-              <file leaf-file-name="docker-compose.override.yml" pinned="false" current-in-tab="false">
-                <entry file="file://$PROJECT_DIR$/docker-compose.override.yml">
-                  <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="68">
-                      <caret line="4" column="14" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
-                    </state>
-                  </provider>
-                </entry>
-              </file>
-            </leaf>
-          </split-first>
-          <split-second>
-            <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-              <file leaf-file-name="TitleController.php" pinned="false" current-in-tab="true">
-                <entry file="file://$PROJECT_DIR$/app/src/Controller/TitleController.php">
-                  <provider selected="true" editor-type-id="text-editor">
-                    <state relative-caret-position="105">
-                      <caret line="20" column="5" selection-start-line="20" selection-start-column="5" selection-end-line="20" selection-end-column="5" />
-                    </state>
-                  </provider>
-                </entry>
-              </file>
-            </leaf>
-          </split-second>
-        </splitter>
-      </split-second>
-    </splitter>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file leaf-file-name="JAVProcessorService.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/Service/JAVProcessorService.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="666">
+              <caret line="104" column="5" lean-forward="true" selection-start-line="104" selection-start-column="5" selection-end-line="104" selection-end-column="5" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="docker-compose.override.yml" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/docker-compose.override.yml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="68">
+              <caret line="4" column="34" lean-forward="true" selection-start-line="4" selection-start-column="34" selection-end-line="4" selection-end-column="34" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="docker-compose.yml" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/docker-compose.yml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="221">
+              <caret line="13" column="14" lean-forward="true" selection-start-line="13" selection-start-column="14" selection-end-line="13" selection-end-column="14" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="FileScanService.php" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app/src/Service/FileScanService.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="1581">
+              <caret line="93" column="13" lean-forward="true" selection-start-line="93" selection-start-column="13" selection-end-line="93" selection-end-column="13" />
+              <folding>
+                <element signature="e#30#64#0#PHP" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
@@ -194,6 +113,8 @@
       <find>build</find>
       <find>symfony</find>
       <find>seriali</find>
+      <find>new file</find>
+      <find>new title</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -203,9 +124,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/Event/VideoFileFoundEvent.php" />
-        <option value="$PROJECT_DIR$/config/services.yaml" />
-        <option value="$PROJECT_DIR$/src/Event/JAVSubscriber.php" />
         <option value="$PROJECT_DIR$/config/packages/dev/monolog.yaml" />
         <option value="$PROJECT_DIR$/src/Event/JAVTitlePreProcessedEvent.php" />
         <option value="$PROJECT_DIR$/vendor/symfony/finder/SplFileInfo.php" />
@@ -228,7 +146,6 @@
         <option value="$PROJECT_DIR$/src/Service/JAVProcessorService.php" />
         <option value="$PROJECT_DIR$/.docker/Dockerfile" />
         <option value="$PROJECT_DIR$/.docker/config/php/php.ini" />
-        <option value="$PROJECT_DIR$/.docker/config/nginx/vhost/sf4_vhost" />
         <option value="$PROJECT_DIR$/app/config/mt.json" />
         <option value="E:/downloads/mt.config.json" />
         <option value="$PROJECT_DIR$/app/.env.dist" />
@@ -237,11 +154,8 @@
         <option value="$PROJECT_DIR$/app/src/Event/JAVTitlePreProcessedEvent.php" />
         <option value="$PROJECT_DIR$/app/src/Command/ScanCommand.php" />
         <option value="$PROJECT_DIR$/docker-compose.yaml" />
-        <option value="$PROJECT_DIR$/app/src/Service/JAVProcessorService.php" />
-        <option value="$PROJECT_DIR$/docker-compose.override.yml" />
         <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/Dockerfile" />
-        <option value="$PROJECT_DIR$/docker-compose.yml" />
         <option value="$PROJECT_DIR$/app/src/EventSubscriber/JAVSubscriber.php" />
         <option value="$PROJECT_DIR$/app/src/Migrations/Version20180421162228.php" />
         <option value="$PROJECT_DIR$/app/src/Controller/MediaController.php" />
@@ -252,6 +166,15 @@
         <option value="$PROJECT_DIR$/app/src/Serializer/AppObjectNormalizer.php" />
         <option value="$PROJECT_DIR$/app/config/services.yaml" />
         <option value="$PROJECT_DIR$/app/src/Serializer/AppGetSetMethodNormalizer.php" />
+        <option value="$PROJECT_DIR$/.docker/config/nginx/vhost/sf4_vhost" />
+        <option value="$PROJECT_DIR$/app/src/Entity/JavFile.php" />
+        <option value="$PROJECT_DIR$/.travis.yml" />
+        <option value="$PROJECT_DIR$/app/src/Service/FileScanService.php" />
+        <option value="$PROJECT_DIR$/app/tests/Service/FileScanServiceTest.php" />
+        <option value="$PROJECT_DIR$/app/tests/Service/JAVProcessorServiceTest.php" />
+        <option value="$PROJECT_DIR$/app/src/Service/JAVProcessorService.php" />
+        <option value="$PROJECT_DIR$/docker-compose.override.yml" />
+        <option value="$PROJECT_DIR$/docker-compose.yml" />
       </list>
     </option>
   </component>
@@ -266,8 +189,8 @@
   </component>
   <component name="PhpWorkspaceProjectConfiguration" interpreter_name="PHP 7.2" />
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="-8" />
-    <option name="y" value="-8" />
+    <option name="x" value="23" />
+    <option name="y" value="-24" />
     <option name="width" value="1936" />
     <option name="height" value="1056" />
   </component>
@@ -276,7 +199,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -300,32 +222,41 @@
               <item name="php-jav-toolbox-api" type="2a2b976b:PhpTreeStructureProvider$1" />
               <item name="app" type="2a2b976b:PhpTreeStructureProvider$1" />
               <item name="src" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="Serializer" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="Controller" type="2a2b976b:PhpTreeStructureProvider$1" />
             </path>
             <path>
               <item name="php-jav-toolbox-api" type="b2602c69:ProjectViewProjectNode" />
               <item name="php-jav-toolbox-api" type="2a2b976b:PhpTreeStructureProvider$1" />
               <item name="app" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="templates" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="src" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="Service" type="2a2b976b:PhpTreeStructureProvider$1" />
             </path>
             <path>
               <item name="php-jav-toolbox-api" type="b2602c69:ProjectViewProjectNode" />
               <item name="php-jav-toolbox-api" type="2a2b976b:PhpTreeStructureProvider$1" />
               <item name="app" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="templates" type="2a2b976b:PhpTreeStructureProvider$1" />
-              <item name="title" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="tests" type="2a2b976b:PhpTreeStructureProvider$1" />
+            </path>
+            <path>
+              <item name="php-jav-toolbox-api" type="b2602c69:ProjectViewProjectNode" />
+              <item name="php-jav-toolbox-api" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="app" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="tests" type="2a2b976b:PhpTreeStructureProvider$1" />
+              <item name="Service" type="2a2b976b:PhpTreeStructureProvider$1" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="SearchEverywhereHistoryKey" value="splfilein&#9;null&#9;null&#10;SplFileInfo&#9;null&#9;null" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="com.jetbrains.php.phpunit.codeGeneration.PhpNewTestDialog.defaultLibrary" value="PHPUnit" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="addDependency C:/projects/github/php-jav-toolbox-api/app" value="--no-progress --no-interaction --ansi --dev" />
+    <property name="com.jetbrains.php.phpunit.codeGeneration.PhpNewTestDialog.defaultLibrary" value="PHPUnit 6+" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../php-jav-info" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="php.override.implement.member.chooser.php.doc" value="NONE" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
@@ -383,7 +314,10 @@
       <workItem from="1524498365335" duration="882000" />
       <workItem from="1524908641479" duration="12663000" />
       <workItem from="1524929037397" duration="988000" />
-      <workItem from="1524931702874" duration="8156000" />
+      <workItem from="1524931702874" duration="13536000" />
+      <workItem from="1524997164935" duration="5738000" />
+      <workItem from="1525359512632" duration="4963000" />
+      <workItem from="1525369487010" duration="2450000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <created>1522401235904</created>
@@ -410,7 +344,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="132373000" />
+    <option name="totallyTimeSpent" value="150904000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
@@ -421,12 +355,11 @@
       <window_info anchor="bottom" id="Database Changes" order="11" show_stripe_button="false" />
       <window_info anchor="bottom" id="Version Control" order="9" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.32943678" />
-      <window_info anchor="bottom" id="Terminal" order="8" visible="true" weight="0.24400872" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.16044776" />
+      <window_info anchor="bottom" id="Terminal" order="8" weight="0.24400872" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.1652452" />
       <window_info anchor="bottom" id="Docker" order="7" show_stripe_button="false" weight="0.32897604" />
       <window_info anchor="bottom" id="TeamCity" order="13" weight="0.32897604" />
       <window_info anchor="right" id="Database" order="3" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32897604" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
@@ -437,6 +370,7 @@
       <window_info anchor="bottom" id="Messages" order="10" weight="0.32928178" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32897604" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -450,38 +384,8 @@
     <option name="LAST_COMMIT_MESSAGE" value="Initial commit" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/Exception/FileProcessException.php" />
-    <entry file="file://$PROJECT_DIR$/src/Exception/PreProcessFileException.php" />
-    <entry file="file://$PROJECT_DIR$/src/Event/JAVTitlePreProcessedEvent.php" />
-    <entry file="file://$PROJECT_DIR$/src/EventSubscriber/JAVSubscriber.php" />
-    <entry file="file://$PROJECT_DIR$/src/Migrations/Version20180421162228.php" />
-    <entry file="file://$PROJECT_DIR$/tests/Service/JAVProcessorServiceTest.php" />
-    <entry file="file://$PROJECT_DIR$/src/Service/JAVRenamerService.php" />
-    <entry file="file://$PROJECT_DIR$/src/Service/FileScanService.php" />
-    <entry file="file://$PROJECT_DIR$/src/Entity/Title.php" />
     <entry file="file://$PROJECT_DIR$/src/Entity/JavFile.php" />
     <entry file="file://$PROJECT_DIR$/src/Service/JAVProcessorService.php" />
-    <entry file="file://$PROJECT_DIR$/.docker/config/php/php.ini">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="493">
-          <caret line="29" column="20" selection-start-line="29" selection-start-column="20" selection-end-line="29" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.docker/config/nginx/vhost/sf4_vhost">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="24" column="1" selection-start-line="24" selection-start-column="1" selection-end-line="24" selection-end-column="1" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/tests/Service/JAVProcessorServiceTest.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="44" column="28" selection-start-line="44" selection-start-column="28" selection-end-line="44" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://E:/downloads/mt.config.json" />
     <entry file="file://$PROJECT_DIR$/app/config/mt.json">
       <provider selected="true" editor-type-id="text-editor">
@@ -520,30 +424,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/Service/JAVProcessorService.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="290">
-          <caret line="90" column="25" selection-start-line="90" selection-start-column="25" selection-end-line="90" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Dockerfile">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1020">
-          <caret line="60" selection-start-line="60" selection-end-line="60" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/README.md">
-      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
-        <state split_layout="SPLIT">
-          <first_editor relative-caret-position="105">
-            <caret line="22" column="25" selection-start-line="22" selection-start-column="25" selection-end-line="22" selection-end-column="25" />
-          </first_editor>
-          <second_editor />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/config/packages/dev/web_profiler.yaml" />
     <entry file="file://$PROJECT_DIR$/app/vendor/mhor/php-mediainfo/src/Container/MediaInfoContainer.php">
       <provider selected="true" editor-type-id="text-editor">
@@ -563,23 +443,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="493">
           <caret line="29" column="42" selection-start-line="29" selection-start-column="42" selection-end-line="29" selection-end-column="42" />
-          <folding>
-            <element signature="e#30#62#0#PHP" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/Entity/JavFile.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="510">
-          <caret line="30" column="7" selection-start-line="30" selection-start-column="7" selection-end-line="30" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/Migrations/Version20180421162228.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="618">
-          <caret line="54" column="45" selection-start-line="54" selection-start-column="45" selection-end-line="54" selection-end-column="45" />
         </state>
       </provider>
     </entry>
@@ -597,20 +460,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/docker-compose.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="408">
-          <caret line="24" column="41" selection-start-line="24" selection-start-column="41" selection-end-line="24" selection-end-column="41" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/docker-compose.override.yml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="68">
-          <caret line="4" column="14" selection-start-line="4" selection-start-column="14" selection-end-line="4" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/symfony.lock">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1139">
@@ -618,13 +467,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/composer.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="7" lean-forward="true" selection-start-line="7" selection-end-line="7" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/composer.json" />
     <entry file="file://$PROJECT_DIR$/app/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="187">
@@ -660,20 +503,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/composer.json">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="20" column="35" selection-start-line="20" selection-start-column="35" selection-end-line="20" selection-end-column="35" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/config/bundles.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="153">
-          <caret line="9" column="7" selection-start-line="9" selection-start-column="7" selection-end-line="9" selection-end-column="7" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/vendor/symfony/serializer/Normalizer/ObjectNormalizer.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="223">
@@ -681,34 +510,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/app/config/services.yaml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="165">
-          <caret line="37" column="55" selection-start-line="37" selection-start-column="55" selection-end-line="37" selection-end-column="55" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/src/Service/FileScanService.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="264">
-          <caret line="23" column="27" selection-start-line="23" selection-start-column="27" selection-end-line="23" selection-end-column="27" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app/vendor/symfony/serializer/Normalizer/AbstractObjectNormalizer.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-289">
-          <caret line="17" column="73" selection-start-line="17" selection-start-column="73" selection-end-line="18" selection-end-column="66" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/app/src/Serializer/AppGetSetMethodNormalizer.php">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="255">
           <caret line="15" column="30" selection-start-line="15" selection-start-column="30" selection-end-line="15" selection-end-column="30" />
-          <folding>
-            <element signature="e#33#112#0#PHP" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -721,11 +526,170 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/app/src/Controller/MediaController.php">
       <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="289">
+          <caret line="17" column="46" lean-forward="true" selection-start-line="17" selection-start-column="46" selection-end-line="17" selection-end-column="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.docker/config/php/php.ini">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="493">
+          <caret line="29" column="20" selection-start-line="29" selection-start-column="20" selection-end-line="29" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.docker/config/nginx/vhost/sf4_vhost">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" column="44" selection-end-line="24" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Dockerfile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1020">
+          <caret line="60" selection-start-line="60" selection-end-line="60" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/vendor/symfony/serializer/Normalizer/AbstractObjectNormalizer.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-289">
+          <caret line="17" column="73" selection-start-line="17" selection-start-column="73" selection-end-line="18" selection-end-column="66" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/config/services.yaml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="510">
+          <caret line="37" column="55" selection-start-line="37" selection-start-column="55" selection-end-line="37" selection-end-column="55" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/config/bundles.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="153">
+          <caret line="9" column="7" selection-start-line="9" selection-start-column="7" selection-end-line="9" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="split-provider[text-editor;markdown-preview-editor]">
+        <state split_layout="SPLIT">
+          <first_editor relative-caret-position="374">
+            <caret line="22" column="25" selection-start-line="22" selection-start-column="25" selection-end-line="22" selection-end-column="25" />
+          </first_editor>
+          <second_editor />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/Entity/Image.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="18" column="16" selection-start-line="18" selection-start-column="16" selection-end-line="18" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/Entity/Tag.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="11" column="7" lean-forward="true" selection-start-line="11" selection-start-column="7" selection-end-line="11" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/Entity/Model.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1428">
+          <caret line="32" column="7" lean-forward="true" selection-start-line="32" selection-start-column="7" selection-end-line="32" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/Migrations/Version20180429112750.php" />
+    <entry file="file://$PROJECT_DIR$/app/src/Migrations/Version20180429113256.php" />
+    <entry file="file://$PROJECT_DIR$/app/src/Entity/JavFile.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="102">
+          <caret line="6" column="3" lean-forward="true" selection-start-line="6" selection-start-column="3" selection-end-line="6" selection-end-column="3" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/Migrations/Version20180421162228.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="207">
+          <caret line="22" column="44" selection-start-line="22" selection-end-line="23" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/Migrations/Version20180429113616.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="17" column="190" selection-start-line="17" selection-start-column="190" selection-end-line="17" selection-end-column="190" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/Repository/JavFileRepository.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="374">
+          <caret line="24" column="6" lean-forward="true" selection-start-line="24" selection-start-column="6" selection-end-line="24" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/tests/Service/JAVProcessorServiceTest.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="459">
+          <caret line="54" column="5" selection-start-line="54" selection-start-column="5" selection-end-line="54" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/composer.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="272">
+          <caret line="16" column="30" selection-start-line="16" selection-start-column="30" selection-end-line="16" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/tests/Service/FileScanServiceTest.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="448">
+          <caret line="52" column="5" lean-forward="true" selection-start-line="52" selection-start-column="5" selection-end-line="56" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.travis.yml">
+      <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="323">
-          <caret line="19" column="28" selection-start-line="19" selection-start-column="28" selection-end-line="19" selection-end-column="28" />
+          <caret line="19" column="19" selection-start-line="19" selection-start-column="19" selection-end-line="19" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/Service/FileScanService.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1581">
+          <caret line="93" column="13" lean-forward="true" selection-start-line="93" selection-start-column="13" selection-end-line="93" selection-end-column="13" />
           <folding>
-            <element signature="e#34#55#0#PHP" expanded="true" />
+            <element signature="e#30#64#0#PHP" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app/src/Service/JAVProcessorService.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="666">
+          <caret line="104" column="5" lean-forward="true" selection-start-line="104" selection-start-column="5" selection-end-line="104" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/docker-compose.override.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="68">
+          <caret line="4" column="34" lean-forward="true" selection-start-line="4" selection-start-column="34" selection-end-line="4" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/docker-compose.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="13" column="14" lean-forward="true" selection-start-line="13" selection-start-column="14" selection-end-line="13" selection-end-column="14" />
         </state>
       </provider>
     </entry>
