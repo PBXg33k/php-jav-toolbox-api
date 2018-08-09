@@ -9,7 +9,7 @@ install:
 matrix:
   include:
     - php: 7.2
-      script: vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+      script: vendor/bin/simple-phpunit --coverage-clover build/logs/clover.xml
       before_script:
         - mkdir -p build/logs
       after_script:
