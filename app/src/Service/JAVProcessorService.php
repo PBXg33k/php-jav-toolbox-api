@@ -26,6 +26,10 @@ use Symfony\Component\Process\Process;
  */
 class JAVProcessorService
 {
+    static $blacklistnames = [
+        'hentaikuindo'
+    ];
+
     /**
      * @var LoggerInterface
      */
@@ -141,6 +145,11 @@ class JAVProcessorService
                 $javFile->setInode($file->getInode());
             }
 
+            if(!self::shouldProcessFile($javFile, $this->logger)) {
+                $this->logger->notice("JAVFILE NOT VALID. SKIPPING {$javFile->getFilename()}");
+                return;
+            }
+
             // Check if Title already exists, if so append file to existing record
             /** @var Title $title */
             $title = $this->entityManager->getRepository(Title::class)
@@ -171,6 +180,25 @@ class JAVProcessorService
         return self::extractID(self::cleanupFilename($fileName));
     }
 
+    public static function shouldProcessFile(JavFile $javFile, LoggerInterface $logger)
+    {
+        $filenameLength = strlen($javFile->getFilename());
+
+        if(in_array($filenameLength, [36,51,52])) {
+            $logger->notice('LENGTH OF FILENAME INDICATES INCORRECT JAVJACK DL');
+            return false;
+        }
+
+        foreach(self::$blacklistnames as $blacklistname) {
+            if(stripos($javFile->getFilename(), $blacklistname) !== FALSE) {
+                $logger->notice('FILENAME CONTAINS BLACKLISTED STRING');
+                return false;
+            }
+        }
+
+        return true;
+    }
+
     /**
      * @param string $fileName
      * @return Title
@@ -179,7 +207,7 @@ class JAVProcessorService
     private static function extractID(string $fileName)
     {
         //^(?:.*?)(?:(?<label>[a-z]{1,6})(?:[-\.]+)?(?<release>[0-9]{2,7})(?:[-_\]]+)?(?:.*?)?(?:0|hd|fhd|cd?)?(?:[-_]?)?(?<part>[1-9]|\W[abcdef]|[0-9]{0,3})?\.)(\w{2,5}?)$
-        if(preg_match("~^(?:.*?)((?<label>[a-z]{1,6})(?:[-\.]+)?(?<release>[0-9]{2,7})(?:[-_\]]+)?(?:.*?)?(?:0|hd|fhd|cd[-_]?)?(?<part>[1-9]|\W?[abcdef]|[0-9]{0,3})?).*?.{4,5}$~i", $fileName, $matches)) {
+        if(preg_match("~^(?:.*?)((?<label>[a-z]{2,6})(?:[-\.]+)?(?<release>[0-9]{2,7})(?:[-_\]]+)?(?:.*?)?(?:0|hd|fhd|cd[-_]?)?(?<part>[1-9]|\W?[abcdef]|[0-9]{0,3})?).*?.{4,5}$~i", $fileName, $matches)) {
 
             $title = (new Title())
                 ->setCatalognumber(sprintf('%s-%s', $matches['label'], $matches['release']));
