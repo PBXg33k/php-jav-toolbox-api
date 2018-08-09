@@ -37,8 +37,3 @@ services:
         - "MYSQL_DATABASE=app"
       ports:
         - "3306:3306"
-
-    elasticsearch:
-      image: elasticsearch
-      ports:
-        - "9200:9200"
