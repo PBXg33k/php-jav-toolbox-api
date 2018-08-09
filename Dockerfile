@@ -56,12 +56,12 @@ RUN ssh-keygen -q -t rsa -N '' -f /root/.ssh/id_rsa \
     && chmod 600 /root/.ssh/id_rsa \
     && chmod 600 /root/.ssh/id_rsa.pub
 
-#RUN rm -rf /var/www/* \
-#    && git clone https://github.com/PBXg33k/php-jav-toolbox-api.git /var/www
+RUN rm -rf /var/www/* \
+    && git clone https://github.com/PBXg33k/php-jav-toolbox-api.git /var/www
 
 WORKDIR /var/www/app
 
-#RUN composer install --no-dev --optimize-autoloader --prefer-dist --no-scripts
+RUN composer install --no-dev --optimize-autoloader --prefer-dist --no-scripts
 
 # Cleanup
 RUN rm -rf /tmp/*

@@ -14,7 +14,6 @@ services:
       build: .
       links:
         - mariadb
-        - elasticsearch
       volumes:
         - "./.docker/config/php/php.ini:/usr/local/etc/php/conf.d/030-custom.ini:ro"
         - "./app:/var/www/app"
@@ -38,8 +37,3 @@ services:
         - "MYSQL_DATABASE=app"
       ports:
         - "3306:3306"
-
-    elasticsearch:
-      image: elasticsearch
-      ports:
-        - "9200:9200"
