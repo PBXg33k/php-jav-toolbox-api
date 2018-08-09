@@ -189,11 +189,12 @@ class JAVProcessorService
             throw new \Exception('Unable to extract file extension');
         }
 
-        $filename = str_replace(".{$fileExtension}", '', $filename);
+        $filename = str_ireplace(".{$fileExtension}", '', $filename);
 
         $leftTrim = [
             'hjd2048.com-',
-            'hjd2048.com'
+            'hjd2048.com',
+            'watch18plus_',
         ];
 
         $rightTrim = [
