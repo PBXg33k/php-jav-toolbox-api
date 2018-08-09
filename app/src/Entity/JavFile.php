@@ -27,7 +27,7 @@ class JavFile
     private $filename;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="bigint")
      */
     private $filesize;
 
@@ -47,7 +47,7 @@ class JavFile
     private $hash;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Title", inversedBy="files")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Title", inversedBy="files", cascade={"persist"})
      */
     private $title;
 
