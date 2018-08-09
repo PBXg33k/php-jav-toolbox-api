@@ -63,8 +63,6 @@ WORKDIR /var/www/app
 
 RUN composer install --no-dev --optimize-autoloader --prefer-dist --no-scripts
 
-RUN php bin/console doctrine:migration:migrate --no-interaction
-
 # Cleanup
 RUN rm -rf /tmp/*
 RUN apt-get remove *-dev --auto-remove -y
