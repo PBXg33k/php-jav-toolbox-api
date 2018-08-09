@@ -17,7 +17,7 @@ services:
       volumes:
         - "./.docker/config/php/php.ini:/usr/local/etc/php/conf.d/030-custom.ini:ro"
         - "./app:/var/www/app"
-        - "./files:/files"
+        - "./media:/media"
       environment:
         - APP_ENV=dev
         - APP_DEBUG=1
@@ -26,7 +26,6 @@ services:
         - MT_CONF_FILE=/var/www/app/config/mt.json
         - MEDIA_DIR=/media
         - THUMB_DIR=/media/thumbs
-      working_dir: "/var/www/app"
 
     mariadb:
       image: mariadb
@@ -38,3 +37,8 @@ services:
         - "MYSQL_DATABASE=app"
       ports:
         - "3306:3306"
+
+    elasticsearch:
+      image: elasticsearch
+      ports:
+        - "9200:9200"

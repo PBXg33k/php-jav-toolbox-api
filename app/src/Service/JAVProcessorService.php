@@ -123,41 +123,46 @@ class JAVProcessorService
                 'path' => $file->getPathname()
             ]);
 
-        if(!$existingFile) {
-            try {
-                /** @var Title $javTitleInfo */
-                $javTitleInfo = self::extractIDFromFilename($file->getFilename());
+        $javTitleInfo = self::extractIDFromFilename($file->getFilename());
 
+        if($existingFile && $existingFile->getTitle()->getCatalognumber() == $javTitleInfo->getCatalognumber()) {
+            $this->logger->info('PATH ALREADY PROCESSED. CONTINUING: '. $existingFile->getFilename());
+            return;
+        }
+
+        try {
+            if($existingFile) {
+                $javFile = $existingFile;
+            } else {
                 /** @var \App\Entity\JavFile $javFile */
                 $javFile = $javTitleInfo->getFiles()->first();
                 $javFile->setPath($file->getPathname());
                 $javFile->setFilesize($file->getSize());
                 $javFile->setInode($file->getInode());
-
-                // Check if Title already exists, if so append file to existing record
-                /** @var Title $title */
-                $title = $this->entityManager->getRepository(Title::class)
-                    ->findOneBy(['catalognumber' => $javTitleInfo->getCatalognumber()]);
-
-                if ($title) {
-                    $this->logger->debug('Found existing title: ' . $title->getCatalognumber());
-                    $title->addFile($javTitleInfo->getFiles()->first());
-                } else {
-                    $this->logger->debug('New title: ' . $javTitleInfo->getCatalognumber());
-                    $title = $javTitleInfo;
-                }
-
-                $this->dispatcher->dispatch(JAVTitlePreProcessedEvent::NAME, new JAVTitlePreProcessedEvent($title, $javFile));
-
-                $this->entityManager->persist($title);
-                $this->entityManager->persist($javFile);
-                $this->entityManager->flush();
-                $this->logger->info('STORED TITLE: ' . $title->getCatalognumber());
-            } catch (\Exception $exception) {
-                $this->logger->error($exception->getMessage());
             }
-        } else {
-            $this->logger->info('PATH ALREADY PROCESSED. CONTINUEING: '. $existingFile->getFilename());
+
+            // Check if Title already exists, if so append file to existing record
+            /** @var Title $title */
+            $title = $this->entityManager->getRepository(Title::class)
+                ->findOneBy(['catalognumber' => $javTitleInfo->getCatalognumber()]);
+
+            if ($title) {
+                $this->logger->debug('Found existing title: ' . $title->getCatalognumber());
+            } else {
+                $this->logger->debug('New title: ' . $javTitleInfo->getCatalognumber());
+                $title = $javTitleInfo;
+            }
+            $title->replaceFile($javFile);
+            $javFile->setTitle($title);
+
+            $this->dispatcher->dispatch(JAVTitlePreProcessedEvent::NAME, new JAVTitlePreProcessedEvent($title, $javFile));
+
+            $this->entityManager->persist($title);
+            $this->entityManager->persist($javFile);
+            $this->entityManager->flush();
+            $this->logger->info('STORED TITLE: ' . $title->getCatalognumber());
+        } catch (\Exception $exception) {
+            $this->logger->error($exception->getMessage());
         }
     }
 
@@ -212,11 +217,12 @@ class JAVProcessorService
             throw new \Exception('Unable to extract file extension');
         }
 
-        $filename = str_replace(".{$fileExtension}", '', $filename);
+        $filename = str_ireplace(".{$fileExtension}", '', $filename);
 
         $leftTrim = [
             'hjd2048.com-',
-            'hjd2048.com'
+            'hjd2048.com',
+            'watch18plus_',
         ];
 
         $rightTrim = [

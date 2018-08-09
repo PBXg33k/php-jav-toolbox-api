@@ -34,12 +34,12 @@ class Title
     private $catalognumber;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\JavFile", mappedBy="title")
+     * @ORM\OneToMany(targetEntity="App\Entity\JavFile", mappedBy="title", cascade={"persist"})
      */
     private $files;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Model", inversedBy="titles")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Model", inversedBy="titles", cascade={"persist"})
      */
     private $models;
 
@@ -104,6 +104,21 @@ class Title
             $this->files[] = $file;
             $file->setTitle($this);
         }
+
+        return $this;
+    }
+
+    public function replaceFile(JavFile $file): self
+    {
+        $matchingRecord = $this->files->filter(
+            /** @var JavFile $entry */
+            function($entry) use ($file) {
+                return $entry->getPath = $file->getPath();
+            }
+        );
+
+        $this->files->removeElement($matchingRecord->first());
+        $this->files->add($file);
 
         return $this;
     }
