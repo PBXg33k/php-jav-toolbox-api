@@ -175,7 +175,7 @@ class JAVProcessorService
         }
     }
 
-    public static function extractIDFromFilename(string $fileName)
+    public static function extractIDFromFilename(string $fileName): Title
     {
         return self::extractID(self::cleanupFilename($fileName));
     }
@@ -204,7 +204,7 @@ class JAVProcessorService
      * @return Title
      * @throws PreProcessFileException
      */
-    private static function extractID(string $fileName)
+    private static function extractID(string $fileName): Title
     {
         //^(?:.*?)(?:(?<label>[a-z]{1,6})(?:[-\.]+)?(?<release>[0-9]{2,7})(?:[-_\]]+)?(?:.*?)?(?:0|hd|fhd|cd?)?(?:[-_]?)?(?<part>[1-9]|\W[abcdef]|[0-9]{0,3})?\.)(\w{2,5}?)$
         if(preg_match("~^(?:.*?)((?<label>[a-z]{2,6})(?:[-\.]+)?(?<release>[0-9]{2,7})(?:[-_\]]+)?(?:.*?)?(?:0|hd|fhd|cd[-_]?)?(?<part>[1-9]|\W?[abcdef]|[0-9]{0,3})?).*?.{4,5}$~i", $fileName, $matches)) {

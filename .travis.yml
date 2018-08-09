@@ -1,20 +1,17 @@
 language: php
 sudo: false
-script:
-  - cd app
 before_install:
   - if [[ "$TRAVIS_PHP_VERSION" != "7.1" ]]; then phpenv config-rm xdebug.ini; fi
   - composer self-update
-install:
   - cd app
+install:
   - composer update $COMPOSER_FLAGS
 matrix:
   include:
-    - php: 7.1
-      script: vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+    - php: 7.2
+      script: vendor/bin/simple-phpunit
       before_script:
         - mkdir -p build/logs
       after_script:
         - travis_retry php vendor/bin/php-coveralls -v
-    - php: 7.2
   fast_finish: true
