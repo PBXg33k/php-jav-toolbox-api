@@ -9,7 +9,7 @@ install:
 matrix:
   include:
     - php: 7.2
-      script: bin/phpunit
+      script: vendor/bin/simple-phpunit
       before_script:
         - mkdir -p build/logs
       after_script:
