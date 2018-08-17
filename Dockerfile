@@ -26,7 +26,7 @@ WORKDIR /var/www
 COPY --from=xxhbuild /usr/local /usr/local/
 
 # install PHP extensions & composer
-RUN apt-get update && apt-get install -y git \
+RUN apt-get update && apt-get install -y \
     zlib1g-dev libicu-dev libpq-dev imagemagick git mysql-client wget mediainfo \
     && pecl install redis-4.0.2 \
 	&& docker-php-ext-install opcache \
@@ -45,25 +45,10 @@ RUN wget https://github.com/mutschler/mt/releases/download/1.0.8/mt-1.0.8-linux_
     && chmod +x /usr/local/bin/mt \
     && rm -f mt-1.0.8-linux_amd64.tar.bz2
 
-# Authorize SSH Host
-RUN mkdir -p /root/.ssh \
-    && chmod 0700 /root/.ssh \
-    && ssh-keyscan github.com > /root/.ssh/known_hosts
-
-# Add the keys and set permissions
-
-RUN ssh-keygen -q -t rsa -N '' -f /root/.ssh/id_rsa \
-    && chmod 600 /root/.ssh/id_rsa \
-    && chmod 600 /root/.ssh/id_rsa.pub
-
-RUN rm -rf /var/www/* \
-    && git clone https://github.com/PBXg33k/php-jav-toolbox-api.git /var/www
-
+COPY . /var/www
 WORKDIR /var/www/app
 
 RUN composer install --no-dev --optimize-autoloader --prefer-dist --no-scripts
-
-RUN php bin/console doctrine:migration:migrate --no-interaction
 
 # Cleanup
 RUN rm -rf /tmp/*
