@@ -56,6 +56,46 @@ class JavFile
      */
     private $inode;
 
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $height;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $width;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $fps;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $codec;
+
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $consistent;
+
+    /**
+     * @ORM\Column(type="blob", nullable=true)
+     */
+    private $meta;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $length;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $bitrate;
+
     public function getId()
     {
         return $this->id;
@@ -153,6 +193,102 @@ class JavFile
     public function setInode(int $inode): self
     {
         $this->inode = $inode;
+
+        return $this;
+    }
+
+    public function getHeight(): ?int
+    {
+        return $this->height;
+    }
+
+    public function setHeight(int $height): self
+    {
+        $this->height = $height;
+
+        return $this;
+    }
+
+    public function getWidth(): ?int
+    {
+        return $this->width;
+    }
+
+    public function setWidth(?int $width): self
+    {
+        $this->width = $width;
+
+        return $this;
+    }
+
+    public function getFps(): ?float
+    {
+        return $this->fps;
+    }
+
+    public function setFps(?float $fps): self
+    {
+        $this->fps = $fps;
+
+        return $this;
+    }
+
+    public function getCodec(): ?string
+    {
+        return $this->codec;
+    }
+
+    public function setCodec(?string $codec): self
+    {
+        $this->codec = $codec;
+
+        return $this;
+    }
+
+    public function getConsistent(): ?bool
+    {
+        return $this->consistent;
+    }
+
+    public function setConsistent(?bool $consistent): self
+    {
+        $this->consistent = $consistent;
+
+        return $this;
+    }
+
+    public function getMeta()
+    {
+        return $this->meta;
+    }
+
+    public function setMeta($meta): self
+    {
+        $this->meta = $meta;
+
+        return $this;
+    }
+
+    public function getLength(): ?int
+    {
+        return $this->length;
+    }
+
+    public function setLength(?int $length): self
+    {
+        $this->length = $length;
+
+        return $this;
+    }
+
+    public function getBitrate(): ?int
+    {
+        return $this->bitrate;
+    }
+
+    public function setBitrate(?int $bitrate): self
+    {
+        $this->bitrate = $bitrate;
 
         return $this;
     }

@@ -85,9 +85,7 @@ class FileScanService
                 );
 
                 try {
-                    if (JAVProcessorService::filenameContainsID($finfo->getFilename())) {
-                        $this->processFile($finfo);
-                    }
+                    $this->processFile($finfo);
                 } catch (\Exception $exception) {
                     $this->logger->error($exception->getMessage());
                 }
@@ -96,9 +94,11 @@ class FileScanService
     }
 
     protected function processFile(SplFileInfo $file) {
-        $this->logger->debug(sprintf('file found: %s', $file->getPathname()));
-        $this->dispatcher->dispatch(VideoFileFoundEvent::NAME, new VideoFileFoundEvent($file));
-        $this->files->add($file);
+        if(JAVProcessorService::filenameContainsID($file->getFilename())) {
+            $this->logger->debug(sprintf('file found: %s', $file->getPathname()));
+            $this->dispatcher->dispatch(VideoFileFoundEvent::NAME, new VideoFileFoundEvent($file));
+            $this->files->add($file);
+        }
     }
 
     /**

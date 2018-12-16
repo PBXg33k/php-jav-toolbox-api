@@ -2,8 +2,6 @@ version: '2'
 services:
     web:
       image: nginx
-      ports:
-        - "80:80"
       links:
         - app
       volumes:
@@ -35,5 +33,3 @@ services:
         - "MYSQL_USER=appuser"
         - "MYSQL_PASSWORD=userPass"
         - "MYSQL_DATABASE=app"
-      ports:
-        - "3306:3306"

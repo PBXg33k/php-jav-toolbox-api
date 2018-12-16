@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Mhor\MediaInfo\Container\MediaInfoContainer;
 use Mhor\MediaInfo\MediaInfo;
+use Mhor\MediaInfo\Type\Video;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Finder\SplFileInfo;
@@ -94,8 +95,21 @@ class JAVProcessorService
         // Start Mediainfo command to get media data
         /** @var MediaInfoContainer $mediaInfoContainer */
         $mediaInfoContainer = $this->mediaInfo->getInfo($file->getPath());
+        if($videoInfo = $mediaInfoContainer->getVideos()) {
+            /** @var Video $vinfo */
+            $vinfo = $videoInfo[0];
+            if($vinfo) {
+                $file->setCodec($vinfo->get('codec'));
+                $file->setLength($vinfo->get('duration')->getMilliseconds());
+                $file->setBitrate($vinfo->get('bit_rate')->getAbsoluteValue());
+                $file->setWidth($vinfo->get('width')->getAbsoluteValue());
+                $file->setHeight($vinfo->get('height')->getAbsoluteValue());
+                $file->setFps($vinfo->get('frame_rate')->getAbsoluteValue());
+                $file->setMeta(\GuzzleHttp\json_encode($mediaInfoContainer->getGeneral()->jsonSerialize()));
+            }
+        }
 
-        var_dump($mediaInfoContainer);die();
+        return $file;
     }
 
     public function getJavFileMetadata(JavFile $file)
@@ -121,23 +135,21 @@ class JAVProcessorService
 
     public function preProcessFile(SplFileInfo $file)
     {
-        /** @var \App\Entity\JavFile $existingFile */
-        $existingFile = $this->entityManager->getRepository(JavFile::class)
+        /** @var \App\Entity\JavFile $javFile */
+        $javFile = $this->entityManager->getRepository(JavFile::class)
             ->findOneBy([
                 'path' => $file->getPathname()
             ]);
 
         $javTitleInfo = self::extractIDFromFilename($file->getFilename());
 
-        if($existingFile && $existingFile->getTitle()->getCatalognumber() == $javTitleInfo->getCatalognumber()) {
-            $this->logger->info('PATH ALREADY PROCESSED. CONTINUING: '. $existingFile->getFilename());
-            return;
-        }
+//        if($javFile && $javFile->getTitle()->getCatalognumber() == $javTitleInfo->getCatalognumber()) {
+//            $this->logger->info('PATH ALREADY PROCESSED. CONTINUING: '. $javFile->getFilename());
+//            return;
+//        }
 
         try {
-            if($existingFile) {
-                $javFile = $existingFile;
-            } else {
+            if(!$javFile) {
                 /** @var \App\Entity\JavFile $javFile */
                 $javFile = $javTitleInfo->getFiles()->first();
                 $javFile->setPath($file->getPathname());
@@ -146,7 +158,7 @@ class JAVProcessorService
             }
 
             if(!self::shouldProcessFile($javFile, $this->logger)) {
-                $this->logger->notice("JAVFILE NOT VALID. SKIPPING {$javFile->getFilename()}");
+                $this->logger->warning("JAVFILE NOT VALID. SKIPPING {$javFile->getFilename()}");
                 return;
             }
 
@@ -156,13 +168,18 @@ class JAVProcessorService
                 ->findOneBy(['catalognumber' => $javTitleInfo->getCatalognumber()]);
 
             if ($title) {
-                $this->logger->debug('Found existing title: ' . $title->getCatalognumber());
+                $this->logger->warning('Found existing title: ' . $title->getCatalognumber());
             } else {
-                $this->logger->debug('New title: ' . $javTitleInfo->getCatalognumber());
+                $this->logger->notice('New title: ' . $javTitleInfo->getCatalognumber());
                 $title = $javTitleInfo;
             }
             $title->replaceFile($javFile);
             $javFile->setTitle($title);
+
+            if(!$javFile->getMeta()) {
+                $this->logger->notice('Loading file meta');
+                $this->processFile($javFile);
+            }
 
             $this->dispatcher->dispatch(JAVTitlePreProcessedEvent::NAME, new JAVTitlePreProcessedEvent($title, $javFile));
 
