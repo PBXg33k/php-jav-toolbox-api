@@ -9,5 +9,6 @@ app/vendor/
 app/.phpunit
 app/phpunit.xml
 ###< symfony/phpunit-bridge ###
+.idea/
 
 docker-compose.override.yml
