@@ -34,7 +34,7 @@ class ScanCommand extends ContainerAwareCommand
     {
         $path = $input->getArgument('path') ?: $this->getContainer()->getParameter('jav_media_file_location');
 
-        $this->logger->info("Starting scan for {$path}");
+        $this->logger->notice("Starting scan for {$path}");
         $this->fileScanService->scanDir($path);
 
         $output->writeln(sprintf('Found %s eligible files', $this->fileScanService->getFiles()->count()));
