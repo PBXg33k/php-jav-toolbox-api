@@ -96,6 +96,11 @@ class JavFile
      */
     private $bitrate;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $checked;
+
     public function getId()
     {
         return $this->id;
@@ -289,6 +294,18 @@ class JavFile
     public function setBitrate(?int $bitrate): self
     {
         $this->bitrate = $bitrate;
+
+        return $this;
+    }
+
+    public function getChecked(): ?bool
+    {
+        return $this->checked;
+    }
+
+    public function setChecked(?bool $checked): self
+    {
+        $this->checked = $checked;
 
         return $this;
     }

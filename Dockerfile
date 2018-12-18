@@ -3,14 +3,6 @@ FROM php:7.3-fpm-alpine AS base
 FROM base AS buildbase
 RUN apk add --no-cache --update --virtual build-dependencies alpine-sdk git automake autoconf
 
-FROM buildbase AS xxhbuild
-RUN git clone https://github.com/Cyan4973/xxHash.git \
-    && cd xxHash \
-    && make \
-    && make install \
-    && cd .. \
-    && rm -rf xxHash
-
 FROM buildbase AS build
 MAINTAINER Oguzhan Uysal <development@oguzhanuysal.eu>
 
@@ -37,16 +29,10 @@ RUN wget https://github.com/mutschler/mt/releases/download/1.0.8/mt-1.0.8-linux_
 FROM build AS final
 WORKDIR /var/www
 
-# RUN apk del build-dependencies php-dependencies
-
-# Copy compiled xxhsum from xxhbuild container
-COPY --from=xxhbuild /usr/local /usr/local/
-COPY --from=jrottenberg/ffmpeg:alpine /usr/local /usr/local/
-
 COPY . /var/www
 WORKDIR /var/www/app
-
-RUN composer install --no-dev --optimize-autoloader --prefer-dist --no-scripts
+RUN apk add --no-cache --update ffmpeg xxhash \
+    && composer install --no-dev --optimize-autoloader --prefer-dist --no-scripts
 
 # Cleanup
 RUN rm -rf /tmp/*
