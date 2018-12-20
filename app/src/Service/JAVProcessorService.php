@@ -160,12 +160,12 @@ class JAVProcessorService
         foreach($title->getFiles() as $javFile)
         {
             if(!$javFile->getChecked()) {
-                $this->checkVideoConsistency($javFile, false, $force);
+                $this->checkVideoConsistency($javFile, true, $force);
             }
         }
     }
 
-    public function checkVideoConsistency(JavFile $file, bool $strict = false, bool $force = false)
+    public function checkVideoConsistency(JavFile $file, bool $strict = true, bool $force = false)
     {
         $this->logger->info('Checking video consistency', [
             'strict'     => $strict,
@@ -197,25 +197,37 @@ class JAVProcessorService
         ]);
 
         $logger = $this->logger;
-        $process = new Process($processArgs);
-        $process->setTimeout(3600);
-        $process->mustRun(function ($type, $buffer) use ($logger, $file) {
-            if(strpos($buffer, ' time=') !== FALSE) {
-                // Calculate/estimate progress
-                if (preg_match('~time=(?<hours>[\d]{1,2})\:(?<minutes>[\d]{2})\:(?<seconds>[\d]{2})?(?:\.(?<millisec>[\d]{0,3}))\sbitrate~',$buffer,$matches)) {
-                    $time = ($matches['hours'] * 3600 + $matches['minutes'] * 60 + $matches['seconds']) * 1000 + ($matches['millisec'] * 10);
+        try {
+            $process = new Process($processArgs);
+            $process->setTimeout(3600);
+            $process->mustRun(function ($type, $buffer) use ($logger, $file) {
+                if (strpos($buffer, ' time=') !== FALSE) {
+                    // Calculate/estimate progress
+                    if (preg_match('~time=(?<hours>[\d]{1,2})\:(?<minutes>[\d]{2})\:(?<seconds>[\d]{2})?(?:\.(?<millisec>[\d]{0,3}))\sbitrate~', $buffer, $matches)) {
+                        $time = ($matches['hours'] * 3600 + $matches['minutes'] * 60 + $matches['seconds']) * 1000 + ($matches['millisec'] * 10);
 
-                    $logger->debug('Progress '. number_format(($time / $file->getLength()) * 100, 2) . '%', [
-                        'path'   => $file->getPath(),
-                        'length' => $file->getLength(),
-                        'mark'   => $time,
-                        'perc'   => number_format($time / $file->getLength() * 100, 2).'%'
-                    ]);
+                        $logger->debug('Progress ' . number_format(($time / $file->getLength()) * 100, 2) . '%', [
+                            'path' => $file->getPath(),
+                            'length' => $file->getLength(),
+                            'mark' => $time,
+                            'perc' => number_format($time / $file->getLength() * 100, 2) . '%'
+                        ]);
+                    }
+                } else {
+                    $this->logger->debug($buffer);
                 }
-            } else {
-                $this->logger->debug($buffer);
-            }
-        });
+            });
+
+            $consistent = $process->getExitCode() == 0;
+        } catch(\Throwable $exception) {
+            $this->logger->error('ffmpeg failed', [
+                'path'        => $file->getPath(),
+                'exception'   => [
+                    'message' => $exception->getMessage()
+                ]
+            ]);
+            $consistent = false;
+        }
 
         $this->logger->debug("ffmpeg output", [
             'file'   => $file->getPath(),
@@ -224,12 +236,12 @@ class JAVProcessorService
 
         $this->logger->info('video check completed', [
             'strict'  => $strict,
-            'result'  => $process->getExitCode(),
+            'result'  => ($process->getExitCode() > 0) ? 'FAILED' : 'SUCCESS',
             'path'    => $file->getPath(),
         ]);
 
         $file->setChecked(true);
-        $file->setConsistent($process->getExitCode() == 0);
+        $file->setConsistent($consistent);
 
         return $file;
     }
