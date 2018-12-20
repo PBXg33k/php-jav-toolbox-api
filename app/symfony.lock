@@ -68,6 +68,9 @@
     "facebook/webdriver": {
         "version": "1.6.0"
     },
+    "facile-it/doctrine-mysql-come-back": {
+        "version": "v1.6.5"
+    },
     "guzzlehttp/guzzle": {
         "version": "6.3.3"
     },

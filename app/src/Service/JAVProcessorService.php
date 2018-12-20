@@ -308,6 +308,8 @@ class JAVProcessorService
                             'line'    => $exception->getLine()
                         ]
                     ]);
+                    $javFile->setChecked(true);
+                    $javFile->setConsistent(false);
                 }
             }
 
