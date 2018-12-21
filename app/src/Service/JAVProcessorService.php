@@ -7,13 +7,9 @@ use App\Event\JAVTitlePreProcessedEvent;
 use App\Exception\PreProcessFileException;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
-use Mhor\MediaInfo\Container\MediaInfoContainer;
-use Mhor\MediaInfo\MediaInfo;
-use Mhor\MediaInfo\Type\Video;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Finder\SplFileInfo;
-use Symfony\Component\Process\Process;
 
 /**
  * Class JAVProcessorService
@@ -52,11 +48,6 @@ class JAVProcessorService
     private $entityManager;
 
     /**
-     * @var MediaInfo
-     */
-    private $mediaInfo;
-
-    /**
      * @var string
      */
     private $thumbnailDirectory;
@@ -66,25 +57,29 @@ class JAVProcessorService
      */
     private $mtConfigPath;
 
-    private $videoInfo;
+    /**
+     * @var MediaProcessorService
+     */
+    private $mediaProcessorService;
 
     public function __construct(
         LoggerInterface $logger,
         EventDispatcherInterface $dispatcher,
         EntityManagerInterface $entityManager,
+        MediaProcessorService $mediaProcessorService,
         $javToolboxMediaThumbDirectory,
         $javToolboxMtConfigPath
     )
     {
-        $this->logger = $logger;
-        $this->dispatcher = $dispatcher;
-        $this->titles = new ArrayCollection();
-        $this->entityManager = $entityManager;
-        $this->mediaInfo = new MediaInfo();
-        $this->mediaInfo->setConfig('use_oldxml_mediainfo_output_format', true);
+        $this->logger                   = $logger;
+        $this->dispatcher               = $dispatcher;
+        $this->entityManager            = $entityManager;
+        $this->mediaProcessorService    = $mediaProcessorService;
 
-        $this->thumbnailDirectory = $javToolboxMediaThumbDirectory;
-        $this->mtConfigPath = $javToolboxMtConfigPath;
+        $this->titles                   = new ArrayCollection();
+
+        $this->thumbnailDirectory       = $javToolboxMediaThumbDirectory;
+        $this->mtConfigPath             = $javToolboxMtConfigPath;
     }
 
     public function processFile(JavFile $file)
@@ -103,55 +98,7 @@ class JAVProcessorService
     }
 
     public function getMetadata(JavFile $file, bool $refresh = true) {
-        if($file->getMeta() && !$refresh) {
-            $this->videoInfo = unserialize($file->getMeta());
-        } else {
-            if($mediaInfoContainer = $this->mediaInfo->getInfo($file->getPath())) {
-                if($videoInfo = $mediaInfoContainer->getVideos()) {
-                    $this->videoInfo = [
-                        'video'   => $videoInfo,
-                        'general' => $mediaInfoContainer->getGeneral(),
-                    ];
-                    $file->setMeta(serialize($this->videoInfo));
-                }
-            } else {
-                throw \Exception('Unable to load video metadata');
-            }
-        }
-
-        /** @var Video $vinfo */
-        $vinfo = $this->videoInfo['video'][0];
-        if($vinfo) {
-            $file->setCodec($vinfo->get('codec'));
-            if($vinfo->get('duration')) {
-                $file->setLength($vinfo->get('duration')->getMilliseconds());
-            }
-            if($vinfo->get('bit_rate')) {
-                $file->setBitrate($vinfo->get('bit_rate')->getAbsoluteValue());
-            } elseif($vinfo->get('nominal_bit_rate')) {
-                $file->setBitrate($vinfo->get('nominal_bit_rate')->getAbsoluteValue());
-            } else {
-                if (!in_array($file->getTitle()->getCatalognumber(), ['KCOD-02'])) {
-                    $file->setBitrate($vinfo->get('maximum_bit_rate')->getAbsoluteValue());
-                }
-            }
-            $file->setWidth($vinfo->get('width')->getAbsoluteValue());
-            $file->setHeight($vinfo->get('height')->getAbsoluteValue());
-            try {
-                if($frameRate = $vinfo->get('frame_rate')) {
-                    $file->setFps($frameRate->getAbsoluteValue());
-                } else {
-                    throw
-                    new \Exception("FPS unknown");
-                }
-            } catch (\Exception $e) {
-                if($vinfo->get('frame_rate_mode')->getShortName() !== 'VFR') {
-                    throw $e;
-                }
-            }
-        }
-
-        return $file;
+        return $this->mediaProcessorService->getMetadata($file);
     }
 
     public function checkJAVFilesConsistency(Title $title, bool $force = false)
@@ -167,51 +114,22 @@ class JAVProcessorService
 
     public function checkVideoConsistency(JavFile $file, bool $strict = true, bool $force = false)
     {
-        $this->logger->info('Checking video consistency', [
-            'strict'     => $strict,
-            'path'       => $file->getPath(),
-        ]);
-        // Run ffmpeg command to check audio stream (faster)
-        if(!$force && $file->getChecked()) {
-            return $file;
-        }
+        $logger     = $this->logger;
+        $em         = $this->entityManager;
+        $startTime  = time();
 
-        // command: "ffmpeg -v verbose -err_detect explode -xerror -i \"{$file->getPath()}\" -map 0:1 -f null -"
-        $processArgs = [
-            'ffmpeg',
-            '-v',
-            'verbose',
-            '-err_detect',
-            'explode',
-            '-xerror',
-            '-i',
-            $file->getPath(),
-        ];
-        if(!$strict) {
-            $processArgs = array_merge($processArgs,['-map','0:1']);
-        }
-        $processArgs = array_merge($processArgs, [
-            '-f',
-            'null',
-            '-',
-        ]);
-
-        $logger = $this->logger;
-        try {
-            $em = $this->entityManager;
-            $starttime = time();
-
-            $process = new Process($processArgs);
-            $process->setTimeout(3600);
-            $process->mustRun(function ($type, $buffer) use ($logger, $file, $em, &$starttime) {
-                if ((time() - $starttime) >= 10) {
+        return $this->mediaProcessorService->checkHealth(
+            $file,
+            $strict,
+            function ($type, $buffer) use ($logger, $file, $em, &$startTime) {
+                if ((time() - $startTime) >= 10) {
                     $logger->debug('Pinging DBAL', [
-                        'start'       => $starttime,
+                        'start'       => $startTime,
                         'end'         => time(),
-                        'time_passed' => $starttime - time()
+                        'time_passed' => $startTime - time()
                     ]);
                     $em->getConnection()->ping();
-                    $starttime = time();
+                    $startTime = time();
                 }
                 if (strpos($buffer, ' time=') !== FALSE) {
                     // Calculate/estimate progress
@@ -228,34 +146,8 @@ class JAVProcessorService
                 } else {
                     $this->logger->debug($buffer);
                 }
-            });
-
-            $consistent = $process->getExitCode() == 0;
-        } catch(\Throwable $exception) {
-            $this->logger->error('ffmpeg failed', [
-                'path'        => $file->getPath(),
-                'exception'   => [
-                    'message' => $exception->getMessage()
-                ]
-            ]);
-            $consistent = false;
-        }
-
-        $this->logger->debug("ffmpeg output", [
-            'file'   => $file->getPath(),
-            'output' => $process->getOutput()
-        ]);
-
-        $this->logger->info('video check completed', [
-            'strict'  => $strict,
-            'result'  => ($process->getExitCode() > 0) ? 'FAILED' : 'SUCCESS',
-            'path'    => $file->getPath(),
-        ]);
-
-        $file->setChecked(true);
-        $file->setConsistent($consistent);
-
-        return $file;
+            }
+        );
     }
 
     public function preProcessFile(SplFileInfo $file)
