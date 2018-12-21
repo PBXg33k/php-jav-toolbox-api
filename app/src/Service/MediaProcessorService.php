@@ -24,10 +24,17 @@ class MediaProcessorService
      */
     private $videoInfo;
 
-    public function __construct(LoggerInterface $logger)
+    /**
+     * @var JAVThumbsService
+     */
+    private $thumbService;
+
+    public function __construct(LoggerInterface $logger, JAVThumbsService $thumbService)
     {
-        $this->logger = $logger;
-        $this->mediaInfo = new MediaInfo();
+        $this->logger       = $logger;
+        $this->thumbService = $thumbService;
+
+        $this->mediaInfo    = new MediaInfo();
         $this->mediaInfo->setConfig('use_oldxml_mediainfo_output_format', true);
     }
 
@@ -143,5 +150,7 @@ class MediaProcessorService
         return $javFile;
     }
 
-    public function generateThumbnails(JavFile $javFile) {}
+    public function generateThumbnails(JavFile $javFile): bool {
+        return $this->thumbService->generateThumbs($javFile);
+    }
 }
