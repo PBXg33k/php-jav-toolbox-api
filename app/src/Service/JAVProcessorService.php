@@ -342,6 +342,7 @@ class JAVProcessorService
 
             $this->dispatcher->dispatch(JAVTitlePreProcessedEvent::NAME, new JAVTitlePreProcessedEvent($title, $javFile));
 
+            $this->entityManager->getConnection()->ping();
             $this->entityManager->persist($title);
             $this->entityManager->persist($javFile);
             $this->entityManager->flush();
