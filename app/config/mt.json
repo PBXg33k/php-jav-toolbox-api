@@ -16,7 +16,7 @@
   "header": true,
   "header_meta": true,
   "filter": "none",
-  "filename": "/files/thumbs{{.Path}}{{.Name}}.jpg",
+  "filename": "/media/thumbs{{.Path}}{{.Name}}.jpg",
   "from": "0",
   "to": "",
   "skip_existing": false,
