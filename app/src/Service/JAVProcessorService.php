@@ -342,10 +342,17 @@ class JAVProcessorService
 
             $this->dispatcher->dispatch(JAVTitlePreProcessedEvent::NAME, new JAVTitlePreProcessedEvent($title, $javFile));
 
-            $this->entityManager->getConnection()->ping();
-            $this->entityManager->persist($title);
-            $this->entityManager->persist($javFile);
-            $this->entityManager->flush();
+            try {
+                $this->entityManager->persist($title);
+                $this->entityManager->persist($javFile);
+                $this->entityManager->flush();
+            } catch(\Throwable $exception) {
+                $this->entityManager->getConnection()->close();
+                $this->entityManager->getConnection()->connect();
+                $this->entityManager->persist($title);
+                $this->entityManager->persist($javFile);
+                $this->entityManager->flush();
+            }
             $this->logger->info('STORED TITLE: ' . $title->getCatalognumber());
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage());
