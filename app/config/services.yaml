@@ -4,7 +4,6 @@ parameters:
     jav_media_file_location: '%env(resolve:MEDIA_DIR)%'
     mt_config_path: '%env(resolve:MT_CONF_FILE)%'
     jav_media_thumb_directory: '%env(resolve:THUMB_DIR)%'
-    locale: 'en'
 
 services:
     # default configuration for services in *this* file

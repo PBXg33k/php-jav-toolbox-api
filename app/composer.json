@@ -6,6 +6,7 @@
         "ext-iconv": "*",
         "doctrine/collections": "^1.5",
         "doctrine/doctrine-migrations-bundle": "^1.3",
+        "facile-it/doctrine-mysql-come-back": "^1.6",
         "mhor/php-mediainfo": "^4.1",
         "pbxg33k/jav-info": "dev-master",
         "php-coveralls/php-coveralls": "^2.1",

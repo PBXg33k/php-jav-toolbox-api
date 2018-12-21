@@ -1,16 +1,9 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: PBX_g33k
- * Date: 30/03/2018
- * Time: 14:23
- */
 
 namespace App\Model;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Config\Definition\Exception\DuplicateKeyException;
-use Symfony\Component\Finder\SplFileInfo;
-
 
 /**
  * Class JAVTitle
@@ -29,7 +22,7 @@ class JAVTitle
     protected $release;
 
     /**
-     * @var ArrayCollection
+     * @var ArrayCollection|JAVFile
      */
     protected $files;
 
