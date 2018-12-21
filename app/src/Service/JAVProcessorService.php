@@ -198,9 +198,21 @@ class JAVProcessorService
 
         $logger = $this->logger;
         try {
+            $em = $this->entityManager;
+            $starttime = time();
+
             $process = new Process($processArgs);
             $process->setTimeout(3600);
-            $process->mustRun(function ($type, $buffer) use ($logger, $file) {
+            $process->mustRun(function ($type, $buffer) use ($logger, $file, $em, &$starttime) {
+                if ((time() - $starttime) >= 10) {
+                    $logger->debug('Pinging DBAL', [
+                        'start'       => $starttime,
+                        'end'         => time(),
+                        'time_passed' => $starttime - time()
+                    ]);
+                    $em->getConnection()->ping();
+                    $starttime = time();
+                }
                 if (strpos($buffer, ' time=') !== FALSE) {
                     // Calculate/estimate progress
                     if (preg_match('~time=(?<hours>[\d]{1,2})\:(?<minutes>[\d]{2})\:(?<seconds>[\d]{2})?(?:\.(?<millisec>[\d]{0,3}))\sbitrate~', $buffer, $matches)) {
@@ -342,9 +354,17 @@ class JAVProcessorService
 
             $this->dispatcher->dispatch(JAVTitlePreProcessedEvent::NAME, new JAVTitlePreProcessedEvent($title, $javFile));
 
-            $this->entityManager->persist($title);
-            $this->entityManager->persist($javFile);
-            $this->entityManager->flush();
+            try {
+                $this->entityManager->persist($title);
+                $this->entityManager->persist($javFile);
+                $this->entityManager->flush();
+            } catch(\Throwable $exception) {
+                $this->entityManager->getConnection()->close();
+                $this->entityManager->getConnection()->connect();
+                $this->entityManager->persist($title);
+                $this->entityManager->persist($javFile);
+                $this->entityManager->flush();
+            }
             $this->logger->info('STORED TITLE: ' . $title->getCatalognumber());
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage());
