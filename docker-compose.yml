@@ -24,6 +24,8 @@ services:
         - MT_CONF_FILE=/var/www/app/config/mt.json
         - MEDIA_DIR=/media
         - THUMB_DIR=/media/thumbs
+        - ENQUEUE_DSN=amqp://guest:guest@rabbitmq:5672
+        - MESSENGER_TRANSPORT_DSN=amqp://guest:guest@rabbitmq:5672/%2f/messages
 
     mariadb:
       image: mariadb
@@ -33,3 +35,6 @@ services:
         - "MYSQL_USER=appuser"
         - "MYSQL_PASSWORD=userPass"
         - "MYSQL_DATABASE=app"
+
+    rabbitmq:
+      image: rabbitmq:management-alpine

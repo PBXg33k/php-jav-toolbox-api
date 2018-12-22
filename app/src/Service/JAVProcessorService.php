@@ -5,11 +5,13 @@ use App\Entity\Title;
 use App\Entity\JavFile;
 use App\Event\JAVTitlePreProcessedEvent;
 use App\Exception\PreProcessFileException;
+use App\Message\CheckVideoMessage;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 /**
  * Class JAVProcessorService
@@ -62,11 +64,17 @@ class JAVProcessorService
      */
     private $mediaProcessorService;
 
+    /**
+     * @var MessageBusInterface
+     */
+    private $messageBus;
+
     public function __construct(
         LoggerInterface $logger,
         EventDispatcherInterface $dispatcher,
         EntityManagerInterface $entityManager,
         MediaProcessorService $mediaProcessorService,
+        MessageBusInterface $messageBus,
         $javToolboxMediaThumbDirectory,
         $javToolboxMtConfigPath
     )
@@ -75,6 +83,7 @@ class JAVProcessorService
         $this->dispatcher               = $dispatcher;
         $this->entityManager            = $entityManager;
         $this->mediaProcessorService    = $mediaProcessorService;
+        $this->messageBus               = $messageBus;
 
         $this->titles                   = new ArrayCollection();
 
@@ -114,40 +123,17 @@ class JAVProcessorService
 
     public function checkVideoConsistency(JavFile $file, bool $strict = true, bool $force = false)
     {
-        $logger     = $this->logger;
-        $em         = $this->entityManager;
-        $startTime  = time();
+        if(!$this->entityManager->contains($file)) {
+            $this->entityManager->persist($file);
+            $this->entityManager->flush();
+        }
 
-        return $this->mediaProcessorService->checkHealth(
-            $file,
-            $strict,
-            function ($type, $buffer) use ($logger, $file, $em, &$startTime) {
-                if ((time() - $startTime) >= 10) {
-                    $logger->debug('Pinging DBAL', [
-                        'start'       => $startTime,
-                        'end'         => time(),
-                        'time_passed' => $startTime - time()
-                    ]);
-                    $em->getConnection()->ping();
-                    $startTime = time();
-                }
-                if (strpos($buffer, ' time=') !== FALSE) {
-                    // Calculate/estimate progress
-                    if (preg_match('~time=(?<hours>[\d]{1,2})\:(?<minutes>[\d]{2})\:(?<seconds>[\d]{2})?(?:\.(?<millisec>[\d]{0,3}))\sbitrate~', $buffer, $matches)) {
-                        $time = ($matches['hours'] * 3600 + $matches['minutes'] * 60 + $matches['seconds']) * 1000 + ($matches['millisec'] * 10);
-
-                        $logger->debug('Progress ' . number_format(($time / $file->getLength()) * 100, 2) . '%', [
-                            'path' => $file->getPath(),
-                            'length' => $file->getLength(),
-                            'mark' => $time,
-                            'perc' => number_format($time / $file->getLength() * 100, 2) . '%'
-                        ]);
-                    }
-                } else {
-                    $this->logger->debug($buffer);
-                }
-            }
-        );
+        $this->logger->notice('Dispatching message',[
+            'path'   => $file->getPath(),
+            'strict' => $strict,
+            'force'  => $force
+        ]);
+        $this->messageBus->dispatch(new CheckVideoMessage($file->getId()));
     }
 
     public function preProcessFile(SplFileInfo $file)
@@ -206,26 +192,6 @@ class JAVProcessorService
                             'path'       => $javFile->getFilename(),
                             'vinfo'      => $this->getMetadata($javFile),
                         ]);
-                }
-            }
-
-            if(!$javFile->getChecked()) {
-                try {
-                    $javFile = $this->checkVideoConsistency($javFile);
-                } catch (\Throwable $exception) {
-                    $this->logger->error('Unable to check video. '. $exception->getMessage(),[
-                        'catalog-id' => $javFile->getTitle()->getCatalognumber(),
-                        'path'       => $javFile->getFilename(),
-                        'vinfo'      => $this->getMetadata($javFile),
-                        'exception'   => [
-                            'message' => $exception->getMessage(),
-                            'code'    => $exception->getCode(),
-                            'file'    => $exception->getFile(),
-                            'line'    => $exception->getLine()
-                        ]
-                    ]);
-                    $javFile->setChecked(true);
-                    $javFile->setConsistent(false);
                 }
             }
 

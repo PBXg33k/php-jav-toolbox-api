@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 class JavFile
 {
     /**
+     * @var int
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -17,26 +18,31 @@ class JavFile
     private $id;
 
     /**
+     * @var int
      * @ORM\Column(type="integer")
      */
     private $part;
 
     /**
+     * @var string
      * @ORM\Column(type="text")
      */
     private $filename;
 
     /**
+     * @var int
      * @ORM\Column(type="bigint", unique=false, options={"unsigned"=true})
      */
     private $filesize;
 
     /**
+     * @var bool
      * @ORM\Column(type="boolean")
      */
     private $processed;
 
     /**
+     * @var string
      * @ORM\Column(type="text")
      */
     private $path;
@@ -47,36 +53,43 @@ class JavFile
     private $hash;
 
     /**
+     * @var string
      * @ORM\ManyToOne(targetEntity="App\Entity\Title", inversedBy="files", cascade={"persist"})
      */
     private $title;
 
     /**
+     * @var int
      * @ORM\Column(type="bigint", unique=false, options={"unsigned"=true})
      */
     private $inode;
 
     /**
+     * @var int
      * @ORM\Column(type="integer")
      */
     private $height;
 
     /**
+     * @var int
      * @ORM\Column(type="integer", nullable=true)
      */
     private $width;
 
     /**
+     * @var float
      * @ORM\Column(type="float", nullable=true)
      */
     private $fps;
 
     /**
+     * @var string
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $codec;
 
     /**
+     * @var bool
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $consistent;
@@ -87,16 +100,19 @@ class JavFile
     private $meta;
 
     /**
+     * @var int
      * @ORM\Column(type="integer", nullable=true)
      */
     private $length;
 
     /**
+     * @var int
      * @ORM\Column(type="integer", nullable=true)
      */
     private $bitrate;
 
     /**
+     * @var bool
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $checked;

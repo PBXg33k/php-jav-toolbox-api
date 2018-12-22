@@ -42,6 +42,7 @@ class MediaProcessorService
         $this->logger->info('Checking video consistency', [
             'strict'     => $strict,
             'path'       => $javFile->getPath(),
+            'filesize'   => $javFile->getFilesize()
         ]);
 
         // command: "ffmpeg -v verbose -err_detect explode -xerror -i \"{$file->getPath()}\" -map 0:1 -f null -"

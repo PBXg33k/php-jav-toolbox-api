@@ -18,10 +18,10 @@ class JAVThumbsService
      */
     protected $logger;
 
-    public function __construct(LoggerInterface $logger, string $mtConfigPath)
+    public function __construct(LoggerInterface $logger, string $javToolboxMtConfigPath)
     {
         $this->logger = $logger;
-        $this->setMtConfigPath($mtConfigPath);
+        $this->setMtConfigPath($javToolboxMtConfigPath);
     }
 
     /**
