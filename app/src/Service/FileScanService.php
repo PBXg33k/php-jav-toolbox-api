@@ -21,7 +21,7 @@ class FileScanService
     ];
 
     /**
-     * @var LoggerInterface
+     * @var LoggerInterace
      */
     private $logger;
 
@@ -76,7 +76,7 @@ class FileScanService
             if(
                 $iv->isFile() &&
                 \in_array($iv->getExtension(), $this->videoExtensions, false) &&
-                $iv->getSize() >= 500000000
+                $iv->getSize() >= 300000000
             ) {
                 $finfo = new SplFileInfo(
                     $iv->getPathname(),

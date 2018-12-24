@@ -17,7 +17,7 @@ services:
         - "./app:/var/www/app"
         - "./media:/media"
       environment:
-        - APP_ENV=dev
+        - APP_ENV=prod
         - APP_DEBUG=1
         - APP_SECRET=83512d52ee8797e6e9de2322dc781885
         - DATABASE_URL=//appuser:userPass@mariadb:3306/app

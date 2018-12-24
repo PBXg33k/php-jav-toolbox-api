@@ -100,8 +100,6 @@ class JavProcessFileCommand extends ContainerAwareCommand
     }
 
     protected function processFile(JavFile $file) {
-        $file = $this->JAVProcessorService->processFile($file);
-        $this->entityManager->merge($file);
-        $this->entityManager->flush();
+        $this->JAVProcessorService->processFile($file);
     }
 }

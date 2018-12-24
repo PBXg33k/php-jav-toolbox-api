@@ -8,3 +8,5 @@ framework:
             # 'App\Message\YourMessage': amqp
             'App\Message\CheckVideoMessage': amqp
             'App\Message\GenerateThumbnailMessage': amqp
+            'App\Message\GetVideoMetadataMessage': amqp
+            'App\Message\ProcessFileMessage': amqp

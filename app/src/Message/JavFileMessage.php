@@ -1,8 +1,6 @@
 <?php
 namespace App\Message;
 
-use App\Entity\JavFile;
-
 abstract class JavFileMessage
 {
     /**

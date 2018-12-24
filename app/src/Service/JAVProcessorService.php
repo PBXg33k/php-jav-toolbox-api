@@ -6,6 +6,8 @@ use App\Entity\JavFile;
 use App\Event\JAVTitlePreProcessedEvent;
 use App\Exception\PreProcessFileException;
 use App\Message\CheckVideoMessage;
+use App\Message\GetVideoMetadataMessage;
+use App\Message\ProcessFileMessage;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -95,19 +97,22 @@ class JAVProcessorService
     {
         $this->logger->info('PROCESSING FILE '. $file->getFilename());
 
-        // Start thumbnail generation (async) first because this takes longer
+        $this->logger->debug('Dispatching message',[
+            'message' => 'ProcessFileMessage',
+            'id'      => $file->getId(),
+            'path'    => $file->getPath()
+        ]);
 
-        // Start Mediainfo command to get media data
-        $file = $this->getMetadata($file, true);
-        if(!$file->getChecked()) {
-            $this->checkVideoConsistency($file);
-        }
-
-        return $file;
+        $this->messageBus->dispatch(new ProcessFileMessage($file->getId()));
     }
 
     public function getMetadata(JavFile $file, bool $refresh = true) {
-        return $this->mediaProcessorService->getMetadata($file);
+        $this->logger->notice('Dispatching message',[
+            'path'    => $file->getPath(),
+            'refresh' => $refresh
+        ]);
+
+        $this->messageBus->dispatch(new GetVideoMetadataMessage($file->getId()));
     }
 
     public function checkJAVFilesConsistency(Title $title, bool $force = false)
@@ -125,7 +130,6 @@ class JAVProcessorService
     {
         if(!$this->entityManager->contains($file)) {
             $this->entityManager->persist($file);
-            $this->entityManager->flush();
         }
 
         $this->logger->notice('Dispatching message',[
@@ -151,7 +155,7 @@ class JAVProcessorService
 
         if(
             $javFile &&
-            $javFile->getTitle()->getCatalognumber() == $javTitleInfo->getCatalognumber() &&
+            strcasecmp($javFile->getTitle()->getCatalognumber(), $javTitleInfo->getCatalognumber()) &&
             $javFile->getMeta() &&
             $javFile->getChecked()
         ) {
@@ -169,30 +173,13 @@ class JAVProcessorService
                 $javFile->setPath($file->getPathname());
                 $javFile->setFilesize($file->getSize());
                 $javFile->setInode($file->getInode());
+
+                $this->entityManager->persist($javFile);
             }
 
             if(!self::shouldProcessFile($javFile, $this->logger)) {
                 $this->logger->warning("JAVFILE NOT VALID. SKIPPING {$javFile->getFilename()}");
                 return;
-            }
-
-            if(!$javFile->getMeta()) {
-                $this->logger->info('Collecting file metadata', [
-                    'catalog-id' => $javTitleInfo->getCatalognumber(),
-                    'path'       => $javFile->getPath(),
-                ]);
-
-                try {
-                    $this->processFile($javFile);
-                } catch (\Throwable $e) {
-                    $this->logger->error(
-                        "Error processing file: " .$e->getMessage(),
-                        [
-                            'catalog-id' => $javTitleInfo->getCatalognumber(),
-                            'path'       => $javFile->getFilename(),
-                            'vinfo'      => $this->getMetadata($javFile),
-                        ]);
-                }
             }
 
             if ($title) {
@@ -210,19 +197,11 @@ class JAVProcessorService
             $title->replaceFile($javFile);
             $javFile->setTitle($title);
 
-            $this->dispatcher->dispatch(JAVTitlePreProcessedEvent::NAME, new JAVTitlePreProcessedEvent($title, $javFile));
+            $this->entityManager->persist($title);
+            $this->entityManager->persist($javFile);
+            $this->entityManager->flush();
 
-            try {
-                $this->entityManager->persist($title);
-                $this->entityManager->persist($javFile);
-                $this->entityManager->flush();
-            } catch(\Throwable $exception) {
-                $this->entityManager->getConnection()->close();
-                $this->entityManager->getConnection()->connect();
-                $this->entityManager->persist($title);
-                $this->entityManager->persist($javFile);
-                $this->entityManager->flush();
-            }
+            $this->processFile($javFile);
             $this->logger->info('STORED TITLE: ' . $title->getCatalognumber());
         } catch (\Exception $exception) {
             $this->logger->error($exception->getMessage());
@@ -238,7 +217,7 @@ class JAVProcessorService
     {
         $filenameLength = strlen($javFile->getFilename());
 
-        if(in_array($filenameLength, [36,51,52])) {
+        if(in_array($filenameLength, [36,51,52]) && !strpos($javFile->getFilename(), ' ')) {
             $logger->notice('LENGTH OF FILENAME INDICATES INCORRECT JAVJACK DL');
             return false;
         }

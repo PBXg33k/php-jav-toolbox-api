@@ -3,10 +3,13 @@ namespace App\MessageHandler;
 
 use App\Entity\JavFile;
 use App\Message\CheckVideoMessage;
+use App\Message\GenerateThumbnailMessage;
 use App\Service\MediaProcessorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class CheckVideoMessageHandler implements MessageHandlerInterface
 {
@@ -25,22 +28,29 @@ class CheckVideoMessageHandler implements MessageHandlerInterface
      */
     private $logger;
 
+    /**
+     * @var MessageBusInterface
+     */
+    private $messageBus;
+
     public function __construct(
         MediaProcessorService $mediaProcessorService,
         EntityManagerInterface $entityManager,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        MessageBusInterface $messageBus
     )
     {
         $this->mediaProcessorService = $mediaProcessorService;
         $this->entityManager         = $entityManager;
         $this->logger                = $logger;
+        $this->messageBus       = $messageBus;
     }
 
     public function __invoke(CheckVideoMessage $message)
     {
         $javFile = $this->entityManager->find(JavFile::class, $message->getJavFileId());
         $startTime  = time();
-        $this->mediaProcessorService->checkHealth(
+        $javFile = $this->mediaProcessorService->checkHealth(
             $javFile,
             true,
             function ($type, $buffer) use($message, $javFile, &$startTime){
@@ -72,5 +82,9 @@ class CheckVideoMessageHandler implements MessageHandlerInterface
                     }
                 }
             });
+
+        if($javFile->getConsistent()) {
+            $this->messageBus->dispatch(new GenerateThumbnailMessage($javFile->getConsistent()));
+        }
     }
 }
