@@ -2,7 +2,7 @@
 namespace App\Message;
 
 
-class ProcessFileMessage
+class ProcessFileMessage extends JavFileMessage
 {
 
 }
