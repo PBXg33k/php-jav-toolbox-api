@@ -3,6 +3,7 @@ namespace App\MessageHandler;
 
 use App\Entity\JavFile;
 use App\Message\CheckVideoMessage;
+use App\Message\GenerateThumbnailMessage;
 use App\Message\GetVideoMetadataMessage;
 use App\Message\ProcessFileMessage;
 use App\Service\MediaProcessorService;
@@ -54,9 +55,11 @@ class ProcessFileMessageHandler
             $this->messageBus->dispatch(new GetVideoMetadataMessage($javFile->getId()));
         }
 
-        if (!$javFile->getChecked()) {
-            // This event will also dispatch message to generate thumbnails if the video is valid
-            $this->messageBus->dispatch(new CheckVideoMessage($javFile->getId()));
+        // This event will also dispatch message to generate thumbnails if the video is valid
+        $this->messageBus->dispatch(new CheckVideoMessage($javFile->getId()));
+
+        if($javFile->getChecked() && $javFile->getConsistent()) {
+            $this->messageBus->dispatch(new GenerateThumbnailMessage($javFile->getId()));
         }
     }
 }

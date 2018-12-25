@@ -1,7 +1,8 @@
 <?php
 namespace App\Message;
 
-class ProcessFileMessage extends JavFileMessage
+
+class ProcessFileMessage
 {
 
 }
