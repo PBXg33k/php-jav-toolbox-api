@@ -3,7 +3,6 @@ namespace App\Service;
 
 use App\Entity\Title;
 use App\Entity\JavFile;
-use App\Event\JAVTitlePreProcessedEvent;
 use App\Exception\PreProcessFileException;
 use App\Message\CheckVideoMessage;
 use App\Message\GetVideoMetadataMessage;

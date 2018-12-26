@@ -55,8 +55,7 @@ class JAVThumbsService
             'cmd' => $process->getCommandLine(),
         ]);
         try{
-            $logger = $this->logger;
-            $process->mustRun(function($type, $buffer) use ($logger) {
+            $process->mustRun(function($type, $buffer) {
                 if(preg_match('~(?<level>[^\[]+)\[(\d+)\]\s(?<message>.*)~', $buffer, $matches)) {
                     switch($matches['level']) {
                         case 'DEBU':
@@ -69,11 +68,15 @@ class JAVThumbsService
                             $loglevel = 'error';
                     }
 
-                    $logger->log($loglevel, $matches['level'], [
+                    $this->logger->log($loglevel, $matches['level'], [
                         'process'    => [
                             'type'   => $type,
                             'buffer' => $buffer
                         ]
+                    ]);
+                } else {
+                    $this->logger->debug('CMD OUTPUT', [
+                        'buffer' => $buffer
                     ]);
                 }
             });
@@ -81,9 +84,11 @@ class JAVThumbsService
             return $process->getExitCode() === 0;
         } catch (ProcessFailedException $exception) {
             $this->logger->error($exception->getMessage(), [
-                'cmd'            => $process->getCommandLine(),
-                'file'           => $javFile->getPath(),
-                'exception_code' => $exception->getCode()
+                'cmd'              => $process->getCommandLine(),
+                'file'             => $javFile->getPath(),
+                'exception_code'   => $exception->getCode(),
+                'process_exitcode' => $exception->getProcess()->getExitCode(),
+                'process_output'   => $exception->getProcess()->getOutput()
             ]);
         }
 

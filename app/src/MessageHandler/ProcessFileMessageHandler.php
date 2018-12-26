@@ -58,8 +58,6 @@ class ProcessFileMessageHandler
         // This event will also dispatch message to generate thumbnails if the video is valid
         $this->messageBus->dispatch(new CheckVideoMessage($javFile->getId()));
 
-        if($javFile->getChecked() && $javFile->getConsistent()) {
-            $this->messageBus->dispatch(new GenerateThumbnailMessage($javFile->getId()));
-        }
+        $this->messageBus->dispatch(new GenerateThumbnailMessage($javFile->getId()));
     }
 }
