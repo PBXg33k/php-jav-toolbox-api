@@ -2,8 +2,6 @@ version: '2'
 services:
     web:
       image: nginx
-      ports:
-        - "80:80"
       links:
         - app
       volumes:
@@ -14,6 +12,7 @@ services:
       build: .
       links:
         - mariadb
+        - rabbitmq
       volumes:
         - "./.docker/config/php/php.ini:/usr/local/etc/php/conf.d/030-custom.ini:ro"
         - "./app:/var/www/app"
@@ -22,10 +21,12 @@ services:
         - APP_ENV=dev
         - APP_DEBUG=1
         - APP_SECRET=83512d52ee8797e6e9de2322dc781885
-        - DATABASE_URL=mysql://appuser:userPass@mariadb:3306/app
+        - DATABASE_URL=//appuser:userPass@mariadb:3306/app
         - MT_CONF_FILE=/var/www/app/config/mt.json
         - MEDIA_DIR=/media
         - THUMB_DIR=/media/thumbs
+        - ENQUEUE_DSN=amqp://guest:guest@rabbitmq:5672
+        - MESSENGER_TRANSPORT_DSN=amqp://guest:guest@rabbitmq:5672/%2f/messages
 
     mariadb:
       image: mariadb
@@ -35,5 +36,6 @@ services:
         - "MYSQL_USER=appuser"
         - "MYSQL_PASSWORD=userPass"
         - "MYSQL_DATABASE=app"
-      ports:
-        - "3306:3306"
+
+    rabbitmq:
+      image: rabbitmq:management-alpine

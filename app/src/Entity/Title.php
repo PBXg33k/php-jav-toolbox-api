@@ -85,7 +85,7 @@ class Title
 
     public function setCatalognumber(string $catalognumber): self
     {
-        $this->catalognumber = $catalognumber;
+        $this->catalognumber = strtoupper($catalognumber);
 
         return $this;
     }

@@ -8,7 +8,6 @@ parameters:
 doctrine:
     dbal:
         # configure these for your database server
-        driver: 'pdo_mysql'
         server_version: '5.7'
         charset: utf8mb4
         default_table_options:
@@ -16,6 +15,10 @@ doctrine:
             collate: utf8mb4_unicode_ci
 
         url: '%env(resolve:DATABASE_URL)%'
+        wrapper_class: 'Facile\DoctrineMySQLComeBack\Doctrine\DBAL\Connection'
+        driver_class: 'Facile\DoctrineMySQLComeBack\Doctrine\DBAL\Driver\PDOMySql\Driver'
+        options:
+            x_reconnect_attempts: 3
     orm:
         auto_generate_proxy_classes: '%kernel.debug%'
         naming_strategy: doctrine.orm.naming_strategy.underscore

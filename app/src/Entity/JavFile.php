@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 class JavFile
 {
     /**
+     * @var int
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -17,44 +18,100 @@ class JavFile
     private $id;
 
     /**
+     * @var int
      * @ORM\Column(type="integer")
      */
     private $part;
 
     /**
+     * @var string
      * @ORM\Column(type="text")
      */
     private $filename;
 
     /**
+     * @var int
      * @ORM\Column(type="bigint", unique=false, options={"unsigned"=true})
      */
     private $filesize;
 
     /**
+     * @var bool
      * @ORM\Column(type="boolean")
      */
     private $processed;
 
     /**
+     * @var string
      * @ORM\Column(type="text")
      */
     private $path;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\FileHash", cascade={"persist", "remove"})
-     */
-    private $hash;
-
-    /**
+     * @var ?Title
      * @ORM\ManyToOne(targetEntity="App\Entity\Title", inversedBy="files", cascade={"persist"})
      */
     private $title;
 
     /**
-     * @ORM\Column(type="bigint", unique=false, options={"unsigned"=true})
+     * @var Inode
+     * @ORM\ManyToOne(targetEntity="App\Entity\Inode", inversedBy="javFiles", cascade={"persist", "merge"})
+     * @ORM\JoinColumn(nullable=true)
      */
     private $inode;
+
+    /**
+     * @var int
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $height;
+
+    /**
+     * @var int
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $width;
+
+    /**
+     * @var float
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $fps;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $codec;
+
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $consistent;
+
+    /**
+     * @ORM\Column(type="blob", nullable=true)
+     */
+    private $meta;
+
+    /**
+     * @var int
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $length;
+
+    /**
+     * @var int
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $bitrate;
+
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $checked;
 
     public function getId()
     {
@@ -121,18 +178,6 @@ class JavFile
         return $this;
     }
 
-    public function getHash(): ?FileHash
-    {
-        return $this->hash;
-    }
-
-    public function setHash(?FileHash $hash): self
-    {
-        $this->hash = $hash;
-
-        return $this;
-    }
-
     public function getTitle(): ?Title
     {
         return $this->title;
@@ -145,14 +190,122 @@ class JavFile
         return $this;
     }
 
-    public function getInode(): ?int
+    public function getInode(): ?Inode
     {
         return $this->inode;
     }
 
-    public function setInode(int $inode): self
+    public function setInode(Inode $inode): self
     {
         $this->inode = $inode;
+
+        return $this;
+    }
+
+    public function getHeight(): ?int
+    {
+        return $this->height;
+    }
+
+    public function setHeight(int $height): self
+    {
+        $this->height = $height;
+
+        return $this;
+    }
+
+    public function getWidth(): ?int
+    {
+        return $this->width;
+    }
+
+    public function setWidth(?int $width): self
+    {
+        $this->width = $width;
+
+        return $this;
+    }
+
+    public function getFps(): ?float
+    {
+        return $this->fps;
+    }
+
+    public function setFps(?float $fps): self
+    {
+        $this->fps = $fps;
+
+        return $this;
+    }
+
+    public function getCodec(): ?string
+    {
+        return $this->codec;
+    }
+
+    public function setCodec(?string $codec): self
+    {
+        $this->codec = $codec;
+
+        return $this;
+    }
+
+    public function getConsistent(): ?bool
+    {
+        return $this->consistent;
+    }
+
+    public function setConsistent(?bool $consistent): self
+    {
+        $this->consistent = $consistent;
+
+        return $this;
+    }
+
+    public function getMeta()
+    {
+        return $this->meta;
+    }
+
+    public function setMeta($meta): self
+    {
+        $this->meta = $meta;
+
+        return $this;
+    }
+
+    public function getLength(): ?int
+    {
+        return $this->length;
+    }
+
+    public function setLength(?int $length): self
+    {
+        $this->length = $length;
+
+        return $this;
+    }
+
+    public function getBitrate(): ?int
+    {
+        return $this->bitrate;
+    }
+
+    public function setBitrate(?int $bitrate): self
+    {
+        $this->bitrate = $bitrate;
+
+        return $this;
+    }
+
+    public function getChecked(): ?bool
+    {
+        return $this->checked;
+    }
+
+    public function setChecked(?bool $checked): self
+    {
+        $this->checked = $checked;
 
         return $this;
     }

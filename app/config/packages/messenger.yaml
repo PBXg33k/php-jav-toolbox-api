@@ -1,0 +1,12 @@
+framework:
+    messenger:
+        transports:
+            # Uncomment the following line to enable a transport named "amqp"
+            amqp: '%env(MESSENGER_TRANSPORT_DSN)%'
+        routing:
+            # Route your messages to the transports
+            # 'App\Message\YourMessage': amqp
+            'App\Message\CheckVideoMessage': amqp
+            'App\Message\GenerateThumbnailMessage': amqp
+            'App\Message\GetVideoMetadataMessage': amqp
+            'App\Message\ProcessFileMessage': amqp

@@ -21,7 +21,7 @@ class FileScanService
     ];
 
     /**
-     * @var LoggerInterface
+     * @var LoggerInterace
      */
     private $logger;
 
@@ -76,7 +76,7 @@ class FileScanService
             if(
                 $iv->isFile() &&
                 \in_array($iv->getExtension(), $this->videoExtensions, false) &&
-                $iv->getSize() >= 500000000
+                $iv->getSize() >= 300000000
             ) {
                 $finfo = new SplFileInfo(
                     $iv->getPathname(),
@@ -85,9 +85,7 @@ class FileScanService
                 );
 
                 try {
-                    if (JAVProcessorService::filenameContainsID($finfo->getFilename())) {
-                        $this->processFile($finfo);
-                    }
+                    $this->processFile($finfo);
                 } catch (\Exception $exception) {
                     $this->logger->error($exception->getMessage());
                 }
@@ -96,9 +94,11 @@ class FileScanService
     }
 
     protected function processFile(SplFileInfo $file) {
-        $this->logger->debug(sprintf('file found: %s', $file->getPathname()));
-        $this->dispatcher->dispatch(VideoFileFoundEvent::NAME, new VideoFileFoundEvent($file));
-        $this->files->add($file);
+        if(JAVProcessorService::filenameContainsID($file->getFilename())) {
+            $this->logger->debug(sprintf('file found: %s', $file->getPathname()));
+            $this->dispatcher->dispatch(VideoFileFoundEvent::NAME, new VideoFileFoundEvent($file));
+            $this->files->add($file);
+        }
     }
 
     /**
