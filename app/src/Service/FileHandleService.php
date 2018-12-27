@@ -73,6 +73,8 @@ class FileHandleService
     private function runHashCommand(array $cmd) :  string
     {
         $process = new Process($cmd);
+        // Increase timeout for large files (default 60 sec)
+        $process->setTimeout(3600);
         $process->mustRun(function ($type, $buffer) {
             $this->logger->debug('CMD OUTPUT', [
                 'type'   => $type,
