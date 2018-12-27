@@ -4,10 +4,18 @@ PHPJavToolbox is a project which aims to make managing JAV collections easier.
 
 **PHPJavToolbox is in active development**
 
+It is meant for those who have a (large) collection unsorted JAV files and wishes to manage said collection.
+See below for the feature's being build.
+
+Check the [CHANGELOG](CHANGELOG.md) for the actual changes being worked on.
+
 ## Requirements
-_(Not required for local development if docker-compose is used)_
-- PHP 7.2 
+- PHP 7.3 
 - MySQL
+- ffmpeg
+- [mt](https://github.com/mutschler/mt)
+- [XXHSUM](https://cyan4973.github.io/xxHash/)
+- md5sum/sha1sum/sha512sum
 
 ## Installation
 #### Docker-compose
@@ -24,10 +32,13 @@ This project is aimed to be used within a docker container, and thus is develope
     5. `php bin/console doctrine:fixtures:load --no-interaction`
 
 ## Features
-- (Mostly done) Scan local filesystem for JAV Titles
+- (DONE) Scan local filesystem for JAV Titles
+- (DONE) Check video consistency, mark broken (video) files
+- (DONE) Filter/Only index actual video files
 - (WIP) Build database with local titles (and duplicates)
 - (WIP) Lookup external sources for title information and covers
 - (WIP) Generate metadata for found titles
-- (TODO) Generate thumbnails from files 
+- (WIP) Generate thumbnails from files 
 - (TODO) Build a filesystem with hardlinks using IDs, tags and actresses in a tree structure
+- (TODO) Symlink extra/duplicate files
 - (TODO) Sharing system

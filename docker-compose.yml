@@ -12,6 +12,7 @@ services:
       build: .
       links:
         - mariadb
+        - rabbitmq
       volumes:
         - "./.docker/config/php/php.ini:/usr/local/etc/php/conf.d/030-custom.ini:ro"
         - "./app:/var/www/app"
@@ -24,6 +25,8 @@ services:
         - MT_CONF_FILE=/var/www/app/config/mt.json
         - MEDIA_DIR=/media
         - THUMB_DIR=/media/thumbs
+        - ENQUEUE_DSN=amqp://guest:guest@rabbitmq:5672
+        - MESSENGER_TRANSPORT_DSN=amqp://guest:guest@rabbitmq:5672/%2f/messages
 
     mariadb:
       image: mariadb
@@ -33,3 +36,6 @@ services:
         - "MYSQL_USER=appuser"
         - "MYSQL_PASSWORD=userPass"
         - "MYSQL_DATABASE=app"
+
+    rabbitmq:
+      image: rabbitmq:management-alpine

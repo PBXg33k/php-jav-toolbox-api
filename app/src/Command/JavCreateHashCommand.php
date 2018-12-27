@@ -5,23 +5,24 @@ namespace App\Command;
 use App\Entity\JavFile;
 use App\Entity\Title;
 use App\Repository\JavFileRepository;
+use App\Service\FileHandleService;
 use App\Service\JAVProcessorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class JavProcessFileCommand extends ContainerAwareCommand
+class JavCreateHashCommand extends Command
 {
-    protected static $defaultName = 'jav:process-file';
+    protected static $defaultName = 'jav:create-hash';
 
     /**
-     * @var JAVProcessorService
+     * @var FileHandleService
      */
-    private $JAVProcessorService;
+    private $fileHandleService;
 
     /**
      * @var EntityManagerInterface
@@ -34,12 +35,12 @@ class JavProcessFileCommand extends ContainerAwareCommand
     private $logger;
 
     public function __construct(
-        JAVProcessorService $JAVProcessorService,
+        FileHandleService $fileHandleService,
         EntityManagerInterface $entityManager,
         LoggerInterface $logger
     )
     {
-        $this->JAVProcessorService = $JAVProcessorService;
+        $this->fileHandleService   = $fileHandleService;
         $this->entityManager       = $entityManager;
         $this->logger              = $logger;
 
@@ -49,7 +50,7 @@ class JavProcessFileCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setDescription('Process JAV File')
+            ->setDescription('Calculate hashes for JAV file')
             ->addOption('file', 'f', InputOption::VALUE_OPTIONAL, 'path to file or directory')
             ->addOption('catalog-id', 'c', InputOption::VALUE_OPTIONAL, 'Process all files for catalog-id')
         ;
@@ -68,7 +69,7 @@ class JavProcessFileCommand extends ContainerAwareCommand
             if($file = $fileRepository->findOneBy([
                 'path' => $path
             ])) {
-                $this->processFile($file);
+                $this->processFile($file, $io);
                 $io->success("Loaded metadata for {$file->getPath()}");
             }
         }
@@ -83,14 +84,26 @@ class JavProcessFileCommand extends ContainerAwareCommand
                 $files = $title->getFiles();
 
                 foreach($files as $file) {
-                    $this->processFile($file);
+                    $this->processFile($file, $io);
                     $io->success("Loaded metadata for {$file->getPath()}");
                 }
             }
         }
     }
 
-    protected function processFile(JavFile $file) {
-        $this->JAVProcessorService->processFile($file);
+    protected function processFile(JavFile $file, SymfonyStyle $output) {
+        $file = $this->fileHandleService->calculateXxhash($file);
+        if($file->getInode()->getXxhash()) {
+            $output->success('Calculated XXHASH: '.$file->getInode()->getXxhash());
+        }
+        $file = $this->fileHandleService->calculateMd5Hash($file);
+        if($file->getInode()->getMd5()) {
+            $output->success('Calculated MD5: '.$file->getInode()->getMd5());
+        }
+
+        $this->entityManager->persist($file);
+        $this->entityManager->flush();
+
+        return $file;
     }
 }

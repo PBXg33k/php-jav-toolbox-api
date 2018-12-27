@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 class JavFile
 {
     /**
+     * @var int
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
@@ -17,66 +18,74 @@ class JavFile
     private $id;
 
     /**
+     * @var int
      * @ORM\Column(type="integer")
      */
     private $part;
 
     /**
+     * @var string
      * @ORM\Column(type="text")
      */
     private $filename;
 
     /**
+     * @var int
      * @ORM\Column(type="bigint", unique=false, options={"unsigned"=true})
      */
     private $filesize;
 
     /**
+     * @var bool
      * @ORM\Column(type="boolean")
      */
     private $processed;
 
     /**
+     * @var string
      * @ORM\Column(type="text")
      */
     private $path;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\FileHash", cascade={"persist", "remove"})
-     */
-    private $hash;
-
-    /**
+     * @var ?Title
      * @ORM\ManyToOne(targetEntity="App\Entity\Title", inversedBy="files", cascade={"persist"})
      */
     private $title;
 
     /**
-     * @ORM\Column(type="bigint", unique=false, options={"unsigned"=true})
+     * @var Inode
+     * @ORM\ManyToOne(targetEntity="App\Entity\Inode", inversedBy="javFiles", cascade={"persist", "merge"})
+     * @ORM\JoinColumn(nullable=true)
      */
     private $inode;
 
     /**
-     * @ORM\Column(type="integer")
+     * @var int
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $height;
 
     /**
+     * @var int
      * @ORM\Column(type="integer", nullable=true)
      */
     private $width;
 
     /**
+     * @var float
      * @ORM\Column(type="float", nullable=true)
      */
     private $fps;
 
     /**
+     * @var string
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $codec;
 
     /**
+     * @var bool
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $consistent;
@@ -87,16 +96,19 @@ class JavFile
     private $meta;
 
     /**
+     * @var int
      * @ORM\Column(type="integer", nullable=true)
      */
     private $length;
 
     /**
+     * @var int
      * @ORM\Column(type="integer", nullable=true)
      */
     private $bitrate;
 
     /**
+     * @var bool
      * @ORM\Column(type="boolean", nullable=true)
      */
     private $checked;
@@ -166,18 +178,6 @@ class JavFile
         return $this;
     }
 
-    public function getHash(): ?FileHash
-    {
-        return $this->hash;
-    }
-
-    public function setHash(?FileHash $hash): self
-    {
-        $this->hash = $hash;
-
-        return $this;
-    }
-
     public function getTitle(): ?Title
     {
         return $this->title;
@@ -190,12 +190,12 @@ class JavFile
         return $this;
     }
 
-    public function getInode(): ?int
+    public function getInode(): ?Inode
     {
         return $this->inode;
     }
 
-    public function setInode(int $inode): self
+    public function setInode(Inode $inode): self
     {
         $this->inode = $inode;
 

@@ -2,21 +2,21 @@
 
 namespace App\Repository;
 
-use App\Entity\FileHash;
+use App\Entity\Inode;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
- * @method FileHash|null find($id, $lockMode = null, $lockVersion = null)
- * @method FileHash|null findOneBy(array $criteria, array $orderBy = null)
- * @method FileHash[]    findAll()
- * @method FileHash[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Inode|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Inode|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Inode[]    findAll()
+ * @method Inode[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class FileHashRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, FileHash::class);
+        parent::__construct($registry, Inode::class);
     }
 
 //    /**
