@@ -1,6 +1,7 @@
 <?php
 namespace App\Service;
 
+use App\Entity\Inode;
 use App\Entity\Title;
 use App\Entity\JavFile;
 use App\Exception\PreProcessFileException;
@@ -171,7 +172,15 @@ class JAVProcessorService
                 $javFile = $javTitleInfo->getFiles()->first();
                 $javFile->setPath($file->getPathname());
                 $javFile->setFilesize($file->getSize());
-                $javFile->setInode($file->getInode());
+
+                /** @var Inode $inode */
+                $inode = $this->entityManager->getRepository(Inode::class)->find($file->getInode());
+
+                if(!$inode) {
+                    $inode = (new Inode)->setId($file->getInode());
+                }
+
+                $javFile->setInode($inode);
 
                 $this->entityManager->persist($javFile);
             }
@@ -260,7 +269,6 @@ class JAVProcessorService
                     ->setFilename($fileName)
                     ->setPart($filePart)
                     ->setProcessed(false)
-                    ->setInode(1)
             );
 
             return $title;

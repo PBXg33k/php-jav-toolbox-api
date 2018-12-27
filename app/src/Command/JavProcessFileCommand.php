@@ -5,11 +5,9 @@ namespace App\Command;
 use App\Entity\JavFile;
 use App\Entity\Title;
 use App\Repository\JavFileRepository;
-use App\Service\FileScanService;
 use App\Service\JAVProcessorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Bridge\Doctrine\RegistryInterface;
 use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -19,11 +17,6 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 class JavProcessFileCommand extends ContainerAwareCommand
 {
     protected static $defaultName = 'jav:process-file';
-
-    /**
-     * @var FileScanService
-     */
-    private $fileScanService;
 
     /**
      * @var JAVProcessorService
@@ -42,13 +35,11 @@ class JavProcessFileCommand extends ContainerAwareCommand
 
     public function __construct(
         JAVProcessorService $JAVProcessorService,
-        FileScanService $fileScanService,
         EntityManagerInterface $entityManager,
         LoggerInterface $logger
     )
     {
         $this->JAVProcessorService = $JAVProcessorService;
-        $this->fileScanService     = $fileScanService;
         $this->entityManager       = $entityManager;
         $this->logger              = $logger;
 

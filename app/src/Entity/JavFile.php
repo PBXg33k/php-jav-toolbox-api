@@ -48,19 +48,15 @@ class JavFile
     private $path;
 
     /**
-     * @ORM\OneToOne(targetEntity="App\Entity\FileHash", cascade={"persist", "remove"})
-     */
-    private $hash;
-
-    /**
-     * @var string
+     * @var ?Title
      * @ORM\ManyToOne(targetEntity="App\Entity\Title", inversedBy="files", cascade={"persist"})
      */
     private $title;
 
     /**
-     * @var int
-     * @ORM\Column(type="bigint", unique=false, options={"unsigned"=true})
+     * @var Inode
+     * @ORM\ManyToOne(targetEntity="App\Entity\Inode", inversedBy="javFiles", cascade={"persist", "merge"})
+     * @ORM\JoinColumn(nullable=true)
      */
     private $inode;
 
@@ -182,18 +178,6 @@ class JavFile
         return $this;
     }
 
-    public function getHash(): ?FileHash
-    {
-        return $this->hash;
-    }
-
-    public function setHash(?FileHash $hash): self
-    {
-        $this->hash = $hash;
-
-        return $this;
-    }
-
     public function getTitle(): ?Title
     {
         return $this->title;
@@ -206,12 +190,12 @@ class JavFile
         return $this;
     }
 
-    public function getInode(): ?int
+    public function getInode(): ?Inode
     {
         return $this->inode;
     }
 
-    public function setInode(int $inode): self
+    public function setInode(Inode $inode): self
     {
         $this->inode = $inode;
 

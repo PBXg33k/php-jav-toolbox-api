@@ -2,6 +2,7 @@
 namespace App\MessageHandler;
 
 use App\Entity\JavFile;
+use App\Message\CalculateFileHashesMessage;
 use App\Message\CheckVideoMessage;
 use App\Message\FooMessage;
 use App\Message\GenerateThumbnailMessage;
@@ -91,6 +92,8 @@ class CheckVideoMessageHandler implements MessageHandlerInterface
 
             if ($javFile->getChecked() && $javFile->getConsistent()) {
                 $this->messageBus->dispatch(new GenerateThumbnailMessage($javFile->getId()));
+                $this->messageBus->dispatch(new CalculateFileHashesMessage($javFile->getId(), CalculateFileHashesMessage::HASH_XXHASH));
+                $this->messageBus->dispatch(new CalculateFileHashesMessage($javFile->getId(), CalculateFileHashesMessage::HASH_MD5));
             }
         }
     }
