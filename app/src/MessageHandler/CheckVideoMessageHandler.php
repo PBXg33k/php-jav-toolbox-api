@@ -89,12 +89,13 @@ class CheckVideoMessageHandler implements MessageHandlerInterface
 
             $this->entityManager->persist($javFile);
             $this->entityManager->flush();
+        }
 
-            if ($javFile->getChecked() && $javFile->getConsistent()) {
-                $this->messageBus->dispatch(new GenerateThumbnailMessage($javFile->getId()));
-                $this->messageBus->dispatch(new CalculateFileHashesMessage($javFile->getId(), CalculateFileHashesMessage::HASH_XXHASH));
-                $this->messageBus->dispatch(new CalculateFileHashesMessage($javFile->getId(), CalculateFileHashesMessage::HASH_MD5));
-            }
+
+        if ($javFile->getChecked() && $javFile->getConsistent()) {
+            $this->messageBus->dispatch(new GenerateThumbnailMessage($javFile->getId()));
+            $this->messageBus->dispatch(new CalculateFileHashesMessage($javFile->getId(), CalculateFileHashesMessage::HASH_XXHASH));
+            $this->messageBus->dispatch(new CalculateFileHashesMessage($javFile->getId(), CalculateFileHashesMessage::HASH_MD5));
         }
     }
 }

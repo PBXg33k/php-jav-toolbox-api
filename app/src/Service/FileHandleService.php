@@ -28,6 +28,7 @@ class FileHandleService
 
     public function calculateMd5Hash(JavFile $javFile)
     {
+        if($javFile->getInode()->getMd5()) return $javFile;
         $javFile->getInode()->setMd5($this->runHashCommand([
             'md5sum',
             $javFile->getPath()
@@ -38,6 +39,7 @@ class FileHandleService
 
     public function calculateSha1Hash(JavFile $javFile)
     {
+        if($javFile->getInode()->getSha1()) return $javFile;
         $javFile->getInode()->setSha1($this->runHashCommand([
             'sha1sum',
             $javFile->getPath()
@@ -48,6 +50,7 @@ class FileHandleService
 
     public function calculateSha512Hash(JavFile $javFile)
     {
+        if($javFile->getInode()->getSha512()) return $javFile;
         $javFile->getInode()->setSha512($this->runHashCommand([
             'sha512sum',
             $javFile->getPath()
@@ -58,6 +61,7 @@ class FileHandleService
 
     public function calculateXxhash(JavFile $javFile)
     {
+        if($javFile->getInode()->getXxhash()) return $javFile;
         $javFile->getInode()->setXxhash($this->runHashCommand([
             'xxhsum',
             $javFile->getPath()
