@@ -207,6 +207,46 @@ class JAVProcessorServiceTest extends TestCase
     /**
      * @test
      */
+    public function willNotProcessInvalidJAVJackFile()
+    {
+        $invalidJavJackDownloads = [
+            '315fbdc5be96ec692e2920bdb33b3d98',
+            '5d2007905b0cc7f7b244490613eb9433',
+            'videoplayback'
+        ];
+
+        foreach($invalidJavJackDownloads as $invalidJavJackDownload) {
+            $this->createTestForInvalidJAVJack($invalidJavJackDownload);
+        }
+    }
+
+    private function createTestForInvalidJAVJack(string $filename) {
+        $javFile = (new JavFile())->setFilename("{$filename}.mp4");
+
+        $this->logger->expects($this->once())
+            ->method('warning')
+            ->with(JAVProcessorService::LOG_UNKNOWN_JAVJACK);
+
+        $this->assertFalse($this->service::shouldProcessFile($javFile, $this->logger));
+    }
+
+    /**
+     * @test
+     */
+    public function willNotProcessBlacklistedFilenames()
+    {
+        $javFile = (new JavFile())->setFilename(join('-', ['aaa', JAVProcessorService::$blacklistnames[0], '02.avi']));
+
+        $this->logger->expects($this->once())
+            ->method('warning')
+            ->with(JAVProcessorService::LOG_BLACKLIST_NAME);
+
+        $this->assertFalse($this->service::shouldProcessFile($javFile, $this->logger));
+    }
+
+    /**
+     * @test
+     */
     public function extractsIDFromFilename()
     {
         $successObj = new Title();
@@ -235,6 +275,5 @@ class JAVProcessorServiceTest extends TestCase
                 $successObj->getFiles()->first()->getFilename(),
                 $processedFilenameResult->getFiles()->first()->getFilename());
         }
-
     }
 }
