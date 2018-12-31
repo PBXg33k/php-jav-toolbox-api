@@ -143,6 +143,11 @@ class JAVProcessorService
         $this->messageBus->dispatch(new CheckVideoMessage($file->getId()));
     }
 
+    /**
+     * @param SplFileInfo $file
+     *
+     * @todo lower complexity. This is a mess
+     */
     public function preProcessFile(SplFileInfo $file)
     {
         /** @var \App\Entity\JavFile $javFile */
@@ -280,6 +285,14 @@ class JAVProcessorService
         throw new PreProcessFileException("Unable to extract ID {$fileName}", 1, null, $fileName);
     }
 
+    /**
+     *
+     * @todo refactor to accept path and use pathinfo instead of regex
+     *
+     * @param string $filename
+     * @return string
+     * @throws \Exception
+     */
     public static function cleanupFilename(string $filename) : string
     {
         if(preg_match("~^.+\.(.*)$~", $filename, $matches)) {
