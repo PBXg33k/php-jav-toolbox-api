@@ -6,9 +6,8 @@ services:
 before_install:
   - composer self-update
   - cd app
-  - pecl install amqp <<< ''
 install:
-  - composer update $COMPOSER_FLAGS
+  - composer install $COMPOSER_FLAGS --ignore-platform-reqs
 matrix:
   include:
     - php: 7.3
