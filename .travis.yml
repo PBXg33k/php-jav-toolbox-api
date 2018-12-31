@@ -6,7 +6,7 @@ services:
 before_install:
   - composer self-update
   - cd app
-  - printf "\n" | pecl install amqp
+  - pecl install amqp <<< ''
 install:
   - composer update $COMPOSER_FLAGS
 matrix:
