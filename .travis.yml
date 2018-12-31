@@ -4,6 +4,7 @@ before_install:
   - if [[ "$TRAVIS_PHP_VERSION" != "7.1" ]]; then phpenv config-rm xdebug.ini; fi
   - composer self-update
   - cd app
+  - echo "extension = amqp.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 install:
   - composer update $COMPOSER_FLAGS
 matrix:
@@ -12,7 +13,6 @@ matrix:
       script: vendor/bin/simple-phpunit
       before_script:
         - mkdir -p build/logs
-        - echo "extension = amqp.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
       after_script:
         - travis_retry php vendor/bin/php-coveralls -v
   fast_finish: true
