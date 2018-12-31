@@ -11,6 +11,8 @@ matrix:
   include:
     - php: 7.2
       script: vendor/bin/simple-phpunit
+      before_install:
+        - echo "extension = amqp.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
       before_script:
         - mkdir -p build/logs
       after_script:
