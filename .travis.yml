@@ -1,5 +1,8 @@
 language: php
 sudo: false
+services:
+  - rabbitmq
+  - redis-server
 before_install:
   - if [[ "$TRAVIS_PHP_VERSION" != "7.1" ]]; then phpenv config-rm xdebug.ini; fi
   - composer self-update
