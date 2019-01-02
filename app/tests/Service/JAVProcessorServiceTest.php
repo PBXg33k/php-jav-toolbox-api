@@ -212,20 +212,6 @@ class JAVProcessorServiceTest extends TestCase
         $invalidJavJackDownloads = [
             '315fbdc5be96ec692e2920bdb33b3d98',
             '5d2007905b0cc7f7b244490613eb9433',
-//            'videoplayback'
-        ];
-
-        foreach($invalidJavJackDownloads as $invalidJavJackDownload) {
-            $this->createTestForInvalidJAVJack($invalidJavJackDownload);
-        }
-    }
-
-    /**
-     * @test
-     */
-    public function willNotProcessInvalidJAVJackFile2()
-    {
-        $invalidJavJackDownloads = [
             'videoplayback'
         ];
 
@@ -235,9 +221,9 @@ class JAVProcessorServiceTest extends TestCase
     }
 
     private function createTestForInvalidJAVJack(string $filename) {
-        $javFile = (new JavFile())->setFilename("{$filename}.mp4");
+        $javFile = (new JavFile())->setPath("/media/{$filename}.mp4");
 
-        $this->logger->expects($this->once())
+        $this->logger->expects($this->any())
             ->method('warning')
             ->with(JAVProcessorService::LOG_UNKNOWN_JAVJACK);
 
