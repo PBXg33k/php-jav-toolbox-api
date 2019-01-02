@@ -212,6 +212,20 @@ class JAVProcessorServiceTest extends TestCase
         $invalidJavJackDownloads = [
             '315fbdc5be96ec692e2920bdb33b3d98',
             '5d2007905b0cc7f7b244490613eb9433',
+//            'videoplayback'
+        ];
+
+        foreach($invalidJavJackDownloads as $invalidJavJackDownload) {
+            $this->createTestForInvalidJAVJack($invalidJavJackDownload);
+        }
+    }
+
+    /**
+     * @test
+     */
+    public function willNotProcessInvalidJAVJackFile2()
+    {
+        $invalidJavJackDownloads = [
             'videoplayback'
         ];
 

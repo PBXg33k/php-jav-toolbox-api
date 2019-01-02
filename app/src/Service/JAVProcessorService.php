@@ -231,9 +231,9 @@ class JAVProcessorService
 
     public static function shouldProcessFile(JavFile $javFile, LoggerInterface $logger)
     {
-        $pathInfo = pathinfo($javFile->getPath(), PATHINFO_FILENAME);
+        $fileName = pathinfo($javFile->getPath(), PATHINFO_FILENAME);
 
-        if(ctype_xdigit($pathInfo) || $pathInfo === 'videoplayback') {
+        if(ctype_xdigit($fileName) || $fileName === 'videoplayback') {
             $logger->warning(self::LOG_UNKNOWN_JAVJACK);
             return false;
         }
