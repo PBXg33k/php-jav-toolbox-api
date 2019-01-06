@@ -46,11 +46,52 @@ class JAVThumbsService
             'path'  => $javFile->getPath()
         ]);
 
-        $process = new Process([
-            "mt",
-            "--config-file=\"{$this->getMtConfigPath()}\"",
+        $pathInfo = pathinfo($javFile->getPath());
+
+        if(file_exists("/media/thumbs{$pathInfo['dirname']}/{$pathInfo['filename']}.jpg")) {
+            $this->logger->info("thumbnail already exists", [
+                'path' => $javFile->getPath()
+            ]);
+
+            return false;
+        }
+
+        $finfo = new \SplFileInfo($javFile->getPath());
+        if(!$finfo->isFile()) {
+            $this->logger->error('Path is not a file', [
+                'path' => $javFile->getPath()
+            ]);
+            throw new \Exception('Path is not a file');
+        }
+
+        if(!$finfo->isReadable()) {
+            $this->logger->error('File is not readable',[
+                'path' => $javFile->getPath()
+            ]);
+            throw new \Exception('File is not readable');
+        }
+
+
+        $process = (new Process([
+            "test",
+            "-r",
             "\"{$javFile->getPath()}\""
-        ]);
+        ]));
+
+        if($process->getExitCode()) {
+            $this->logger->error('FILE NOT READABLE BY CMD', [
+                'path' => $javFile->getPath()
+            ]);
+            return false;
+        }
+
+
+        $process = (new Process([
+            "mt",
+            "--config-file",
+            $this->getMtConfigPath(),
+            $javFile->getPath()
+        ]))->setTimeout(10*60);
         $this->logger->debug("Running MT CMD", [
             'cmd' => $process->getCommandLine(),
         ]);
@@ -88,7 +129,13 @@ class JAVThumbsService
                 'file'             => $javFile->getPath(),
                 'exception_code'   => $exception->getCode(),
                 'process_exitcode' => $exception->getProcess()->getExitCode(),
-                'process_output'   => $exception->getProcess()->getOutput()
+                'process_output'   => $exception->getProcess()->getOutput(),
+                'proc'             => [
+                    'isTty'        => $process->isTty(),
+                    'isPty'        => $process->isPty(),
+                    'working_dir'  => $process->getWorkingDirectory(),
+                    'env'          => $process->getEnv()
+                ]
             ]);
         }
 
