@@ -31,6 +31,7 @@ class ThumbnailController extends AbstractController
     /**
      * ThumbnailController constructor.
      * @param EntityManagerInterface $entityManager
+     * @param LoggerInterface $logger
      * @param string $javToolboxMediaThumbDirectory
      */
     public function __construct(
