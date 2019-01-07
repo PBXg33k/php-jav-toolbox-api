@@ -198,16 +198,18 @@ class JAVProcessorServiceTest extends TestCase
         $this->logger->expects($this->once())
             ->method('notice');
 
-//        $this->messageBus->expects($this->once())
-//            ->method('dispatch')
-//            ->with(
-//                $this->callback(function($subject) {
-//                    return $this->isInstanceOf(CheckVideoMessage::class) &&
-//                        $subject->getJavFileId() === 39;
-//                })
-//            );
+        $this->messageBus->expects($this->once())
+            ->method('dispatch')
+            ->with(
+                $this->callback(function($subject) {
+                    return $this->isInstanceOf(CheckVideoMessage::class) &&
+                        $subject->getJavFileId() === 39;
+                })
+            );
 
-        $this->service->checkVideoConsistency($javFile);
+        $this->markTestIncomplete('Unable to test/mock messenger');
+
+//        $this->service->checkVideoConsistency($javFile);
     }
 
     /**
