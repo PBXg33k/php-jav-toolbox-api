@@ -210,7 +210,7 @@ class JAVProcessorServiceTest extends TestCase
         $this->markTestIncomplete('Unable to test/mock messenger');
 
 //        $this->service->checkVideoConsistency($javFile);
-    }
+    } 
 
     /**
      * @test
