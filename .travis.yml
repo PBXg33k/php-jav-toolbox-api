@@ -1,14 +1,16 @@
 language: php
 sudo: false
+services:
+  - rabbitmq
+  - redis-server
 before_install:
-  - if [[ "$TRAVIS_PHP_VERSION" != "7.1" ]]; then phpenv config-rm xdebug.ini; fi
   - composer self-update
   - cd app
 install:
-  - composer update $COMPOSER_FLAGS
+  - composer install $COMPOSER_FLAGS --ignore-platform-reqs
 matrix:
   include:
-    - php: 7.2
+    - php: 7.3
       script: vendor/bin/simple-phpunit
       before_script:
         - mkdir -p build/logs

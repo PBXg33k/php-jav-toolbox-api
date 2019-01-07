@@ -31,6 +31,9 @@ class JAVProcessorService
         'hentaikuindo'
     ];
 
+    const LOG_BLACKLIST_NAME  = 'Filename contains blacklisted string';
+    const LOG_UNKNOWN_JAVJACK = 'Unknown JAVJACK file detected';
+
     /**
      * @var LoggerInterface
      */
@@ -140,6 +143,11 @@ class JAVProcessorService
         $this->messageBus->dispatch(new CheckVideoMessage($file->getId()));
     }
 
+    /**
+     * @param SplFileInfo $file
+     *
+     * @todo lower complexity. This is a mess
+     */
     public function preProcessFile(SplFileInfo $file)
     {
         /** @var \App\Entity\JavFile $javFile */
@@ -223,16 +231,16 @@ class JAVProcessorService
 
     public static function shouldProcessFile(JavFile $javFile, LoggerInterface $logger)
     {
-        $filenameLength = strlen($javFile->getFilename());
+        $fileName = trim(pathinfo($javFile->getPath(), PATHINFO_FILENAME));
 
-        if(in_array($filenameLength, [36,51,52]) && !strpos($javFile->getFilename(), ' ')) {
-            $logger->notice('LENGTH OF FILENAME INDICATES INCORRECT JAVJACK DL');
+        if(ctype_xdigit($fileName) || $fileName === 'videoplayback') {
+            $logger->warning(self::LOG_UNKNOWN_JAVJACK);
             return false;
         }
 
         foreach(self::$blacklistnames as $blacklistname) {
             if(stripos($javFile->getFilename(), $blacklistname) !== FALSE) {
-                $logger->notice('FILENAME CONTAINS BLACKLISTED STRING');
+                $logger->warning(self::LOG_BLACKLIST_NAME);
                 return false;
             }
         }
@@ -277,6 +285,14 @@ class JAVProcessorService
         throw new PreProcessFileException("Unable to extract ID {$fileName}", 1, null, $fileName);
     }
 
+    /**
+     *
+     * @todo refactor to accept path and use pathinfo instead of regex
+     *
+     * @param string $filename
+     * @return string
+     * @throws \Exception
+     */
     public static function cleanupFilename(string $filename) : string
     {
         if(preg_match("~^.+\.(.*)$~", $filename, $matches)) {

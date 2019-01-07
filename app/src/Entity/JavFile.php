@@ -113,6 +113,13 @@ class JavFile
      */
     private $checked;
 
+    public function setId(int $id): self
+    {
+        $this->id = $id;
+
+        return $this;
+    }
+
     public function getId()
     {
         return $this->id;
@@ -173,6 +180,9 @@ class JavFile
 
     public function setPath(string $path): self
     {
+        if(!$this->getFilename()) {
+            $this->setFilename(pathinfo($path, PATHINFO_BASENAME));
+        }
         $this->path = $path;
 
         return $this;
