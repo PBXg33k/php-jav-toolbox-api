@@ -22,8 +22,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
     - This also prevents the same file to be checked multiple times if it's an exact duplicate
 - Messages are always dispatched. It is up to the handler to check if processing is required
 - Add couple of unit tests, more to be added in future updates
+- JavJack's faulty download check is based on filename instead of length (filename is either videoplayback or hexidecimal value)
 
-### Deleted
+### Removed
 - Code cleanup
 
 ## v0.1.0

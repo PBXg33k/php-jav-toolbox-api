@@ -7,7 +7,7 @@ before_install:
   - composer self-update
   - cd app
 install:
-  - composer install $COMPOSER_FLAGS --ignore-platform-reqs
+  - composer update $COMPOSER_FLAGS --ignore-platform-reqs
 matrix:
   include:
     - php: 7.3
