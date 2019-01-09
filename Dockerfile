@@ -45,5 +45,7 @@ RUN apk add --no-cache --update ffmpeg xxhash \
 
 # Cleanup
 RUN rm -rf /tmp/*
+
+CMD ["/var/www/start.sh"]
     
 EXPOSE 9000

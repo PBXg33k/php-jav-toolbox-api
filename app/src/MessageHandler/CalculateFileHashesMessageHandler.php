@@ -45,7 +45,7 @@ class CalculateFileHashesMessageHandler
     public function __invoke(CalculateFileHashesMessage $message)
     {
         /** @var JavFile $javFile */
-        $javFile = $this->entityManager->getRepository(JavFile::class)->find($message->getJavFileId());
+        $javFile = $this->entityManager->find(JavFile::class, $message->getJavFileId());
 
         if($message->hasXxhash()) {
             $this->logger->debug('Calculating hash', [

@@ -21,7 +21,7 @@ class FileScanService
     ];
 
     /**
-     * @var LoggerInterace
+     * @var LoggerInterface
      */
     private $logger;
 

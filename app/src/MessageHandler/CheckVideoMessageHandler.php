@@ -52,7 +52,7 @@ class CheckVideoMessageHandler implements MessageHandlerInterface
         /** @var JavFile $javFile */
         $javFile = $this->entityManager->find(JavFile::class, $message->getJavFileId());
         $startTime  = time();
-        if (!$javFile->getChecked()) {
+        if (!$javFile->getInode()->isChecked()) {
             $javFile = $this->mediaProcessorService->checkHealth(
                 $javFile,
                 true,
@@ -74,11 +74,11 @@ class CheckVideoMessageHandler implements MessageHandlerInterface
                             if (preg_match('~time=(?<hours>[\d]{1,2})\:(?<minutes>[\d]{2})\:(?<seconds>[\d]{2})?(?:\.(?<millisec>[\d]{0,3}))\sbitrate~', $buffer, $matches)) {
                                 $time = ($matches['hours'] * 3600 + $matches['minutes'] * 60 + $matches['seconds']) * 1000 + ($matches['millisec'] * 10);
 
-                                $this->logger->debug('Progress ' . number_format(($time / $javFile->getLength()) * 100, 2) . '%', [
+                                $this->logger->debug('Progress ' . number_format(($time / $javFile->getInode()->getLength()) * 100, 2) . '%', [
                                     'path' => $javFile->getPath(),
-                                    'length' => $javFile->getLength(),
+                                    'length' => $javFile->getInode()->getLength(),
                                     'mark' => $time,
-                                    'perc' => number_format($time / $javFile->getLength() * 100, 2) . '%'
+                                    'perc' => number_format($time / $javFile->getInode()->getLength() * 100, 2) . '%'
                                 ]);
                             }
                         } else {
@@ -88,14 +88,13 @@ class CheckVideoMessageHandler implements MessageHandlerInterface
                 });
 
             $this->entityManager->persist($javFile);
+            $this->entityManager->persist($javFile->getInode());
             $this->entityManager->flush();
         }
 
-
-        if ($javFile->getChecked() && $javFile->getConsistent()) {
+        if($javFile->getInode()->isChecked() && $javFile->getInode()->isConsistent()) {
             $this->messageBus->dispatch(new GenerateThumbnailMessage($javFile->getId()));
-            $this->messageBus->dispatch(new CalculateFileHashesMessage($javFile->getId(), CalculateFileHashesMessage::HASH_XXHASH));
-            $this->messageBus->dispatch(new CalculateFileHashesMessage($javFile->getId(), CalculateFileHashesMessage::HASH_MD5));
+            $this->messageBus->dispatch(new CalculateFileHashesMessage($javFile->getId(), CalculateFileHashesMessage::HASH_XXHASH | CalculateFileHashesMessage::HASH_MD5));
         }
     }
 }

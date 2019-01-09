@@ -38,13 +38,13 @@ class GenerateThumbnailMessageHandler
     {
         /** @var JavFile $javFile */
         $javFile = $this->entityManager->find(JavFile::class, $message->getJavFileId());
-        if ($javFile->getChecked() && $javFile->getConsistent()) {
+        if ($javFile->getInode()->isChecked() && $javFile->getInode()->isConsistent()) {
             $this->thumbsService->generateThumbs($javFile);
         } else {
             $this->logger->error('File conditions not met for thumbnail', [
                 'path'       => $javFile->getPath(),
-                'checked'    => $javFile->getChecked(),
-                'consistent' => $javFile->getConsistent()
+                'checked'    => $javFile->getInode()->isChecked(),
+                'consistent' => $javFile->getInode()->isConsistent()
             ]);
         }
     }
