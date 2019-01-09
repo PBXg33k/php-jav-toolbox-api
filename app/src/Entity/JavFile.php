@@ -30,18 +30,6 @@ class JavFile
     private $filename;
 
     /**
-     * @var int
-     * @ORM\Column(type="bigint", unique=false, options={"unsigned"=true})
-     */
-    private $filesize;
-
-    /**
-     * @var bool
-     * @ORM\Column(type="boolean")
-     */
-    private $processed;
-
-    /**
      * @var string
      * @ORM\Column(type="text")
      */
@@ -59,59 +47,6 @@ class JavFile
      * @ORM\JoinColumn(nullable=true)
      */
     private $inode;
-
-    /**
-     * @var int
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $height;
-
-    /**
-     * @var int
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $width;
-
-    /**
-     * @var float
-     * @ORM\Column(type="float", nullable=true)
-     */
-    private $fps;
-
-    /**
-     * @var string
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $codec;
-
-    /**
-     * @var bool
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $consistent;
-
-    /**
-     * @ORM\Column(type="blob", nullable=true)
-     */
-    private $meta;
-
-    /**
-     * @var int
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $length;
-
-    /**
-     * @var int
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $bitrate;
-
-    /**
-     * @var bool
-     * @ORM\Column(type="boolean", nullable=true)
-     */
-    private $checked;
 
     public function setId(int $id): self
     {
@@ -149,26 +84,38 @@ class JavFile
         return $this;
     }
 
+    /**
+     * @deprecated
+     */
     public function getFilesize(): ?int
     {
-        return $this->filesize;
+        return $this->getInode()->getFilesize();
     }
 
+    /**
+     * @deprecated
+     */
     public function setFilesize(int $filesize): self
     {
-        $this->filesize = $filesize;
+        $this->getInode()->setFilesize($filesize);
 
         return $this;
     }
 
+    /**
+     * @deprecated
+     */
     public function getProcessed(): ?bool
     {
-        return $this->processed;
+        return $this->getInode()->isProcessed();
     }
 
+    /**
+     * @deprecated
+     */
     public function setProcessed(bool $processed): self
     {
-        $this->processed = $processed;
+        $this->getInode()->setProcessed($processed);
 
         return $this;
     }
@@ -212,110 +159,164 @@ class JavFile
         return $this;
     }
 
+    /**
+     * @deprecated
+     */
     public function getHeight(): ?int
     {
-        return $this->height;
+        return $this->getInode()->getHeight();
     }
 
+    /**
+     * @deprecated
+     */
     public function setHeight(int $height): self
     {
-        $this->height = $height;
+        $this->getInode()->setHeight($height);
 
         return $this;
     }
 
+    /**
+     * @deprecated
+     */
     public function getWidth(): ?int
     {
-        return $this->width;
+        return $this->getInode()->getWidth();
     }
 
+    /**
+     * @deprecated
+     */
     public function setWidth(?int $width): self
     {
-        $this->width = $width;
+        $this->getInode()->setWidth($width);
 
         return $this;
     }
 
+    /**
+     * @deprecated
+     */
     public function getFps(): ?float
     {
-        return $this->fps;
+        return $this->getInode()->getFps();
     }
 
+    /**
+     * @deprecated
+     */
     public function setFps(?float $fps): self
     {
-        $this->fps = $fps;
+        $this->getInode()->setFps($fps);
 
         return $this;
     }
 
+    /**
+     * @deprecated
+     */
     public function getCodec(): ?string
     {
-        return $this->codec;
+        return $this->getInode()->getCodec();
     }
 
+    /**
+     * @deprecated
+     */
     public function setCodec(?string $codec): self
     {
-        $this->codec = $codec;
+        $this->getInode()->setCodec($codec);
 
         return $this;
     }
 
+    /**
+     * @deprecated
+     */
     public function getConsistent(): ?bool
     {
-        return $this->consistent;
+        return $this->getInode()->isConsistent();
     }
 
+    /**
+     * @deprecated
+     */
     public function setConsistent(?bool $consistent): self
     {
-        $this->consistent = $consistent;
+        $this->getInode()->setCodec($consistent);
 
         return $this;
     }
 
+    /**
+     * @deprecated
+     */
     public function getMeta()
     {
-        return $this->meta;
+        return $this->getInode()->getMeta();
     }
 
+    /**
+     * @deprecated
+     */
     public function setMeta($meta): self
     {
-        $this->meta = $meta;
+        $this->getInode()->setMeta($meta);
 
         return $this;
     }
 
+    /**
+     * @deprecated
+     */
     public function getLength(): ?int
     {
-        return $this->length;
+        return $this->getInode()->getLength();
     }
 
+    /**
+     * @deprecated
+     */
     public function setLength(?int $length): self
     {
-        $this->length = $length;
+        $this->getInode()->setLength($length);
 
         return $this;
     }
 
+    /**
+     * @deprecated
+     */
     public function getBitrate(): ?int
     {
-        return $this->bitrate;
+        return $this->getInode()->getBitrate();
     }
 
+    /**
+     * @deprecated
+     */
     public function setBitrate(?int $bitrate): self
     {
-        $this->bitrate = $bitrate;
+        $this->getInode()->setBitrate($bitrate);
 
         return $this;
     }
 
+    /**
+     * @deprecated
+     */
     public function getChecked(): ?bool
     {
-        return $this->checked;
+        return $this->getInode()->isChecked();
     }
 
+    /**
+     * @deprecated
+     */
     public function setChecked(?bool $checked): self
     {
-        $this->checked = $checked;
+        $this->getInode()->setChecked($checked);
 
         return $this;
     }
