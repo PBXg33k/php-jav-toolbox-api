@@ -38,9 +38,12 @@ class GetVideoMetadataMessageHandler
 
     public function __invoke(GetVideoMetadataMessage $message)
     {
+        /** @var JavFile $javFile */
         $javFile = $this->entityManager->find(JavFile::class, $message->getJavFileId());
-        $javFile = $this->mediaProcessorService->getMetadata($javFile);
-        $this->entityManager->persist($javFile);
-        $this->entityManager->flush();
+        if(!$javFile->getInode()->getMeta()) {
+            $javFile = $this->mediaProcessorService->getMetadata($javFile);
+            $this->entityManager->persist($javFile);
+            $this->entityManager->flush();
+        }
     }
 }
