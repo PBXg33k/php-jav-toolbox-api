@@ -42,7 +42,7 @@ class MediaProcessorService
         $this->logger->info('Checking video consistency', [
             'strict'     => $strict,
             'path'       => $javFile->getPath(),
-            'filesize'   => $javFile->getFilesize()
+            'filesize'   => $javFile->getInode()->getFilesize()
         ]);
 
         // command: "ffmpeg -v verbose -err_detect explode -xerror -i \"{$file->getPath()}\" -map 0:1 -f null -"
@@ -92,8 +92,7 @@ class MediaProcessorService
             'path'    => $javFile->getPath(),
         ]);
 
-        $javFile->setChecked(true);
-        $javFile->setConsistent($consistent);
+        $javFile->getInode()->setChecked(true)->setConsistent($consistent);
 
         return $javFile;
     }
@@ -121,22 +120,22 @@ class MediaProcessorService
         /** @var Video $vinfo */
         $vinfo = $this->videoInfo['video'][0];
         if($vinfo) {
-            $javFile->setCodec($vinfo->get('codec'));
+            $javFile->getInode()->setCodec($vinfo->get('codec'));
             if($vinfo->get('duration')) {
-                $javFile->setLength($vinfo->get('duration')->getMilliseconds());
+                $javFile->getInode()->setLength($vinfo->get('duration')->getMilliseconds());
             }
             if($vinfo->get('bit_rate')) {
-                $javFile->setBitrate($vinfo->get('bit_rate')->getAbsoluteValue());
+                $javFile->getInode()->setBitrate($vinfo->get('bit_rate')->getAbsoluteValue());
             } elseif($vinfo->get('nominal_bit_rate')) {
-                $javFile->setBitrate($vinfo->get('nominal_bit_rate')->getAbsoluteValue());
+                $javFile->getInode()->setBitrate($vinfo->get('nominal_bit_rate')->getAbsoluteValue());
             } else {
-                $javFile->setBitrate($vinfo->get('maximum_bit_rate')->getAbsoluteValue());
+                $javFile->getInode()->setBitrate($vinfo->get('maximum_bit_rate')->getAbsoluteValue());
             }
-            $javFile->setWidth($vinfo->get('width')->getAbsoluteValue());
-            $javFile->setHeight($vinfo->get('height')->getAbsoluteValue());
+            $javFile->getInode()->setWidth($vinfo->get('width')->getAbsoluteValue());
+            $javFile->getInode()->setHeight($vinfo->get('height')->getAbsoluteValue());
             try {
                 if($frameRate = $vinfo->get('frame_rate')) {
-                    $javFile->setFps($frameRate->getAbsoluteValue());
+                    $javFile->getinode()->setFps($frameRate->getAbsoluteValue());
                 } else {
                     throw
                     new \Exception("FPS unknown");

@@ -51,7 +51,7 @@ class ProcessFileMessageHandler
         /** @var JavFile $javFile */
         $javFile = $this->entityManager->find(JavFile::class, $message->getJavFileId());
 
-        if (!$javFile->getMeta()) {
+        if (!$javFile->getInode()->getMeta()) {
             $this->messageBus->dispatch(new GetVideoMetadataMessage($javFile->getId()));
         }
 

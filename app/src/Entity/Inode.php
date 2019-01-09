@@ -41,7 +41,7 @@ class Inode
      * @var bool
      * @ORM\Column(type="boolean", nullable=true)
      */
-    private $checked;
+    private $checked = false;
 
     /**
      * @var int
@@ -100,7 +100,7 @@ class Inode
      * @var bool
      * @ORM\Column(type="boolean")
      */
-    private $processed;
+    private $processed = false;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\JavFile", mappedBy="inodeinfo")

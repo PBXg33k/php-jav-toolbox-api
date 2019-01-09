@@ -123,7 +123,7 @@ class JAVProcessorService
         /** @var JavFile $javFile */
         foreach($title->getFiles() as $javFile)
         {
-            if(!$javFile->getChecked()) {
+            if(!$javFile->getInode()->isChecked()) {
                 $this->checkVideoConsistency($javFile, true, $force);
             }
         }
@@ -164,8 +164,9 @@ class JAVProcessorService
         if(
             $javFile &&
             strcasecmp($javFile->getTitle()->getCatalognumber(), $javTitleInfo->getCatalognumber()) &&
-            $javFile->getMeta() &&
-            $javFile->getChecked()
+            $javFile->getInode() &&
+            $javFile->getInode()->getMeta() &&
+            $javFile->getInode()->isChecked()
         ) {
             $this->logger->info('PATH ALREADY PROCESSED. CONTINUING', [
                 'catalog-id' => $javFile->getTitle()->getCatalognumber(),
@@ -179,13 +180,13 @@ class JAVProcessorService
                 /** @var \App\Entity\JavFile $javFile */
                 $javFile = $javTitleInfo->getFiles()->first();
                 $javFile->setPath($file->getPathname());
-                $javFile->setFilesize($file->getSize());
 
                 /** @var Inode $inode */
                 $inode = $this->entityManager->getRepository(Inode::class)->find($file->getInode());
 
                 if(!$inode) {
                     $inode = (new Inode)->setId($file->getInode());
+                    $inode->setFilesize($file->getSize());
                 }
 
                 $javFile->setInode($inode);
@@ -276,7 +277,6 @@ class JAVProcessorService
                 (new JavFile())
                     ->setFilename($fileName)
                     ->setPart($filePart)
-                    ->setProcessed(false)
             );
 
             return $title;
