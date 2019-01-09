@@ -4,20 +4,12 @@ namespace App\Tests\MessageHandler;
 use App\Entity\Inode;
 use App\Message\CalculateFileHashesMessage;
 use App\MessageHandler\CalculateFileHashesMessageHandler;
-use App\MessageHandler\ProcessFileMessageHandler;
 use App\Service\FileHandleService;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use App\Entity\JavFile;
-use App\Message\CheckVideoMessage;
-use App\Message\GenerateThumbnailMessage;
-use App\Message\GetVideoMetadataMessage;
-use App\Message\ProcessFileMessage;
-use App\Service\MediaProcessorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 class CalculateFileHashesMessageHandlerTest extends TestCase
