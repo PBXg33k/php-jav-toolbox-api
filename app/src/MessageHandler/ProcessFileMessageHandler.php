@@ -51,13 +51,8 @@ class ProcessFileMessageHandler
         /** @var JavFile $javFile */
         $javFile = $this->entityManager->find(JavFile::class, $message->getJavFileId());
 
-        if (!$javFile->getInode()->getMeta()) {
-            $this->messageBus->dispatch(new GetVideoMetadataMessage($javFile->getId()));
-        }
-
-        // This event will also dispatch message to generate thumbnails if the video is valid
+        $this->messageBus->dispatch(new GetVideoMetadataMessage($javFile->getId()));
         $this->messageBus->dispatch(new CheckVideoMessage($javFile->getId()));
-
         $this->messageBus->dispatch(new GenerateThumbnailMessage($javFile->getId()));
     }
 }

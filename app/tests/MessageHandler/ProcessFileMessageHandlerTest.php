@@ -14,7 +14,6 @@ use App\Message\ProcessFileMessage;
 use App\Service\MediaProcessorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 
@@ -74,7 +73,7 @@ class ProcessFileMessageHandlerTest extends TestCase
     /**
      * @test
      */
-    public function willDispatchAllMessagesOnANewFile()
+    public function willDispatchAllMessages()
     {
         $message = new ProcessFileMessage(1);
         $inode   = (new Inode())->setMeta(false);
