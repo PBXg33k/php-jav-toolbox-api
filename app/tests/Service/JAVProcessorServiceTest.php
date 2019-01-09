@@ -16,6 +16,7 @@ use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\Messenger\Envelope;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 class JAVProcessorServiceTest extends TestCase
@@ -119,11 +120,10 @@ class JAVProcessorServiceTest extends TestCase
                     return $this->isInstanceOf(ProcessFileMessage::class) &&
                         $subject->getJavFileId() === 39;
                 })
-            );
+            )
+            ->willReturn(new Envelope(new ProcessFileMessage(39)));
 
-        $this->markTestIncomplete('Unable to test/mock messenger');
-
-//        $this->service->processFile($javFile);
+        $this->service->processFile($javFile);
     }
 
     /**
@@ -134,7 +134,10 @@ class JAVProcessorServiceTest extends TestCase
         $javFile = (new JavFile())->setId(39);
 
         $this->logger->expects($this->once())
-            ->method('notice');
+            ->method('info');
+
+        $this->logger->expects($this->once())
+            ->method('debug');
 
         $this->messageBus->expects($this->once())
             ->method('dispatch')
@@ -143,11 +146,11 @@ class JAVProcessorServiceTest extends TestCase
                     return $this->isInstanceOf(GetVideoMetadataMessage::class) &&
                         $subject->getJavFileId() === 39;
                 })
-            );
+            )
+            ->willReturn(new Envelope(new GetVideoMetadataMessage(39)));
 
-        $this->markTestIncomplete('Unable to test/mock messenger');
 
-//        $this->service->processFile($javFile);
+        $this->service->processFile($javFile);
     }
 
     /**
@@ -172,11 +175,10 @@ class JAVProcessorServiceTest extends TestCase
                     return $this->isInstanceOf(CheckVideoMessage::class) &&
                         $subject->getJavFileId() === 39;
                 })
-            );
+            )
+            ->willReturn(new Envelope(new CheckVideoMessage(39)));
 
-        $this->markTestIncomplete('Unable to test/mock messenger');
-
-//        $this->service->checkVideoConsistency($javFile);
+        $this->service->checkVideoConsistency($javFile);
     }
 
     /**
@@ -205,11 +207,10 @@ class JAVProcessorServiceTest extends TestCase
                     return $this->isInstanceOf(CheckVideoMessage::class) &&
                         $subject->getJavFileId() === 39;
                 })
-            );
+            )
+            ->willReturn(new Envelope(new CheckVideoMessage(39)));
 
-        $this->markTestIncomplete('Unable to test/mock messenger');
-
-//        $this->service->checkVideoConsistency($javFile);
+        $this->service->checkVideoConsistency($javFile);
     } 
 
     /**
