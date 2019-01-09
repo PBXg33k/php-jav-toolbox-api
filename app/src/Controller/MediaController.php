@@ -2,15 +2,13 @@
 
 namespace App\Controller;
 
-use App\Entity\Title;
 use App\Repository\TitleRepository;
 use App\Service\JAVProcessorService;
-use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 
-class MediaController extends Controller
+class MediaController extends AbstractController
 {
     /**
      * @var JAVProcessorService

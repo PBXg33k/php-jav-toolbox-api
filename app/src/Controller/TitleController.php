@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Entity\Title;
 use App\Form\TitleType;
 use App\Repository\TitleRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * @Route("/title")
  */
-class TitleController extends Controller
+class TitleController extends AbstractController
 {
     /**
      * @Route("/", name="title_index", methods="GET")

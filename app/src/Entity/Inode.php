@@ -38,6 +38,71 @@ class Inode
     private $xxhash;
 
     /**
+     * @var bool
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $checked = false;
+
+    /**
+     * @var int
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $height;
+
+    /**
+     * @var int
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $width;
+
+    /**
+     * @var float
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $fps;
+
+    /**
+     * @var string
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $codec;
+
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    private $consistent;
+
+    /**
+     * @ORM\Column(type="blob", nullable=true)
+     */
+    private $meta;
+
+    /**
+     * @var int
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $length;
+
+    /**
+     * @var int
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $bitrate;
+
+    /**
+     * @var int
+     * @ORM\Column(type="bigint", unique=false, options={"unsigned"=true})
+     */
+    private $filesize;
+
+    /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    private $processed = false;
+
+    /**
      * @ORM\OneToMany(targetEntity="App\Entity\JavFile", mappedBy="inodeinfo")
      */
     private $javFiles;
@@ -104,6 +169,204 @@ class Inode
     {
         $this->xxhash = $xxhash;
 
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isChecked(): ?bool
+    {
+        return $this->checked;
+    }
+
+    /**
+     * @param bool $checked
+     * @return Inode
+     */
+    public function setChecked(bool $checked): self
+    {
+        $this->checked = $checked;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getHeight(): ?int
+    {
+        return $this->height;
+    }
+
+    /**
+     * @param int $height
+     * @return Inode
+     */
+    public function setHeight(int $height): self
+    {
+        $this->height = $height;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getWidth(): ?int
+    {
+        return $this->width;
+    }
+
+    /**
+     * @param int $width
+     * @return Inode
+     */
+    public function setWidth(int $width): self
+    {
+        $this->width = $width;
+        return $this;
+    }
+
+    /**
+     * @return float
+     */
+    public function getFps(): ?float
+    {
+        return $this->fps;
+    }
+
+    /**
+     * @param float $fps
+     * @return Inode
+     */
+    public function setFps(float $fps): self
+    {
+        $this->fps = $fps;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCodec(): ?string
+    {
+        return $this->codec;
+    }
+
+    /**
+     * @param string $codec
+     * @return Inode
+     */
+    public function setCodec(string $codec): self
+    {
+        $this->codec = $codec;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isConsistent(): ?bool
+    {
+        return $this->consistent;
+    }
+
+    /**
+     * @param bool $consistent
+     * @return Inode
+     */
+    public function setConsistent(bool $consistent): self
+    {
+        $this->consistent = $consistent;
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getMeta()
+    {
+        return $this->meta;
+    }
+
+    /**
+     * @param mixed $meta
+     * @return Inode
+     */
+    public function setMeta($meta)
+    {
+        $this->meta = $meta;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLength(): ?int
+    {
+        return $this->length;
+    }
+
+    /**
+     * @param int $length
+     * @return Inode
+     */
+    public function setLength(int $length): self
+    {
+        $this->length = $length;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getBitrate(): ?int
+    {
+        return $this->bitrate;
+    }
+
+    /**
+     * @param int $bitrate
+     * @return Inode
+     */
+    public function setBitrate(int $bitrate): self
+    {
+        $this->bitrate = $bitrate;
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getFilesize(): ?int
+    {
+        return $this->filesize;
+    }
+
+    /**
+     * @param int $filesize
+     * @return Inode
+     */
+    public function setFilesize(int $filesize): self
+    {
+        $this->filesize = $filesize;
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isProcessed(): ?bool
+    {
+        return $this->processed;
+    }
+
+    /**
+     * @param bool $processed
+     * @return Inode
+     */
+    public function setProcessed(bool $processed): self
+    {
+        $this->processed = $processed;
         return $this;
     }
 
