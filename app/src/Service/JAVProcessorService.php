@@ -258,7 +258,7 @@ class JAVProcessorService
     private static function extractID(string $fileName): Title
     {
         //^(?:.*?)(?:(?<label>[a-z]{1,6})(?:[-\.]+)?(?<release>[0-9]{2,7})(?:[-_\]]+)?(?:.*?)?(?:0|hd|fhd|cd?)?(?:[-_]?)?(?<part>[1-9]|\W[abcdef]|[0-9]{0,3})?\.)(\w{2,5}?)$
-        if(preg_match("~^(?:.*?)((?<label>[a-z]{2,6})(?:[-\.]+)?(?<release>[0-9]{2,7})(?:[-_\]]+)?(?:.*?)?(?:0|hd|fhd|cd[-_]?)?(?<part>[1-9]|\W?[abcdef]|[0-9]{0,3})?).*?.{4,5}$~i", $fileName, $matches)) {
+        if(preg_match("~^(?:.*?)((?<label>[a-z]{2,6})(?:[-\.\s]+)?(?<release>[0-9]{2,7})(?:[-_\]]+)?(?:.*?)?(?:0|hd|fhd|cd[-_]?)?(?<part>[1-9]|\W?[abcdef]|[0-9]{0,3})?).*?.{4,5}$~i", $fileName, $matches)) {
 
             $title = (new Title())
                 ->setCatalognumber(sprintf('%s-%s', $matches['label'], $matches['release']));
