@@ -211,11 +211,11 @@ class JAVProcessorService
                     'filename'       => $file->getFilename()
                 ]);
                 $title = $javTitleInfo;
+                $this->entityManager->persist($title);
             }
             $title->replaceFile($javFile);
             $javFile->setTitle($title);
 
-            $this->entityManager->merge($title);
             $this->entityManager->merge($javFile);
             $this->entityManager->flush();
 
