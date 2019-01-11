@@ -147,6 +147,7 @@ class JAVProcessorService
      * @param SplFileInfo $file
      *
      * @todo lower complexity. This is a mess
+     * @todo Check for bug causing duplicate title records
      */
     public function preProcessFile(SplFileInfo $file)
     {
@@ -214,8 +215,8 @@ class JAVProcessorService
             $title->replaceFile($javFile);
             $javFile->setTitle($title);
 
-            $this->entityManager->persist($title);
-            $this->entityManager->persist($javFile);
+            $this->entityManager->merge($title);
+            $this->entityManager->merge($javFile);
             $this->entityManager->flush();
 
             $this->processFile($javFile);
