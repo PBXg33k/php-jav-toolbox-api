@@ -147,7 +147,6 @@ class JAVProcessorService
      * @param SplFileInfo $file
      *
      * @todo lower complexity. This is a mess
-     * @todo Check for bug causing duplicate title records
      */
     public function preProcessFile(SplFileInfo $file)
     {

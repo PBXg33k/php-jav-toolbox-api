@@ -6,6 +6,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.1.3] - 2019-01-12
+### Changed
+- Bugfixes
+  - `Inode::meta` was not being populated causing `GetVideoMetadataMessageHandler` to trigger on already processed entries
+  - Duplicate `Title` records were inserted into db
+    - Patched code
+    - Added migration which removes duplicate records and adds an unique constraint in db
+  - Updated `composer.json`
+  - Enhanced `JAVProcessorService::extractID`
+  
+
 ## [0.1.2] - 2019-01-10
 ### Changed
 - Bugfix on the Dockerfile
