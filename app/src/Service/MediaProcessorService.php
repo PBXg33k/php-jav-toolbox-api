@@ -115,11 +115,41 @@ class MediaProcessorService
 
             $inode = $javFile->getInode();
 
-            $inode->setMeta(json_encode([
-                'general' => $mediaInfoContainer->getGeneral()->jsonSerialize(),
-                'video'   => $mediaInfoContainer->getVideos()[0]->jsonSerialize(),
-                'audio'   => $mediaInfoContainer->getAudios()[0]->jsonSerialize()
-            ]));
+            $meta = [
+                'general'   => $mediaInfoContainer->getGeneral()->jsonSerialize(),
+                'video'     => [],
+                'audio'     => [],
+                'subtitles' => [],
+                'images'    => [],
+                'menus'     => [],
+                'others'    => []
+            ];
+
+            foreach ($mediaInfoContainer->getVideos() as $video) {
+                $meta['video'][] = $video->jsonSerialize();
+            }
+
+            foreach ($mediaInfoContainer->getAudios() as $audio) {
+                $meta['audio'][] = $audio->jsonSerialize();
+            }
+
+            foreach ($mediaInfoContainer->getSubtitles() as $subtitle) {
+                $meta['subtitles'][] = $subtitle->jsonSerialize();
+            }
+
+            foreach ($mediaInfoContainer->getImages() as $image) {
+                $meta['images'][] = $image->jsonSerialize();
+            }
+
+            foreach ($mediaInfoContainer->getMenus() as $menu) {
+                $meta['menus'][] = $menu->jsonSerialize();
+            }
+
+            foreach ($mediaInfoContainer->getOthers() as $other) {
+                $meta['others'][] = $other->jsonSerialize();
+            }
+
+            $inode->setMeta(json_encode($meta));
         } else {
             // @todo replace exception type
             throw new \Exception('Unable to load video metadata');
