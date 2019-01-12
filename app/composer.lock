@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d4fd82d6facd362d092176e511e57e99",
+    "content-hash": "cb0d92fa06100d02d46c27c4e3b2aeea",
     "packages": [
         {
             "name": "colinodell/symfony-lts-or-current",
@@ -6920,7 +6920,8 @@
     "prefer-lowest": false,
     "platform": {
         "php": "^7.1.3",
-        "ext-iconv": "*"
+        "ext-iconv": "*",
+        "ext-json": "^1.7"
     },
     "platform-dev": []
 }
