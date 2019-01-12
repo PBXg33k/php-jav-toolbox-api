@@ -37,7 +37,7 @@ class JavFile
 
     /**
      * @var ?Title
-     * @ORM\ManyToOne(targetEntity="App\Entity\Title", inversedBy="files", cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Title", inversedBy="files")
      */
     private $title;
 
