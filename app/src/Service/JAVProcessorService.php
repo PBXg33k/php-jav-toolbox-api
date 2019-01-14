@@ -14,6 +14,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Messenger\MessageBusInterface;
+use App\Service\FilenameParser;
 
 /**
  * Class JAVProcessorService
@@ -225,9 +226,9 @@ class JAVProcessorService
         }
     }
 
-    public static function extractIDFromFilename(string $fileName): Title
+    public static function extractIDFromFilename(string $fileName)//: Title
     {
-        return self::extractID(self::cleanupFilename($fileName));
+        return self::extractID($fileName);
     }
 
     public static function shouldProcessFile(JavFile $javFile, LoggerInterface $logger)
@@ -254,114 +255,53 @@ class JAVProcessorService
      * @return Title
      * @throws PreProcessFileException
      */
-    private static function extractID(string $fileName): Title
+    private static function extractID(string $fileName)//: Title
     {
-        //^(?:.*?)(?:(?<label>[a-z]{1,6})(?:[-\.]+)?(?<release>[0-9]{2,7})(?:[-_\]]+)?(?:.*?)?(?:0|hd|fhd|cd?)?(?:[-_]?)?(?<part>[1-9]|\W[abcdef]|[0-9]{0,3})?\.)(\w{2,5}?)$
-        if(preg_match("~^(?:.*?)((?<label>[a-z]{2,6})(?:[-\.\s]+)?(?<release>[0-9]{2,7})(?:[-_\]]+)?(?:.*?)?(?:0|hd|fhd|cd[-_]?)?(?<part>[1-9]|\W?[abcdef]|[0-9]{0,3})?).*?.{4,5}$~i", $fileName, $matches)) {
+        $javTitle = false;
 
-            $title = (new Title())
-                ->setCatalognumber(sprintf('%s-%s', $matches['label'], $matches['release']));
-
-            $filePart = 1;
-
-            if($matches['part'] !== '') {
-                if(!is_numeric($matches['part'])) {
-                    // Convert letter to number (a = 1, b = 2)
-                    $matches['part'] = ord(strtolower($matches['part'])) - 96;
-                }
-
-                $filePart = $matches['part'];
-            }
-
-            $title->addFile(
-                (new JavFile())
-                    ->setFilename($fileName)
-                    ->setPart($filePart)
-            );
-
-            return $title;
-        }
-
-        throw new PreProcessFileException("Unable to extract ID {$fileName}", 1, null, $fileName);
-    }
-
-    /**
-     *
-     * @todo refactor to accept path and use pathinfo instead of regex
-     *
-     * @param string $filename
-     * @return string
-     * @throws \Exception
-     */
-    public static function cleanupFilename(string $filename) : string
-    {
-        if(preg_match("~^.+\.(.*)$~", $filename, $matches)) {
-            $fileExtension = $matches[1];
-        } else {
-            throw new \Exception('Unable to extract file extension');
-        }
-
-        $filename = str_ireplace(".{$fileExtension}", '', $filename);
-
-        $leftTrim = [
-            'hjd2048.com-',
-            'hjd2048.com',
-            'watch18plus_',
+        $matchers = [
+            FilenameParser\CustomMarozParser::class,
+            FilenameParser\CustomParserHjd2048::class,
+            FilenameParser\ProcessedFilenameParser::class,
+            FilenameParser\Level1Parser::class,
+            FilenameParser\Level2Parser::class,
+            FilenameParser\Level3Parser::class,
+            FilenameParser\Level4Parser::class,
+            FilenameParser\Level5Parser::class,
+            FilenameParser\Hack5Parser::class,
+            FilenameParser\Level6Parser::class,
+            FilenameParser\Level7Parser::class,
+            FilenameParser\Level10Parser::class,
+            FilenameParser\Level11Parser::class,
+            FilenameParser\Level40Parser::class,
+            FilenameParser\CustomSkyParser::class,
+            FilenameParser\Hack1Parser::class,
+            FilenameParser\Hack2Parser::class,
+            FilenameParser\Hack3Parser::class,
+            FilenameParser\Hack4Parser::class,
         ];
 
-        $rightTrim = [
-            'h264',
-            '1080p',
-            '1080',
-            '108',
-            '1920',
-            '720',
-            '108',
-            'hhb',
-            'fhd',
-            '[hd]',
-            'hd',
-            'sd',
-            'mp4',
-            '-f',
-            '-5'
-        ];
+        foreach($matchers as $matcher) {
+            /** @var FilenameParser\BaseParser $matcherInstance */
+            $matcherInstance = new $matcher;
 
-        $filename = self::rtrim(self::ltrim($filename, $leftTrim), $rightTrim);
-
-        return $filename.'.'.$fileExtension;
-    }
-
-    private static function ltrim(string $filename, array $leftTrim): string
-    {
-        foreach ($leftTrim as $trim) {
-            if(stripos(strtolower($filename), $trim) === 0) {
-                $filename = substr($filename, strlen($trim));
-                $filename = self::ltrim($filename, $leftTrim);
+            if($matcherInstance->hasMatch($fileName)) {
+                $javTitle =  $matcherInstance->getParts();
             }
         }
 
-        return $filename;
-    }
-
-    private static function rtrim(string $filename, array $rightTrim): string
-    {
-        // Parse filename to exclude exces filtering if filtered word is part of release
-        $parsed = self::extractID("{$filename}.mp4");
-
-        foreach ($rightTrim as $trim) {
-            if($parsed !== null && $trim == explode('-', $parsed->getCatalognumber())[1]) {
-                return $filename;
-            }
-
-            if(stripos($filename, $trim) === strlen($filename) - strlen($trim)) {
-                $filename = substr($filename, 0, -1 * abs(strlen($trim)));
-                $filename = rtrim($filename, '-');
-                $filename = self::rtrim($filename, $rightTrim);
-            }
+        if(!$javTitle) {
+            throw new PreProcessFileException('Unable to detect JAV Title',1,null,$fileName);
         }
 
-        return $filename;
+        $title = (new Title())
+            ->setCatalognumber(sprintf('%s-%s', $javTitle->getLabel(), $javTitle->getRelease()));
+
+        $title->addFile(
+            (new JavFile())
+                ->setFilename($fileName)
+                ->setPart(($javTitle->getPart()) ?: 1)
+        );
     }
 
     public static function filenameContainsID(string $filename): bool

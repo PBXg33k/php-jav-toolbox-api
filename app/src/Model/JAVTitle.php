@@ -27,9 +27,24 @@ class JAVTitle
     protected $files;
 
     /**
+     * @var ?int
+     */
+    protected $part;
+
+    /**
      * @var bool
      */
     protected $multipart = false;
+
+    /**
+     * @var string
+     */
+    protected $cleanName;
+
+    /**
+     * @var string
+     */
+    protected $parser;
 
     public function __construct()
     {
@@ -119,5 +134,65 @@ class JAVTitle
         return $this;
     }
 
+    /**
+     * @return int
+     */
+    public function getPart(): ?int
+    {
+        return $this->part;
+    }
 
+    /**
+     * @param int|string $part
+     * @return JAVTitle
+     * @throws \Exception If $part is neither an integer or a string
+     */
+    public function setPart($part): JAVTitle
+    {
+        if(is_string($part)) {
+            // convert to integer
+            $part = ord(strtolower($part)) - 96;
+        } elseif (!is_int($part)) {
+            throw new \Exception('part must be either an integer or a string');
+        }
+
+        $this->part = $part;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getParser(): string
+    {
+        return $this->parser;
+    }
+
+    /**
+     * @param string $parser
+     * @return JAVTitle
+     */
+    public function setParser(string $parser): JAVTitle
+    {
+        $this->parser = $parser;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCleanName(): string
+    {
+        return $this->cleanName;
+    }
+
+    /**
+     * @param string $cleanName
+     * @return JAVTitle
+     */
+    public function setCleanName(string $cleanName): JAVTitle
+    {
+        $this->cleanName = $cleanName;
+        return $this;
+    }
 }
