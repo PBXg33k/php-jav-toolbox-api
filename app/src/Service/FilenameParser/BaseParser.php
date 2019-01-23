@@ -91,16 +91,16 @@ abstract class BaseParser
 
     public abstract function __construct();
 
-    public function hasMatch(string $filename): bool
+    public function hasMatch(string $path): bool
     {
         if(!$this->pattern) {
             throw new \Exception('pattern not set');
         }
 
-        $filename       = $this->cleanUp($filename);
-        $this->filename = $filename;
+        $path       = $this->cleanUp($path);
+        $this->filename = $path;
 
-        $match = preg_match($this->pattern, $filename, $this->matches);
+        $match = preg_match($this->pattern, $path, $this->matches);
         if($match) {
             if(
                 in_array(strtolower($this->matches['label']),$this->blacklistLabel)
@@ -112,14 +112,14 @@ abstract class BaseParser
         return $match;
     }
 
-    public function cleanUp(string $filename): string
+    public function cleanUp(string &$filename): string
     {
         $filename = trim(self::rtrim(
             self::ltrim(
                 str_ireplace(
                     $this->filterWords,
                     ' ',
-                    $filename
+                    $this->extractFilename($filename)
                 ),
                 $this->leftTrim
             ),
@@ -178,6 +178,10 @@ abstract class BaseParser
     protected function constructRegexPattern(string ...$parts) {
         $this->pattern = sprintf('~^%s$~i', implode("", $parts));
         return $this->pattern;
+    }
+
+    private function extractFilename(string $path) {
+        return pathinfo($path, PATHINFO_FILENAME);
     }
 
     private static function ltrim(string $filename, array $leftTrim): string

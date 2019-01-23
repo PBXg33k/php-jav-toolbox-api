@@ -286,22 +286,21 @@ class JAVProcessorService
             $matcherInstance = new $matcher;
 
             if($matcherInstance->hasMatch($fileName)) {
-                $javTitle =  $matcherInstance->getParts();
+                $javTitle = $matcherInstance->getParts();
+
+                $title = (new Title())
+                    ->setCatalognumber(sprintf('%s-%s', $javTitle->getLabel(), $javTitle->getRelease()));
+
+                $title->addFile(
+                    (new JavFile())
+                        ->setFilename($fileName)
+                        ->setPart(($javTitle->getPart()) ?: 1)
+                );
+
+                return $title;
             }
         }
-
-        if(!$javTitle) {
-            throw new PreProcessFileException('Unable to detect JAV Title',1,null,$fileName);
-        }
-
-        $title = (new Title())
-            ->setCatalognumber(sprintf('%s-%s', $javTitle->getLabel(), $javTitle->getRelease()));
-
-        $title->addFile(
-            (new JavFile())
-                ->setFilename($fileName)
-                ->setPart(($javTitle->getPart()) ?: 1)
-        );
+        throw new PreProcessFileException('Unable to detect JAV Title',1,null,$fileName);
     }
 
     public static function filenameContainsID(string $filename): bool
