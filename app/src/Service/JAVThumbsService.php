@@ -3,6 +3,7 @@ namespace App\Service;
 
 use App\Entity\JavFile;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
 
@@ -46,13 +47,8 @@ class JAVThumbsService
             'path'  => $javFile->getPath()
         ]);
 
-        $pathInfo = pathinfo($javFile->getPath());
-
-        if(file_exists("/media/thumbs{$pathInfo['dirname']}/{$pathInfo['filename']}.jpg")) {
-            $this->logger->info("thumbnail already exists", [
-                'path' => $javFile->getPath()
-            ]);
-
+        // Check for old path
+        if($this->getThumbnail($javFile)) {
             return false;
         }
 
@@ -71,7 +67,6 @@ class JAVThumbsService
             throw new \Exception('File is not readable');
         }
 
-
         $process = (new Process([
             "test",
             "-r",
@@ -85,11 +80,12 @@ class JAVThumbsService
             return false;
         }
 
-
         $process = (new Process([
             "mt",
             "--config-file",
             $this->getMtConfigPath(),
+            "--output",
+            $this->getThumbPath($javFile),
             $javFile->getPath()
         ]))->setTimeout(10*60);
         $this->logger->debug("Running MT CMD", [
@@ -140,5 +136,46 @@ class JAVThumbsService
         }
 
         return false;
+    }
+
+    /**
+     * Method for addressing issue #38
+     *
+     * @param JavFile $javFile
+     */
+    private function renameFromFilenameToInode(JavFile $javFile)
+    {
+        $filesystem = new Filesystem();
+        $pathInfo = pathinfo($javFile->getPath());
+
+        $oldPath = "/media/thumbs{$pathInfo['dirname']}/{$pathInfo['filename']}.jpg";
+
+        if($filesystem->exists($oldPath))
+        {
+            $this->logger->debug('Renaming thumbnail', [
+                'oldpath' => $oldPath,
+                'newpath' => $this->getThumbPath($javFile)
+            ]);
+
+            if(!$filesystem->exists($this->getThumbPath($javFile))) {
+                $filesystem->rename($oldPath, $this->getThumbPath($javFile));
+            }
+        }
+    }
+
+    public function getThumbnail(JavFile $javFile)
+    {
+        $this->renameFromFilenameToInode($javFile);
+
+        if(file_exists($this->getThumbPath($javFile))) {
+            return new \SplFileInfo($this->getThumbPath($javFile));
+        }
+
+        return false;
+    }
+
+    private function getThumbPath(JavFile $javFile)
+    {
+        return "/media/thumbs/{$javFile->getInode()->getId()}.jpg";
     }
 }
