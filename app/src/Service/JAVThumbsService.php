@@ -15,13 +15,23 @@ class JAVThumbsService
     protected $mtConfigPath;
 
     /**
+     * @var string
+     */
+    protected $javToolboxMediaThumbDirectory;
+
+    /**
      * @var LoggerInterface
      */
     protected $logger;
 
-    public function __construct(LoggerInterface $logger, string $javToolboxMtConfigPath)
+    public function __construct(
+        LoggerInterface $logger,
+        string $javToolboxMtConfigPath,
+        string $javToolboxMediaThumbDirectory
+    )
     {
-        $this->logger = $logger;
+        $this->logger   = $logger;
+        $this->setJavToolboxMediaThumbDirectory($javToolboxMediaThumbDirectory);
         $this->setMtConfigPath($javToolboxMtConfigPath);
     }
 
@@ -35,10 +45,36 @@ class JAVThumbsService
 
     /**
      * @param string $mtConfigPath
+     * @return JAVThumbsService
      */
-    public function setMtConfigPath(string $mtConfigPath): void
+    public function setMtConfigPath(string $mtConfigPath): self
     {
         $this->mtConfigPath = $mtConfigPath;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getJavToolboxMediaThumbDirectory(): string
+    {
+        return $this->javToolboxMediaThumbDirectory;
+    }
+
+    /**
+     * @param string $javToolboxMediaThumbDirectory
+     * @return JAVThumbsService
+     * @throws \Exception
+     */
+    public function setJavToolboxMediaThumbDirectory(string $javToolboxMediaThumbDirectory): JAVThumbsService
+    {
+        if(!is_dir($javToolboxMediaThumbDirectory)) {
+            throw new \Exception('Path not a directory');
+        }
+
+        $this->javToolboxMediaThumbDirectory = $javToolboxMediaThumbDirectory;
+        return $this;
     }
 
     public function generateThumbs(JavFile $javFile)
@@ -148,17 +184,23 @@ class JAVThumbsService
         $filesystem = new Filesystem();
         $pathInfo = pathinfo($javFile->getPath());
 
-        $oldPath = "/media/thumbs{$pathInfo['dirname']}/{$pathInfo['filename']}.jpg";
+
+        $oldPath = "{$pathInfo['dirname']}/{$pathInfo['filename']}.jpg";
 
         if($filesystem->exists($oldPath))
         {
-            $this->logger->debug('Renaming thumbnail', [
-                'oldpath' => $oldPath,
-                'newpath' => $this->getThumbPath($javFile)
-            ]);
-
             if(!$filesystem->exists($this->getThumbPath($javFile))) {
+                $this->logger->debug('Renaming thumbnail', [
+                    'oldpath' => $oldPath,
+                    'newpath' => $this->getThumbPath($javFile)
+                ]);
                 $filesystem->rename($oldPath, $this->getThumbPath($javFile));
+            } else {
+                $this->logger->debug('Duplicate thumbnail detected during rename', [
+                    'oldpath' => $oldPath,
+                    'newPath' => $this->getThumbPath($javFile)
+                ]);
+                $filesystem->remove($oldPath);
             }
         }
     }
@@ -176,6 +218,6 @@ class JAVThumbsService
 
     private function getThumbPath(JavFile $javFile)
     {
-        return "/media/thumbs/{$javFile->getInode()->getId()}.jpg";
+        return "{$this->javToolboxMediaThumbDirectory}/{$javFile->getInode()->getId()}.jpg";
     }
 }
