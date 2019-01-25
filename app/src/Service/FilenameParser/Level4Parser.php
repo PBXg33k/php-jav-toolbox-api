@@ -4,11 +4,14 @@ namespace App\Service\FilenameParser;
 class Level4Parser extends BaseParser
 {
     /**
-     * Level3Parser constructor.
+     * Level4Parser constructor.
      *
      * matches:
      * 0901ABC123
+     *
+     * @obsolete already covered by Level3Parser
      */
+
     public function __construct()
     {
         $this->constructRegexPattern(

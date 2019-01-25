@@ -21,6 +21,7 @@ class Level3ParserTest extends FilenameParserTest
             'dasf ABC-123 asoldinasdoi' => false,
             '138541384ABC-123'          => true,
             '00098_ABC-123'             => true,
+            '0901ABC123'                => true,
         ]);
     }
 }

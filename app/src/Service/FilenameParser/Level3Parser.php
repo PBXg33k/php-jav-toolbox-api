@@ -15,7 +15,7 @@ class Level3Parser extends BaseParser
         $this->constructRegexPattern(
             "[\d_]+",
             self::PREG_LABEL,
-            "\-+?",
+            "\-*?",
             self::PREG_RELEASE,
             self::PREG_PART,
             "_?"
