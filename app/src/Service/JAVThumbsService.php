@@ -77,6 +77,13 @@ class JAVThumbsService
         return $this;
     }
 
+    /**
+     * @param JavFile $javFile
+     * @return bool
+     * @throws \Exception
+     *
+     * @todo refactor to make more testable
+     */
     public function generateThumbs(JavFile $javFile)
     {
         $this->logger->debug("Generating thumbs for file", [
