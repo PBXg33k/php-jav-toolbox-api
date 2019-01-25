@@ -61,6 +61,16 @@ abstract class FilenameParserTest extends TestCase
 
         foreach($this->matchExpects as $input => $expect) {
             $result = $this->parser->hasMatch($input);
+            if($expect !== $result) {
+                var_dump(
+                    $input,
+                    $this->parser->cleanUp($input),
+                    get_class($this->parser),
+                    $expect,
+                    $result,
+                    $this->parser->pattern
+                ); die();
+            }
             $this->assertEquals($expect, $result);
 
         }
@@ -69,8 +79,8 @@ abstract class FilenameParserTest extends TestCase
     protected function getFilterSamples()
     {
         return [
-            'KV-142(60fps).mp4' => 'KV-142( )',
-            'HUNTA-228 [WebRip_720p]_[only scene with Mishima Natsuko].mp4' => 'HUNTA-228 [   ] [only scene with Mishima Natsuko]'
+            'KV-142(60fps).mp4' => 'KV-142',
+            'HUNTA-228 [WebRip_720p]_[only scene with Mishima Natsuko].mp4' => 'HUNTA-228 [][only scene with Mishima Natsuko]'
         ];
     }
 }

@@ -118,7 +118,7 @@ abstract class BaseParser
             self::ltrim(
                 str_ireplace(
                     $this->filterWords,
-                    ' ',
+                    '',
                     $this->extractFilename($filename)
                 ),
                 $this->leftTrim

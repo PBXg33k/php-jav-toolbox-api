@@ -15,6 +15,8 @@ class Level1ParserTest extends FilenameParserTest
             'ABC012-1'                  => true,
             'ABC-012-1'                 => true,
             'ABC.024'                   => false,
+            '000_ABC-123_'              => false,
+            'ABC-123_'                  => true,
             'ABC-123 Some Title'        => false,
             'hjd2048.com-ABC-012'       => true,
             'ABC-012hd'                 => true,

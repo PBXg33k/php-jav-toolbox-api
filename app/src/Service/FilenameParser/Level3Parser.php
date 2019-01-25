@@ -13,12 +13,12 @@ class Level3Parser extends BaseParser
     public function __construct()
     {
         $this->constructRegexPattern(
-            "[\d_]+?",
+            "[\d_]+",
             self::PREG_LABEL,
             "\-+?",
             self::PREG_RELEASE,
             self::PREG_PART,
-            "_"
+            "_?"
         );
     }
 }
