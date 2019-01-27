@@ -15,7 +15,6 @@ class Level1Parser extends BaseParser
     {
         $this->constructRegexPattern(
             self::PREG_LABEL,
-            "\-?",
             self::PREG_RELEASE,
             self::PREG_PART
         );

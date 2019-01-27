@@ -88,7 +88,7 @@ class FileScanService
                     $this->processFile($finfo);
                 } catch (\Exception $exception) {
                     $this->logger->error($exception->getMessage(), [
-                        'path' => $finfo->getPath()
+                        'path' => $finfo->getPathname()
                     ]);
                 }
             }

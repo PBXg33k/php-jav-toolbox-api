@@ -8,7 +8,7 @@ abstract class BaseParser
 {
     const PREG_LABEL   = '(?<label>3dsvr|1[1-9]id|9snis|9soe|2[0-9]id|[a-z]{2,7})';
     const PREG_RELEASE = '(?<release>[0-9]{2,7})';
-    const PREG_PART    = '(?:(?:\W|\_|\-|hhb|hd|cd|sc|disk\s?)(?<part>[1-9]|(?:[abcd]|[f][^hd])|[01][1-9]?|[IVX]+))?';
+    const PREG_PART    = '(?:(?:\W|\_|\-|hhb|hd|cd|sc|disk\s?)?(?<part>[1-9]|(?:[abcd]|[f][^hd])|[01][1-9]?|[IVX]+)?)?';
     const PREG_SIMPLE_PART  = '(?<part>0?[1-9]+|[abcde])?';
 
     private $blacklistRegex = [
@@ -31,8 +31,6 @@ abstract class BaseParser
         'full-hd',
         'fhd',
         '[hd]',
-        '[44x.me]',
-        '[thz.la]',
         'webrip',
         'dvdrip',
         'hdrip',
@@ -48,11 +46,10 @@ abstract class BaseParser
         '.wmv',
         '(non-nude)',
         'non-nude',
-        '[   ]',
         '~',
+        '[]',
         '()',
         '_',
-        '.',
     ];
 
     private $leftTrim = [
@@ -76,7 +73,6 @@ abstract class BaseParser
         ' -',
         '-f',
         '-5',
-        '.',
         'avi',
     ];
 
@@ -93,26 +89,20 @@ abstract class BaseParser
 
     public function hasMatch(string $path): bool
     {
+        $this->filename = $path;
+
         if(!$this->pattern) {
             throw new \Exception('pattern not set');
         }
 
-        $path       = $this->cleanUp($path);
-        $this->filename = $path;
-
-        $match = preg_match($this->pattern, $path, $this->matches);
-        if($match) {
-            if(
-                in_array(strtolower($this->matches['label']),$this->blacklistLabel)
-            ) {
-                return false;
-            }
+        if(!preg_match($this->pattern, $this->filename, $this->matches)) {
+            return preg_match($this->pattern, $this->cleanUp($this->filename), $this->matches);
         }
 
-        return $match;
+        return true;
     }
 
-    public function cleanUp(string &$filename): string
+    public function cleanUp(string $filename): string
     {
         $filename = trim(self::rtrim(
             self::ltrim(
@@ -140,7 +130,7 @@ abstract class BaseParser
         $title = (new JAVTitle())
             ->setLabel($this->matches['label'])
             ->setRelease($this->matches['release'])
-            ->setParser(static::class)
+            ->setParser(basename(str_replace('\\', '/', static::class)))
             ->setCleanName($this->cleanUp($this->filename));
 
         if(isset($this->matches['part']) && !is_null($this->matches['part'])) {

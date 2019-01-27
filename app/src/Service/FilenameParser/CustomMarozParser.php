@@ -13,7 +13,7 @@ class CustomMarozParser extends BaseParser
             self::PREG_LABEL,
             "\-",
             self::PREG_RELEASE,
-            "(?:[\-\_\w\.\d]+)?",
+            "(?:[\-\_\w\.\d]+?)?",
             self::PREG_PART
         );
     }

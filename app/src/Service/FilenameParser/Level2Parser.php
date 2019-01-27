@@ -18,11 +18,9 @@ class Level2Parser extends BaseParser
     {
         $this->constructRegexPattern(
             self::PREG_LABEL,
-            '\-?',
+            '\-',
             self::PREG_RELEASE,
-            '(?:\-*)?',
-            self::PREG_PART,
-            '(?:\.[a-z]{3})?'
+            self::PREG_PART
         );
     }
 }

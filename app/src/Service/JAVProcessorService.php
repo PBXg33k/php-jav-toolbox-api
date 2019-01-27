@@ -279,6 +279,7 @@ class JAVProcessorService
             FilenameParser\Hack2Parser::class,
             FilenameParser\Hack3Parser::class,
             FilenameParser\Hack4Parser::class,
+            FilenameParser\Level12Parser::class,
         ];
 
         foreach($matchers as $matcher) {
