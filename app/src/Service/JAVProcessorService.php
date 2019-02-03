@@ -226,7 +226,7 @@ class JAVProcessorService
         }
     }
 
-    public static function extractIDFromFilename(string $fileName)//: Title
+    public static function extractIDFromFilename(string $fileName): Title
     {
         return self::extractID($fileName);
     }
