@@ -266,7 +266,6 @@ class JAVProcessorService
             FilenameParser\Level1Parser::class,
             FilenameParser\Level2Parser::class,
             FilenameParser\Level3Parser::class,
-            FilenameParser\Level4Parser::class,
             FilenameParser\Level5Parser::class,
             FilenameParser\Hack5Parser::class,
             FilenameParser\Level6Parser::class,
