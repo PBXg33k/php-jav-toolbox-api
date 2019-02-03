@@ -50,6 +50,9 @@ abstract class BaseParser
         '[]',
         '()',
         '_',
+        'hjd2048.com-',
+        'hjd2048.com',
+        'watch18plus_',
     ];
 
     private $leftTrim = [
@@ -70,7 +73,7 @@ abstract class BaseParser
         'hd',
         'sd',
         'mp4',
-        ' -',
+        's-',
         '-f',
         '-5',
         'avi',
@@ -104,17 +107,30 @@ abstract class BaseParser
 
     public function cleanUp(string $filename): string
     {
-        $filename = trim(self::rtrim(
-            self::ltrim(
-                str_ireplace(
-                    $this->filterWords,
-                    '',
-                    $this->extractFilename($filename)
+
+//        var_dump([
+//            'raw'       => $filename,
+//            'rtrim'     => self::rtrim($filename, $this->rightTrim),
+//            'ltrim'     => self::ltrim($filename, $this->leftTrim),
+//            'filter'    => str_ireplace($this->filterWords, '', $this->extractFilename($filename)),
+//            'extracted' => $this->extractFilename($filename),
+//            'pathinfo'  => pathinfo($filename)
+//        ]);
+
+
+        $filename = trim(
+            self::rtrim(
+                self::ltrim(
+                    str_ireplace(
+                        $this->filterWords,
+                        '',
+                        $this->extractFilename($filename)
+                    ),
+                    $this->leftTrim
                 ),
-                $this->leftTrim
-            ),
-            $this->rightTrim
-        ));
+                $this->rightTrim
+            )
+        );
 
         foreach ($this->blacklistRegex as $blacklistRegex) {
             if(preg_match(sprintf("~(%s)~i", $blacklistRegex),$filename, $matches)) {

@@ -66,8 +66,7 @@ abstract class FilenameParserTest extends TestCase
                     $input,
                     $this->parser->cleanUp($input),
                     get_class($this->parser),
-                    $expect,
-                    $result,
+                    sprintf('EXPECTED: %s, GOT: %s', ($expect) ? 'true' : 'false', $result ? 'true' : 'false'),
                     $this->parser->pattern
                 ); die();
             }

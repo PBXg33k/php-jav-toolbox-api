@@ -20,6 +20,7 @@ class Level2Parser extends BaseParser
             self::PREG_LABEL,
             '\-',
             self::PREG_RELEASE,
+            '\-?',
             self::PREG_PART
         );
     }
