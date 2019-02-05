@@ -34,12 +34,12 @@ class Title
     private $catalognumber;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\JavFile", mappedBy="title", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="App\Entity\JavFile", mappedBy="title", cascade={"persist", "merge"})
      */
     private $files;
 
     /**
-     * @ORM\ManyToMany(targetEntity="App\Entity\Model", inversedBy="titles", cascade={"persist"})
+     * @ORM\ManyToMany(targetEntity="App\Entity\Model", inversedBy="titles", cascade={"persist", "merge"})
      */
     private $models;
 
