@@ -61,17 +61,31 @@ abstract class FilenameParserTest extends TestCase
 
         foreach($this->matchExpects as $input => $expect) {
             $result = $this->parser->hasMatch($input);
-            if($expect !== $result) {
-                var_dump(
-                    $input,
-                    $this->parser->cleanUp($input),
-                    get_class($this->parser),
-                    sprintf('EXPECTED: %s, GOT: %s', ($expect) ? 'true' : 'false', $result ? 'true' : 'false'),
-                    $this->parser->pattern
-                ); die();
-            }
             $this->assertEquals($expect, $result);
 
+        }
+    }
+
+    /**
+     * @test
+     * @expectedException \Exception
+     */
+    public function willThrowExceptionIfNoPatternIsSet()
+    {
+        $this->parser->pattern = null;
+
+        $this->parser->hasMatch('test');
+    }
+
+    /**
+     * @test
+     */
+    public function willFilterBlacklistedWords()
+    {
+        foreach($this->matchExpects as $input => $expect) {
+            $input = preg_replace('/^(.*?)(\.[a-z0-4]{2,6})?$/i', '$1fullhd$2', $input);
+            $result = $this->parser->hasMatch($input);
+            $this->assertEquals($expect, $result);
         }
     }
 

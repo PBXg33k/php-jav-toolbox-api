@@ -1,6 +1,7 @@
 <?php
 namespace App\Tests\Service;
 
+use App\Entity\Inode;
 use App\Entity\JavFile;
 use App\Entity\Title;
 use App\Message\CheckVideoMessage;
@@ -11,6 +12,7 @@ use App\Service\JAVProcessorService;
 use App\Service\MediaProcessorService;
 use Doctrine\ORM\EntityManagerInterface;
 use org\bovigo\vfs\content\LargeFileContent;
+use org\bovigo\vfs\content\FileContent;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -60,12 +62,14 @@ class JAVProcessorServiceTest extends TestCase
     /**
      * @var MockObject|JAVNameMatcherService
      */
-    private $javRenameService;
+    private $javNameMatcherService;
 
     /**
      * @var vfsStreamDirectory
      */
     private $mediaThumbRoot;
+
+    private $videoConsistencyIteration = 0;
 
     public function setUp()
     {
@@ -74,18 +78,18 @@ class JAVProcessorServiceTest extends TestCase
         $this->entityManager            = $this->createMock(EntityManagerInterface::class);
         $this->mediaProcessorService    = $this->createMock(MediaProcessorService::class);
         $this->messageBus               = $this->createMock(MessageBusInterface::class);
-        $this->javRenameService         = $this->createMock(JAVNameMatcherService::class);
+        $this->javNameMatcherService         = $this->createMock(JAVNameMatcherService::class);
 
         $this->mediaRoot                = vfsStream::setup('media');
         $this->mediaThumbRoot           = vfsStream::setup('thumb');
 
-        $this->service = new JAVProcessorService(
+        $this->service                  = new JAVProcessorService(
             $this->logger,
             $this->dispatcher,
             $this->entityManager,
             $this->mediaProcessorService,
             $this->messageBus,
-            $this->javRenameService,
+            $this->javNameMatcherService,
             $this->mediaRoot->url(),
             $this->mediaThumbRoot->url()
         );
@@ -99,7 +103,6 @@ class JAVProcessorServiceTest extends TestCase
     public function willDispatchMessageForProcessingFile()
     {
         $javFile = (new JavFile())->setId(39);
-
 
         $this->logger->expects($this->once())
             ->method('info');
@@ -219,18 +222,14 @@ class JAVProcessorServiceTest extends TestCase
         ];
 
         foreach($invalidJavJackDownloads as $invalidJavJackDownload) {
-            $this->createTestForInvalidJAVJack($invalidJavJackDownload);
+            $javFile = (new JavFile())->setPath("/media/{$invalidJavJackDownload}.mp4")->setFilename("{$invalidJavJackDownload}.mp4");
+
+            $this->logger->expects($this->any())
+                ->method('warning')
+                ->with(JAVProcessorService::LOG_UNKNOWN_JAVJACK);
+
+            $this->assertFalse($this->service::shouldProcessFile($javFile, $this->logger));
         }
-    }
-
-    private function createTestForInvalidJAVJack(string $filename) {
-        $javFile = (new JavFile())->setPath("/media/{$filename}.mp4");
-
-        $this->logger->expects($this->any())
-            ->method('warning')
-            ->with(JAVProcessorService::LOG_UNKNOWN_JAVJACK);
-
-        $this->assertFalse($this->service::shouldProcessFile($javFile, $this->logger));
     }
 
     /**
@@ -259,15 +258,13 @@ class JAVProcessorServiceTest extends TestCase
         $title
             ->setCatalognumber('ABC-123');
 
-        $testFile = vfsStream::newFile($filenameVariation)
-            ->withContent(LargeFileContent::withKilobytes(9001))
-            ->at($this->mediaRoot);
+        $testFile = $this->createMockFile($filenameVariation, LargeFileContent::withKilobytes(9001), $this->mediaRoot);
 
         $title->addFile((new JavFile())->setFilename($filenameVariation)->setPath($testFile->url()));
 
         $finfo = new \SplFileInfo($testFile->url());
 
-        $this->javRenameService->expects($this->once())
+        $this->javNameMatcherService->expects($this->once())
             ->method('extractIDFromFileInfo')
             ->with($finfo)
             ->willReturn($title);
@@ -280,4 +277,112 @@ class JAVProcessorServiceTest extends TestCase
             $title->getFiles()->first()->getFilename(),
             $processedFilenameResult->getFiles()->first()->getFilename());
     }
+
+    public function testFilenameContainsID()
+    {
+        $input = new \SplFileInfo($this->mediaRoot->url());
+
+        $this->javNameMatcherService->expects($this->once())
+            ->method('extractIDFromFileInfo')
+            ->with($input)
+            ->willReturn(new Title());
+
+        $this->assertsame(true, $this->service->filenameContainsID($input));
+    }
+
+    public function testGetMetadata()
+    {
+        $this->logger->expects($this->once())
+            ->method('notice');
+
+        $this->messageBus->expects($this->once())
+            ->method('dispatch')
+            ->with(
+                $this->callback(function($subject) {
+                    return $this->isInstanceOf(GetVideoMetadataMessage::class) &&
+                        $subject->getJavFileId() === 1;
+                })
+            )
+            ->willReturn(new Envelope(new GetVideoMetadataMessage(1)));
+
+        $this->service->getMetadata((new JavFile())->setId(1));
+    }
+
+    public function testCheckVideoConsistencyPersisted()
+    {
+        $javFile = (new JavFile())->setId(1);
+
+        $this->setCheckVideoAssertions($javFile, false);
+
+        $this->service->checkVideoConsistency($javFile);
+    }
+
+    public function testCheckVideoConsistencyNotPersisted()
+    {
+        $javFile = (new JavFile())->setId(1);
+
+        $this->setCheckVideoAssertions($javFile, true);
+
+        $this->service->checkVideoConsistency($javFile);
+    }
+
+    public function testCheckJAVFilesConsistency()
+    {
+        $title = (new Title())
+            ->addFile((new JavFile())->setId(1)->setInode((new Inode())->setChecked(false)));
+
+        $this->setCheckVideoAssertions($title->getFiles()->first());
+
+        $this->service->checkJAVFilesConsistency($title);
+    }
+
+    public function testCheckMultiFileJAVFilesConsistency()
+    {
+        $title = (new Title())
+            ->addFile((new JavFile())->setId(1)->setInode((new Inode())->setChecked(false)))
+            ->addFile((new JavFile())->setId(2)->setInode((new Inode())->setChecked(false)));
+
+        $title->getFiles()->forAll(function($key, $item) {
+            return $this->setCheckVideoAssertions($item, true);
+        });
+
+        $this->service->checkJAVFilesConsistency($title);
+    }
+
+    private function setCheckVideoAssertions(JavFile $javFile, bool $persisted = false)
+    {
+        $this->entityManager->expects($this->at($this->videoConsistencyIteration))
+            ->method('contains')
+            ->with($javFile)
+            ->willReturn($persisted);
+
+        if(!$persisted) {
+            $this->entityManager->expects($this->at($this->videoConsistencyIteration+1))
+                ->method('persist')
+                ->with($javFile);
+        }
+
+        $this->logger->expects($this->at($this->videoConsistencyIteration))
+            ->method('notice');
+
+        $this->messageBus->expects($this->at($this->videoConsistencyIteration))
+            ->method('dispatch')
+            ->with(
+                $this->callback(function($subject) use ($javFile) {
+                    return $this->isInstanceOf(CheckVideoMessage::class) &&
+                        $subject->getJavFileId() === $javFile->getId();
+                })
+            )
+            ->willReturn(new Envelope(new CheckVideoMessage($javFile->getId())));
+
+        ++$this->videoConsistencyIteration;
+
+        return true;
+    }
+
+    private function createMockFile($filename, FileContent $size, $location)
+    {
+        return vfsStream::newFile($filename)->withContent($size)->at($location);
+    }
+
 }
