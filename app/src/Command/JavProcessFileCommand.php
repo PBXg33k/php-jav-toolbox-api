@@ -5,6 +5,7 @@ namespace App\Command;
 use App\Entity\JavFile;
 use App\Entity\Title;
 use App\Repository\JavFileRepository;
+use App\Service\FileScanService;
 use App\Service\JAVProcessorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -13,6 +14,8 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 
 class JavProcessFileCommand extends ContainerAwareCommand
 {
@@ -28,6 +31,11 @@ class JavProcessFileCommand extends ContainerAwareCommand
      */
     private $entityManager;
 
+    /**
+     * @var FileScanService
+     */
+    private $fileScanService;
+
     /**+
      * @var LoggerInterface
      */
@@ -36,11 +44,13 @@ class JavProcessFileCommand extends ContainerAwareCommand
     public function __construct(
         JAVProcessorService $JAVProcessorService,
         EntityManagerInterface $entityManager,
+        FileScanService $fileScanService,
         LoggerInterface $logger
     )
     {
         $this->JAVProcessorService = $JAVProcessorService;
         $this->entityManager       = $entityManager;
+        $this->fileScanService     = $fileScanService;
         $this->logger              = $logger;
 
         parent::__construct();
@@ -70,6 +80,16 @@ class JavProcessFileCommand extends ContainerAwareCommand
             ])) {
                 $this->processFile($file);
                 $io->success("Loaded metadata for {$file->getPath()}");
+            } else {
+                if(is_file($path)) {
+                    $pathinfo = pathinfo($path);
+                    $finder = Finder::create()->files()->in($pathinfo['dirname'])->name($pathinfo['basename']);
+
+                    /** @var SplFileInfo $file */
+                    foreach($finder as $file) {
+                        $this->fileScanService->processFile($file);
+                    }
+                }
             }
         }
 

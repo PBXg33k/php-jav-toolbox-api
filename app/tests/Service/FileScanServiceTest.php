@@ -3,13 +3,14 @@ namespace App\Tests\Service;
 
 use App\Event\VideoFileFoundEvent;
 use App\Service\FileScanService;
+use App\Service\JAVProcessorService;
 use org\bovigo\vfs\content\LargeFileContent;
 use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Symfony\Component\Finder\SplFileInfo;
 
 class FileScanServiceTest extends TestCase
 {
@@ -19,14 +20,19 @@ class FileScanServiceTest extends TestCase
     private $rootFs;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var MockObject|LoggerInterface
      */
     private $logger;
 
     /**
-     * @var \PHPUnit_Framework_MockObject_MockObject
+     * @var MockObject|EventDispatcherInterface
      */
     private $eventDispatcher;
+
+    /**
+     * @var MockObject|JAVProcessorService
+     */
+    private $javProcessorService;
 
     /**
      * @var FileScanService
@@ -35,11 +41,14 @@ class FileScanServiceTest extends TestCase
 
     protected function setUp()
     {
-        $this->logger = $logger = $this->createMock(LoggerInterface::class);
-
-        $this->eventDispatcher = $eventDispatcher = $this->createMock(EventDispatcherInterface::class);
-
-        $this->fileScanService = new FileScanService($logger, $eventDispatcher);
+        $this->logger               = $this->createMock(LoggerInterface::class);
+        $this->eventDispatcher      = $this->createMock(EventDispatcherInterface::class);
+        $this->javProcessorService  = $this->createMock(JAVProcessorService::class);
+        $this->fileScanService      = new FileScanService(
+            $this->logger,
+            $this->eventDispatcher,
+            $this->javProcessorService
+        );
 
         $this->rootFs = vfsStream::setup('testDir');
 
@@ -67,8 +76,12 @@ class FileScanServiceTest extends TestCase
                 $this->isInstanceOf(VideoFileFoundEvent::class)
             );
 
-        $this->fileScanService->scanDir(vfsStream::url('testDir'));
+        $this->javProcessorService->expects($this->once())
+            ->method('filenameContainsID')
+            ->willReturn(true);
 
-        $this->assertInstanceOf(SplFileInfo::class, $this->fileScanService->getFiles()->first());
+        $this->fileScanService->scanDir($this->rootFs->url());
+
+        $this->assertInstanceOf(\SplFileInfo::class, $this->fileScanService->getFiles()->first());
     }
 }
