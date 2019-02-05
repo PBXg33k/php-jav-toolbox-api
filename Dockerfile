@@ -35,6 +35,11 @@ RUN wget https://github.com/mutschler/mt/releases/download/1.0.8/mt-1.0.8-linux_
     && chmod +x /usr/local/bin/mt \
     && rm -f mt-1.0.8-linux_amd64.tar.bz2
 
+RUN yes | git clone git://github.com/xdebug/xdebug.git && cd xdebug && sh rebuild.sh \
+    && echo "zend_extension=$(find /usr/local/lib/php/extensions/ -name xdebug.so)" > /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.remote_enable=on" >> /usr/local/etc/php/conf.d/xdebug.ini \
+    && echo "xdebug.remote_autostart=off" >> /usr/local/etc/php/conf.d/xdebug.ini
+
 FROM build AS final
 WORKDIR /var/www
 
