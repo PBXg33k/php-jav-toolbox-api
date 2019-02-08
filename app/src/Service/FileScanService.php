@@ -36,17 +36,24 @@ class FileScanService
     /** @var Filesystem */
     private $filesystem;
 
+    private $javProcessorService;
+
     private $rootPath;
 
     private $extensionRegex;
 
-    public function __construct(LoggerInterface $logger, EventDispatcherInterface $dispatcher)
+    public function __construct(
+        LoggerInterface $logger,
+        EventDispatcherInterface $dispatcher,
+        JAVProcessorService $JAVProcessorService
+    )
     {
         $this->setLogger($logger);
-        $this->dispatcher = $dispatcher;
-        $this->files = new ArrayCollection();
-        $this->filesystem = new Filesystem();
-        $this->extensionRegex = sprintf('/.%s$/i', implode('|.', $this->videoExtensions));
+        $this->dispatcher           = $dispatcher;
+        $this->javProcessorService  = $JAVProcessorService;
+        $this->files                = new ArrayCollection();
+        $this->filesystem           = new Filesystem();
+        $this->extensionRegex       = sprintf('/.%s$/i', implode('|.', $this->videoExtensions));
     }
 
     public function setLogger(LoggerInterface $logger)
@@ -95,8 +102,8 @@ class FileScanService
         }
     }
 
-    protected function processFile(SplFileInfo $file) {
-        if(JAVProcessorService::filenameContainsID($file->getPathname())) {
+    public function processFile(SplFileInfo $file) {
+        if($this->javProcessorService->filenameContainsID($file)) {
             $this->logger->debug(sprintf('file found: %s', $file->getPathname()));
             $this->dispatcher->dispatch(VideoFileFoundEvent::NAME, new VideoFileFoundEvent($file));
             $this->files->add($file);

@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Inode;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -17,6 +18,19 @@ class FileHashRepository extends ServiceEntityRepository
     public function __construct(RegistryInterface $registry)
     {
         parent::__construct($registry, Inode::class);
+    }
+
+    public function exists(int $inodeId): bool
+    {
+        $q = $this->createQueryBuilder('i')
+            ->select('COUNT(i.id) as cnt')
+            ->where('i.id = :inodeid')
+            ->setParameter('inodeid', $inodeId)
+            ->getQuery();
+        $count = $q->execute([], Query::HYDRATE_SINGLE_SCALAR);
+        $q->free();
+        unset($q);
+        return (bool) $count > 0;
     }
 
 //    /**

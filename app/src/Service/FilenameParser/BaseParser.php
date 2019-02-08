@@ -2,6 +2,7 @@
 namespace App\Service\FilenameParser;
 
 
+use App\Model\JAVIDExtractionResult;
 use App\Model\JAVTitle;
 
 abstract class BaseParser
@@ -107,17 +108,6 @@ abstract class BaseParser
 
     public function cleanUp(string $filename): string
     {
-
-//        var_dump([
-//            'raw'       => $filename,
-//            'rtrim'     => self::rtrim($filename, $this->rightTrim),
-//            'ltrim'     => self::ltrim($filename, $this->leftTrim),
-//            'filter'    => str_ireplace($this->filterWords, '', $this->extractFilename($filename)),
-//            'extracted' => $this->extractFilename($filename),
-//            'pathinfo'  => pathinfo($filename)
-//        ]);
-
-
         $filename = trim(
             self::rtrim(
                 self::ltrim(
@@ -141,12 +131,15 @@ abstract class BaseParser
         return $filename;
     }
 
-    public function getParts(): JAVTitle
+    public function getParts(): JAVIDExtractionResult
     {
-        $title = (new JAVTitle())
+        $result = (new JAVIDExtractionResult())
+            ->setSuccess($this->hasMatch($this->filename))
             ->setLabel($this->matches['label'])
             ->setRelease($this->matches['release'])
             ->setParser(basename(str_replace('\\', '/', static::class)))
+            ->setPart(1)
+            ->setFilename($this->filename)
             ->setCleanName($this->cleanUp($this->filename));
 
         if(isset($this->matches['part']) && !is_null($this->matches['part'])) {
@@ -175,10 +168,10 @@ abstract class BaseParser
                 );
             }
 
-            $title->setPart($part);
+            $result->setPart($part);
         }
 
-        return $title;
+        return $result;
     }
 
     protected function constructRegexPattern(string ...$parts) {

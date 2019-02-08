@@ -54,4 +54,14 @@ class JAVRenamerService
             }
         }
     }
+
+    /**
+     * @param Filesystem $filesystem
+     * @return JAVRenamerService
+     */
+    public function setFilesystem(Filesystem $filesystem): JAVRenamerService
+    {
+        $this->filesystem = $filesystem;
+        return $this;
+    }
 }

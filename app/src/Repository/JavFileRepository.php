@@ -19,6 +19,21 @@ class JavFileRepository extends ServiceEntityRepository
         parent::__construct($registry, JavFile::class);
     }
 
+    public function findOneByFileInfo(\SplFileInfo $fileInfo)
+    {
+        return $this->findOneBy([
+            'inode' => $fileInfo->getInode(),
+            'path'  => $fileInfo->getPathname()
+        ]);
+    }
+
+    public function findOneByPath(string $path)
+    {
+        return $this->findOneBy([
+            'path' => $path
+        ]);
+    }
+
 //    /**
 //     * @return JavFile[] Returns an array of JavFile objects
 //     */

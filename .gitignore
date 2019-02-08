@@ -12,4 +12,4 @@ app/phpunit.xml
 .idea/
 
 docker-compose.override.yml
-app/build/logs/clover.xml
+app/build/

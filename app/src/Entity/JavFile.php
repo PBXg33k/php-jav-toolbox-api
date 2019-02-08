@@ -37,13 +37,13 @@ class JavFile
 
     /**
      * @var ?Title
-     * @ORM\ManyToOne(targetEntity="App\Entity\Title", inversedBy="files")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Title", inversedBy="files", cascade={"persist"})
      */
     private $title;
 
     /**
      * @var Inode
-     * @ORM\ManyToOne(targetEntity="App\Entity\Inode", inversedBy="javFiles", cascade={"persist", "merge"})
+     * @ORM\ManyToOne(targetEntity="App\Entity\Inode", inversedBy="javFiles", cascade={"persist"})
      * @ORM\JoinColumn(nullable=true)
      */
     private $inode;

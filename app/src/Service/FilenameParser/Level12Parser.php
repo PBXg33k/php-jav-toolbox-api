@@ -19,13 +19,4 @@ class Level12Parser extends BaseParser
             self::PREG_PART
         );
     }
-
-//    public function hasMatch(string $path): bool
-//    {
-//        var_dump(
-//            $path,
-//            $this->cleanUp($path),
-//            preg_match($this->pattern, $path, $this->matches)
-//        ); die();
-//    }
 }

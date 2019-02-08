@@ -70,7 +70,7 @@ class JAVThumbsService
     public function setJavToolboxMediaThumbDirectory(string $javToolboxMediaThumbDirectory): JAVThumbsService
     {
         if(!is_dir($javToolboxMediaThumbDirectory)) {
-            throw new \Exception('Path not a directory');
+            throw new \Exception('Path not a directory: '. $javToolboxMediaThumbDirectory);
         }
 
         $this->javToolboxMediaThumbDirectory = $javToolboxMediaThumbDirectory;
