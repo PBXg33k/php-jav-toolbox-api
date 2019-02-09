@@ -231,11 +231,6 @@ class JAVProcessorService
         }
     }
 
-    public function extractIDFromFilename(SplFileInfo $fileInfo): Title
-    {
-        return $this->javNameMatcherService->extractIDFromFileInfo($fileInfo);
-    }
-
     public static function shouldProcessFile(JavFile $javFile, LoggerInterface $logger)
     {
         $fileName = trim(pathinfo($javFile->getFilename(), PATHINFO_FILENAME));
@@ -253,6 +248,11 @@ class JAVProcessorService
         }
 
         return true;
+    }
+
+    public function extractIDFromFilename(SplFileInfo $fileInfo): Title
+    {
+        return $this->javNameMatcherService->extractIDFromFileInfo($fileInfo);
     }
 
     public function filenameContainsID(SplFileInfo $filename): bool
