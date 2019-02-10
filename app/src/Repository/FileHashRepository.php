@@ -33,6 +33,14 @@ class FileHashRepository extends ServiceEntityRepository
         return (bool) $count > 0;
     }
 
+    public function findBroken()
+    {
+        return $this->findBy([
+            'checked'    => 1,
+            'consistent' => 0
+        ]);
+    }
+
 //    /**
 //     * @return FileHash[] Returns an array of FileHash objects
 //     */
