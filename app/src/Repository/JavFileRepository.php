@@ -34,6 +34,20 @@ class JavFileRepository extends ServiceEntityRepository
         ]);
     }
 
+    public function findOneByOrCreate(JavFile $javFile, array $lookupKeys)
+    {
+        $criteria = [];
+        foreach($lookupKeys as $lookupKey) {
+            $criteria[$lookupKey] = $this->getClassMetadata()->getFieldValue($javFile, $lookupKey);
+        }
+
+        if($lookup = $this->findOneBy($criteria)) {
+            return $lookup;
+        } else {
+            return $javFile;
+        }
+    }
+
 //    /**
 //     * @return JavFile[] Returns an array of JavFile objects
 //     */

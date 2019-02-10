@@ -380,6 +380,11 @@ class JAVProcessorServiceTest extends TestCase
         return true;
     }
 
+    public function fileExistWillCheckInodeForExistence()
+    {
+
+    }
+
     private function createMockFile($filename, FileContent $size, $location)
     {
         return vfsStream::newFile($filename)->withContent($size)->at($location);
