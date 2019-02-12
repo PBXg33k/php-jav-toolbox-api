@@ -82,9 +82,17 @@ class FileScanService
         {
             if(
                 $iv->isFile() &&
-                \in_array($iv->getExtension(), $this->videoExtensions, false) &&
-                $iv->getSize() >= 300000000
+                \in_array($iv->getExtension(), $this->videoExtensions, false)
             ) {
+                if($iv->getSize() < 300000000) {
+                    $this->logger->warning('File did not meet filesize requirement', [
+                        'path'  => $iv->getPathname(),
+                        'size'  => $iv->getSize(),
+                        'inode' => $iv->getInode()
+                    ]);
+                    continue;
+                }
+
                 $finfo = new SplFileInfo(
                     $iv->getPathname(),
                     ltrim($iv->getPath(), $this->rootPath),
