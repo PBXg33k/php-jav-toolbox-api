@@ -1,0 +1,61 @@
+image: php:7.3-fpm-alpine
+
+variables:
+  PROJECT_ROOT: app
+
+cache:
+  paths:
+    - app/vendor/
+
+stages:
+  - validate
+  - analyse
+  - test
+
+before_script:
+  # Install composer dependencies
+  - cd $PROJECT_ROOT
+  - wget https://composer.github.io/installer.sig -O - -q | tr -d '\n' > installer.sig
+  - php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+  - php -r "if (hash_file('SHA384', 'composer-setup.php') === file_get_contents('installer.sig')) { echo 'Installer verified'; } else { echo 'Installer corrupt'; unlink('composer-setup.php'); } echo PHP_EOL;"
+  - php composer-setup.php
+  - php -r "unlink('composer-setup.php'); unlink('installer.sig');"
+  - php composer.phar install
+
+# Ensure that composer.json is valid and composer.lock is up to date with composer.json
+composer-validate:
+  stage: validate
+  script:
+    - php composer.phar validate
+
+php-stan:
+  stage: analyse
+  allow_failure: true
+  script:
+    - vendor/bin/phpstan analyse -l 4 src tests
+
+phpmd:
+  stage: analyse
+  allow_failure: true
+  script:
+    - vendor/bin/phpmd src Pbxg33k\\PhpmdCodeClimate\\CodeClimateRenderer phpmd.xml > gl-code-quality-report.json
+  artifacts:
+    when: always
+    reports:
+      codequality: $PROJECT_ROOT/gl-code-quality-report.json
+
+# Ensure that we don't have any versions in our dependency tree with known vulnerabilities
+php-security-checker:
+  stage: validate
+  image: pipelinecomponents/php-security-checker:latest
+  script:
+    - security-checker security:check composer.lock
+
+unit-test:
+  stage: test
+  script:
+    - bin/phpunit
+  artifacts:
+    when: always
+    reports:
+      junit: $PROJECT_ROOT/build/logs/junit.xml

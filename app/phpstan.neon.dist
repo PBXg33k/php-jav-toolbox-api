@@ -1,0 +1,12 @@
+includes:
+	- vendor/phpstan/phpstan-phpunit/extension.neon
+	- vendor/phpstan/phpstan-phpunit/rules.neon
+	- vendor/phpstan/phpstan-symfony/extension.neon
+	- vendor/phpstan/phpstan-doctrine/extension.neon
+	- vendor/phpstan/phpstan-doctrine/rules.neon
+parameters:
+	symfony:
+		container_xml_path: '%rootDir%/../../../var/cache/dev/srcApp_KernelDevDebugContainer.xml'
+	autoload_files:
+		# @see https://github.com/phpstan/phpstan/issues/694#issuecomment-350724288
+		- '%rootDir%/../../../bin/.phpunit/phpunit-6.5/vendor/autoload.php'
