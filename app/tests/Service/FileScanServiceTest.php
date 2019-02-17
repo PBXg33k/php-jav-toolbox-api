@@ -1,7 +1,7 @@
 <?php
 namespace App\Tests\Service;
 
-use App\Event\VideoFileFoundEvent;
+use App\Event\QualifiedVideoFileFound;
 use App\Service\FileScanService;
 use App\Service\JAVProcessorService;
 use org\bovigo\vfs\content\LargeFileContent;
@@ -72,8 +72,8 @@ class FileScanServiceTest extends TestCase
 
         $this->eventDispatcher->expects($this->once())->method('dispatch')
             ->with(
-                $this->equalTo(VideoFileFoundEvent::NAME),
-                $this->isInstanceOf(VideoFileFoundEvent::class)
+                $this->equalTo(QualifiedVideoFileFound::NAME),
+                $this->isInstanceOf(QualifiedVideoFileFound::class)
             );
 
         $this->javProcessorService->expects($this->once())

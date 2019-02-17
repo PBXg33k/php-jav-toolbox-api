@@ -17,6 +17,7 @@ services:
 #            $javToolboxMediaFileLocation: '%jav_media_file_location%'
             $javToolboxMtConfigPath: '%mt_config_path%'
             $javToolboxMediaThumbDirectory: '%jav_media_thumb_directory%'
+            $javMediaFileLocation: '%jav_media_file_location%'
 
 
     # makes classes in src/ available to be used as services

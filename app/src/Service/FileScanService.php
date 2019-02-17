@@ -3,6 +3,7 @@ namespace App\Service;
 
 use App\Event\DirectoryFoundEvent;
 use App\Event\FileFoundEvent;
+use App\Event\QualifiedVideoFileFound;
 use App\Event\VideoFileFoundEvent;
 use Doctrine\Common\Collections\ArrayCollection;
 use Psr\Log\LoggerInterface;
@@ -87,6 +88,7 @@ class FileScanService
             ) {
                 $this->dispatcher->dispatch(FileFoundEvent::NAME, new FileFoundEvent($iv));
                 if (in_array($iv->getExtension(), $this->videoExtensions, false)) {
+                    $this->dispatcher->dispatch(VideoFileFoundEvent::NAME, new VideoFileFoundEvent($iv));
                     if ($iv->getSize() < 300000000) {
                         $this->logger->warning('File did not meet filesize requirement', [
                             'path' => $iv->getPathname(),
@@ -120,7 +122,7 @@ class FileScanService
     {
         if($this->javProcessorService->filenameContainsID($file)) {
             $this->logger->debug(sprintf('file found: %s', $file->getPathname()));
-            $this->dispatcher->dispatch(VideoFileFoundEvent::NAME, new VideoFileFoundEvent($file));
+            $this->dispatcher->dispatch(QualifiedVideoFileFound::NAME, new QualifiedVideoFileFound($file));
             $this->files->add($file);
         }
     }

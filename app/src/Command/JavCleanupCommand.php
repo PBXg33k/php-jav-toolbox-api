@@ -3,7 +3,7 @@
 namespace App\Command;
 
 use App\Entity\Title;
-use App\Event\VideoFileFoundEvent;
+use App\Event\QualifiedVideoFileFound;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
@@ -16,14 +16,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class JavCleanupCommand extends Command
+class JavCleanupCommand extends SectionedCommand
 {
     protected static $defaultName = 'jav:cleanup';
-
-    /**
-     * @var ConsoleSectionOutput
-     */
-    private $progressSection;
 
     private $entityManager;
 
@@ -47,18 +42,18 @@ class JavCleanupCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        parent::execute($input, $output);
         $io = new SymfonyStyle($input, $output);
 
         if($output instanceof ConsoleOutput) {
             /** @var ConsoleOutput $output */
 
             $tableSection = $output->section();
-            $this->progressSection = $progressSection = $output->section();
 
-            $progressSection->writeln('Looking up inconsistend files in database');
+            $this->updateProgressOutput('Looking up inconsistend files in database');
             $brokenTitles = $this->entityManager->getRepository(Title::class)->findWithBrokenFiles();
             $brokenTitlesCount = count($brokenTitles);
-            $progressSection->overwrite(sprintf('Found %d inconsistent files in database', $brokenTitlesCount));
+            $this->updateProgressOutput(sprintf('Found %d inconsistent files in database', $brokenTitlesCount));
 
             if ($brokenTitles) {
                 $table = new Table($tableSection);
@@ -75,7 +70,7 @@ class JavCleanupCommand extends Command
                 $i=1;
                 /** @var Title $title */
                 foreach ($brokenTitles as $title) {
-                    $progressSection->overwrite(sprintf('%d/%d Processing %s', $i, $brokenTitlesCount, $title->getCatalognumber()));
+                    $this->updateProgressOutput(sprintf('%d/%d Processing %s', $i, $brokenTitlesCount, $title->getCatalognumber()));
                     foreach ($title->getFiles() as $file) {
                         $tableRow = [
                             'catalog-id' => $title->getCatalognumber(),
@@ -92,12 +87,12 @@ class JavCleanupCommand extends Command
                     $i++;
                 }
 
-                $progressSection->overwrite('Rendering table');
+                $this->updateProgressOutput('Rendering table');
 
                 $table->setFooterTitle(sprintf('Titles %d  Size %d bytes', count($brokenTitles), $collectiveSize));
                 $table->render();
 
-                $progressSection->overwrite('Complete');
+                $this->updateProgressOutput('Complete');
             } else {
                 $io->success('No broken titles found');
             }
@@ -108,7 +103,7 @@ class JavCleanupCommand extends Command
         ConsoleSectionOutput $sectionOutput,
         EventDispatcherInterface $eventDispatcher
     ) {
-        $eventDispatcher->addListener(VideoFileFoundEvent::NAME, function(VideoFileFoundEvent $event) {
+        $eventDispatcher->addListener(QualifiedVideoFileFound::NAME, function(QualifiedVideoFileFound $event) {
             $this->progressSection->overwrite(
                 sprintf(
                     'Found videofile: %s',
