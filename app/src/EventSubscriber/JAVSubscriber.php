@@ -56,7 +56,7 @@ class JAVSubscriber implements EventSubscriberInterface
         $this->eventDispatcher->addListener(JavFileUpdatedEvent::NAME, function(JavFileUpdatedEvent $event) {
             $this->entityManager->merge($event->getJavFile());
             $this->entityManager->flush();
-        })
+        });
 
         $this->JAVProcessorService->preProcessFile($event->getFile());
     }
