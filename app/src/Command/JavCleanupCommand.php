@@ -2,20 +2,17 @@
 
 namespace App\Command;
 
+use App\Entity\JavFile;
 use App\Entity\Title;
-use App\Event\QualifiedVideoFileFound;
 use App\Service\MediaProcessorService;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\ConsoleSectionOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class JavCleanupCommand extends SectionedCommand
 {
@@ -63,7 +60,7 @@ class JavCleanupCommand extends SectionedCommand
             $this->cmdSection = $output->section();
         }
         parent::execute($input, $output);
-        
+
 
         $io = new SymfonyStyle($input, $output);
 
@@ -108,36 +105,12 @@ class JavCleanupCommand extends SectionedCommand
                 }
 
                 $this->updateStateMessage('Rendering table');
-
                 $table->setFooterTitle(sprintf('Titles %d  Size %d bytes', count($brokenTitles), $collectiveSize));
                 $table->render();
-
                 $this->updateStateMessage('Confirming files marked for deletion');
 
-                $starttime = time();
-                foreach($brokenTitles as $title) {
-                    $this->updateProgressOutput("Processing title {$title->getCatalognumber()}");
-                    foreach($title->getFiles() as $file) {
-                        $this->updateProgressOutput("Processing title {$title->getCatalognumber()}. File: {$file->getPath()}");
-                        try {
-                            $this->mediaProcessorService->checkHealth(
-                                $file,
-                                true,
-                                function ($type, $buffer) use ($starttime) {
-                                    if ((time() - $starttime) >= 30) {
-                                        $this->entityManager->getConnection()->ping();
-                                        $starttime = time();
-                                    }
-
-                                    $this->cmdSection->overwrite("FFMPEG Output: {$buffer}");
-                                },
-                                true);
-                        } catch (\Throwable $exception) {
-                            // FFMPEG failed.
-                            var_dump($exception);die();
-                        }
-                    }
-                }
+                // Do the actual checking before deleting files
+                $this->checkTitleConsistencies(...$brokenTitles);
 
                 $this->updateProgressOutput('Complete');
             } else {
@@ -146,17 +119,37 @@ class JavCleanupCommand extends SectionedCommand
         }
     }
 
-    private function setEventListeners(
-        ConsoleSectionOutput $sectionOutput,
-        EventDispatcherInterface $eventDispatcher
-    ) {
-        $eventDispatcher->addListener(QualifiedVideoFileFound::NAME, function(QualifiedVideoFileFound $event) {
-            $this->progressSection->overwrite(
-                sprintf(
-                    'Found videofile: %s',
-                    $event->getFile()->getPathname()
-                )
-            );
-        });
+    private function checkTitleConsistencies(Title ...$titles) {
+        foreach($titles as $brokenTitle) {
+            foreach($brokenTitle->getFiles() as $javFile) {
+                $this->checkFileConsistency($javFile);
+            }
+        }
+    }
+
+    private function checkFileConsistency(JavFile $file) {
+        $starttime = time();
+        $this->updateProgressOutput("Processing title {$file->getTitle()->getCatalognumber()}. File: {$file->getPath()}");
+        try {
+            $this->mediaProcessorService->checkHealth(
+                $file,
+                true,
+                function ($type, $buffer) use ($starttime) {
+                    if ((time() - $starttime) >= 30) {
+                        $this->entityManager->getConnection()->ping();
+                        $starttime = time();
+                    }
+
+                    // Calculate progress for progress bar
+                    $this->cmdSection->overwrite("FFMPEG Output: {$buffer}");
+                },
+                true);
+
+            // If we reach this line the file seems A-OK (since no exception is thrown)
+        } catch (\Throwable $exception) {
+            // FFMPEG failed.
+            var_dump($exception);
+            die();
+        }
     }
 }
