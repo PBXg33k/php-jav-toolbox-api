@@ -93,4 +93,33 @@ class FileScanServiceTest extends TestCase
 
         $this->assertInstanceOf(\SplFileInfo::class, $this->fileScanService->getFiles()->first());
     }
+
+    /**
+     * @test
+     */
+    public function willLogErrorIfExceptionIsThrownByJavProcessorService()
+    {
+        // Mock file which will be processed
+        vfsStream::newFile('ABC-123.mkv')
+            ->withContent(new LargeFileContent(500000000))
+            ->at($this->rootFs);
+
+        $this->eventDispatcher->expects($this->exactly(4))
+            ->method('dispatch')
+            ->withConsecutive(
+                [$this->equalTo(DirectoryFoundEvent::NAME), $this->isInstanceOf(DirectoryFoundEvent::class)],
+                [$this->equalTo(DirectoryFoundEvent::NAME), $this->isInstanceOf(DirectoryFoundEvent::class)],
+                [$this->equalTo(FileFoundEvent::NAME), $this->isInstanceOf(FileFoundEvent::class)],
+                [$this->equalTo(VideoFileFoundEvent::NAME), $this->isInstanceOf(VideoFileFoundEvent::class)]
+            );
+
+        $this->javProcessorService->expects($this->once())
+            ->method('filenameContainsID')
+            ->willThrowException(new \Exception("Exception message"));
+
+        $this->logger->expects($this->once())
+            ->method('error');
+
+        $this->fileScanService->scanDir($this->rootFs->url());
+    }
 }
