@@ -1,7 +1,10 @@
 <?php
 namespace App\Tests\Service;
 
+use App\Event\DirectoryFoundEvent;
+use App\Event\FileFoundEvent;
 use App\Event\QualifiedVideoFileFound;
+use App\Event\VideoFileFoundEvent;
 use App\Service\FileScanService;
 use App\Service\JAVProcessorService;
 use org\bovigo\vfs\content\LargeFileContent;
@@ -70,10 +73,16 @@ class FileScanServiceTest extends TestCase
             ->withContent(LargeFileContent::withMegabytes(5))
             ->at($this->rootFs);
 
-        $this->eventDispatcher->expects($this->once())->method('dispatch')
-            ->with(
-                $this->equalTo(QualifiedVideoFileFound::NAME),
-                $this->isInstanceOf(QualifiedVideoFileFound::class)
+        $this->eventDispatcher->expects($this->exactly(7))
+            ->method('dispatch')
+            ->withConsecutive(
+                [$this->equalTo(DirectoryFoundEvent::NAME), $this->isInstanceOf(DirectoryFoundEvent::class)],
+                [$this->equalTo(DirectoryFoundEvent::NAME), $this->isInstanceOf(DirectoryFoundEvent::class)],
+                [$this->equalTo(FileFoundEvent::NAME), $this->isInstanceOf(FileFoundEvent::class)],
+                [$this->equalTo(VideoFileFoundEvent::NAME), $this->isInstanceOf(VideoFileFoundEvent::class)],
+                [$this->equalTo(QualifiedVideoFileFound::NAME), $this->isInstanceOf(QualifiedVideoFileFound::class)],
+                [$this->equalTo(FileFoundEvent::NAME), $this->isInstanceOf(FileFoundEvent::class)],
+                [$this->equalTo(VideoFileFoundEvent::NAME), $this->isInstanceOf(VideoFileFoundEvent::class)]
             );
 
         $this->javProcessorService->expects($this->once())

@@ -4,6 +4,7 @@ namespace App\Tests\Service;
 use App\Entity\Inode;
 use App\Entity\JavFile;
 use App\Entity\Title;
+use App\Event\JavFileUpdatedEvent;
 use App\Message\CheckVideoMessage;
 use App\Message\GetVideoMetadataMessage;
 use App\Message\ProcessFileMessage;
@@ -190,9 +191,12 @@ class JAVProcessorServiceTest extends TestCase
             ->with($this->identicalTo($javFile))
             ->willReturn(false);
 
-        $this->entityManager->expects($this->once())
-            ->method('persist')
-            ->willReturn($this->identicalTo($javFile));
+        $this->dispatcher->expects($this->once())
+            ->method('dispatch')
+            ->with(
+                $this->equalTo(JavFileUpdatedEvent::NAME),
+                $this->isInstanceOf(JavFileUpdatedEvent::class)
+            );
 
         $this->logger->expects($this->once())
             ->method('notice');
@@ -357,9 +361,12 @@ class JAVProcessorServiceTest extends TestCase
             ->willReturn($persisted);
 
         if(!$persisted) {
-            $this->entityManager->expects($this->at($this->videoConsistencyIteration+1))
-                ->method('persist')
-                ->with($javFile);
+            $this->dispatcher->expects($this->once())
+                ->method('dispatch')
+                ->with(
+                    $this->equalTo(JavFileUpdatedEvent::NAME),
+                    $this->isInstanceOf(JavFileUpdatedEvent::class)
+                );
         }
 
         $this->logger->expects($this->at($this->videoConsistencyIteration))
