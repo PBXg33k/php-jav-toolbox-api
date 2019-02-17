@@ -3,18 +3,27 @@
 namespace App\Command;
 
 use App\Entity\Title;
+use App\Event\VideoFileFoundEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Console\Output\ConsoleSectionOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class JavCleanupCommand extends Command
 {
     protected static $defaultName = 'jav:cleanup';
+
+    /**
+     * @var ConsoleSectionOutput
+     */
+    private $progressSection;
 
     private $entityManager;
 
@@ -40,47 +49,72 @@ class JavCleanupCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        $brokenTitles = $this->entityManager->getRepository(Title::class)->findWithBrokenFiles();
+        if($output instanceof ConsoleOutput) {
+            /** @var ConsoleOutput $output */
 
-        if($brokenTitles) {
-            $table = new Table($output);
-            $table->setHeaders([
-                'CatalogID',
-                'Inode',
-                'Part',
-                'Filesize',
-                'Filename',
-            ]);
+            $tableSection = $output->section();
+            $this->progressSection = $progressSection = $output->section();
 
-            $collectiveSize = 0;
+            $progressSection->writeln('Looking up inconsistend files in database');
+            $brokenTitles = $this->entityManager->getRepository(Title::class)->findWithBrokenFiles();
+            $brokenTitlesCount = count($brokenTitles);
+            $progressSection->overwrite(sprintf('Found %d inconsistent files in database', $brokenTitlesCount));
 
-            /** @var Title $title */
-            foreach($brokenTitles as $title) {
-                foreach($title->getFiles() as $file) {
-                    $tableRow = [
-                        'catalog-id' => $title->getCatalognumber(),
-                        'inode'      => $file->getInode()->getId(),
-                        'part'       => $file->getPart(),
-                        'filesize'   => $file->getInode()->getFilesize(),
-                        'filename'   => $file->getFilename()
-                    ];
+            if ($brokenTitles) {
+                $table = new Table($tableSection);
+                $table->setHeaders([
+                    'CatalogID',
+                    'Inode',
+                    'Part',
+                    'Filesize',
+                    'Filename',
+                ]);
 
-                    $table->addRow($tableRow);
+                $collectiveSize = 0;
 
-                    $collectiveSize += $file->getInode()->getFilesize();
+                $i=1;
+                /** @var Title $title */
+                foreach ($brokenTitles as $title) {
+                    $progressSection->overwrite(sprintf('%d/%d Processing %s', $i, $brokenTitlesCount, $title->getCatalognumber()));
+                    foreach ($title->getFiles() as $file) {
+                        $tableRow = [
+                            'catalog-id' => $title->getCatalognumber(),
+                            'inode' => $file->getInode()->getId(),
+                            'part' => $file->getPart(),
+                            'filesize' => $file->getInode()->getFilesize(),
+                            'filename' => $file->getFilename()
+                        ];
+
+                        $table->addRow($tableRow);
+
+                        $collectiveSize += $file->getInode()->getFilesize();
+                    }
+                    $i++;
                 }
+
+                $progressSection->overwrite('Rendering table');
+
+                $table->setFooterTitle(sprintf('Titles %d  Size %d bytes', count($brokenTitles), $collectiveSize));
+                $table->render();
+
+                $progressSection->overwrite('Complete');
+            } else {
+                $io->success('No broken titles found');
             }
-
-            $table->setFooterTitle(sprintf('Titles %d  Size %d bytes', count($brokenTitles), $collectiveSize));
-            $table->render();
-        } else {
-            $io->success('No broken titles found');
         }
+    }
 
-
-
-//        if ($input->getOption('option1')) {
-//
-//        }
+    private function setEventListeners(
+        ConsoleSectionOutput $sectionOutput,
+        EventDispatcherInterface $eventDispatcher
+    ) {
+        $eventDispatcher->addListener(VideoFileFoundEvent::NAME, function(VideoFileFoundEvent $event) {
+            $this->progressSection->overwrite(
+                sprintf(
+                    'Found videofile: %s',
+                    $event->getFile()->getPathname()
+                )
+            );
+        });
     }
 }

@@ -1,6 +1,8 @@
 <?php
 namespace App\Service;
 
+use App\Event\DirectoryFoundEvent;
+use App\Event\FileFoundEvent;
 use App\Event\VideoFileFoundEvent;
 use Doctrine\Common\Collections\ArrayCollection;
 use Psr\Log\LoggerInterface;
@@ -81,36 +83,41 @@ class FileScanService
         foreach($items as $ik => $iv)
         {
             if(
-                $iv->isFile() &&
-                \in_array($iv->getExtension(), $this->videoExtensions, false)
+                $iv->isFile()
             ) {
-                if($iv->getSize() < 300000000) {
-                    $this->logger->warning('File did not meet filesize requirement', [
-                        'path'  => $iv->getPathname(),
-                        'size'  => $iv->getSize(),
-                        'inode' => $iv->getInode()
-                    ]);
-                    continue;
-                }
+                $this->dispatcher->dispatch(FileFoundEvent::NAME, new FileFoundEvent($iv));
+                if (in_array($iv->getExtension(), $this->videoExtensions, false)) {
+                    if ($iv->getSize() < 300000000) {
+                        $this->logger->warning('File did not meet filesize requirement', [
+                            'path' => $iv->getPathname(),
+                            'size' => $iv->getSize(),
+                            'inode' => $iv->getInode()
+                        ]);
+                        continue;
+                    }
 
-                $finfo = new SplFileInfo(
-                    $iv->getPathname(),
-                    ltrim($iv->getPath(), $this->rootPath),
-                    ltrim($iv->getPathname(), $this->rootPath)
-                );
+                    $finfo = new SplFileInfo(
+                        $iv->getPathname(),
+                        ltrim($iv->getPath(), $this->rootPath),
+                        ltrim($iv->getPathname(), $this->rootPath)
+                    );
 
-                try {
-                    $this->processFile($finfo);
-                } catch (\Exception $exception) {
-                    $this->logger->error($exception->getMessage(), [
-                        'path' => $finfo->getPathname()
-                    ]);
+                    try {
+                        $this->processFile($finfo);
+                    } catch (\Exception $exception) {
+                        $this->logger->error($exception->getMessage(), [
+                            'path' => $finfo->getPathname()
+                        ]);
+                    }
                 }
+            } elseif ($iv->isDir()) {
+                $this->dispatcher->dispatch(DirectoryFoundEvent::NAME, new DirectoryFoundEvent($iv));
             }
         }
     }
 
-    public function processFile(SplFileInfo $file) {
+    public function processFile(SplFileInfo $file)
+    {
         if($this->javProcessorService->filenameContainsID($file)) {
             $this->logger->debug(sprintf('file found: %s', $file->getPathname()));
             $this->dispatcher->dispatch(VideoFileFoundEvent::NAME, new VideoFileFoundEvent($file));

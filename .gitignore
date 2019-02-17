@@ -13,3 +13,4 @@ app/phpunit.xml
 
 docker-compose.override.yml
 app/build/
+.DS_Store

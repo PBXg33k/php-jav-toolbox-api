@@ -14,6 +14,8 @@ class ScanCommand extends ContainerAwareCommand
 
     private $logger;
 
+    private $progressSection;
+
     public function __construct(FileScanService $fileScanService, LoggerInterface $logger)
     {
         $this->fileScanService = $fileScanService;
