@@ -220,13 +220,6 @@ class JAVProcessorService
 
                 $this->processFile($javFile);
                 $this->logger->info('STORED TITLE: ' . $title->getCatalognumber());
-//            } catch (\Exception $exception) {
-//                $this->logger->error($exception->getMessage(), [
-//                    'javfile' => [
-//                        'catalog' => $javTitleInfo->getCatalognumber(),
-//                        'path' => $javFile->getPath()
-//                    ]
-//                ]);
             } catch (\Exception $exception) {
                 $this->logger->error($exception->getMessage(), [
                     'javfile' => [
