@@ -4,6 +4,7 @@ namespace App\Command;
 
 use App\Entity\Title;
 use App\Event\QualifiedVideoFileFound;
+use App\Service\MediaProcessorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
@@ -20,14 +21,29 @@ class JavCleanupCommand extends SectionedCommand
 {
     protected static $defaultName = 'jav:cleanup';
 
+    /**
+     * @var EntityManagerInterface
+     */
     private $entityManager;
+
+    /**
+     * @var MediaProcessorService
+     */
+    private $mediaProcessorService;
+
+    /**
+     * @var ConsoleSectionOutput
+     */
+    private $cmdSection;
 
     public function __construct(
         EntityManagerInterface $entityManager,
+        MediaProcessorService $mediaProcessorService,
         ?string $name = null
     )
     {
-        $this->entityManager = $entityManager;
+        $this->entityManager            = $entityManager;
+        $this->mediaProcessorService    = $mediaProcessorService;
         parent::__construct($name);
     }
 
@@ -43,6 +59,12 @@ class JavCleanupCommand extends SectionedCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         parent::execute($input, $output);
+
+        if($output instanceof ConsoleOutput) {
+            $this->cmdSection = $output->section();
+        }
+
+
         $io = new SymfonyStyle($input, $output);
 
         if($output instanceof ConsoleOutput) {
@@ -50,7 +72,7 @@ class JavCleanupCommand extends SectionedCommand
 
             $tableSection = $output->section();
 
-            $this->updateProgressOutput('Looking up inconsistend files in database');
+            $this->updateStateMessage('Looking up inconsistend files in database');
             $brokenTitles = $this->entityManager->getRepository(Title::class)->findWithBrokenFiles();
             $brokenTitlesCount = count($brokenTitles);
             $this->updateProgressOutput(sprintf('Found %d inconsistent files in database', $brokenTitlesCount));
@@ -87,10 +109,37 @@ class JavCleanupCommand extends SectionedCommand
                     $i++;
                 }
 
-                $this->updateProgressOutput('Rendering table');
+                $this->updateStateMessage('Rendering table');
 
                 $table->setFooterTitle(sprintf('Titles %d  Size %d bytes', count($brokenTitles), $collectiveSize));
                 $table->render();
+
+                $this->updateStateMessage('Confirming files marked for deletion');
+
+                $starttime = time();
+                foreach($brokenTitles as $title) {
+                    $this->updateProgressOutput("Processing title {$title->getCatalognumber()}");
+                    foreach($title->getFiles() as $file) {
+                        $this->updateProgressOutput("Processing title {$title->getCatalognumber()}. File: {$file->getPath()}");
+                        try {
+                            $this->mediaProcessorService->checkHealth(
+                                $file,
+                                true,
+                                function ($type, $buffer) use ($starttime) {
+                                    if ((time() - $starttime) >= 30) {
+                                        $this->entityManager->getConnection()->ping();
+                                        $starttime = time();
+                                    }
+
+                                    $this->cmdSection->overwrite("FFMPEG Output: {$buffer}");
+                                },
+                                true);
+                        } catch (\Throwable $exception) {
+                            // FFMPEG failed.
+                            var_dump($exception);die();
+                        }
+                    }
+                }
 
                 $this->updateProgressOutput('Complete');
             } else {

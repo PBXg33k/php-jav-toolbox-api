@@ -38,7 +38,7 @@ class MediaProcessorService
         $this->mediaInfo->setConfig('use_oldxml_mediainfo_output_format', true);
     }
 
-    public function checkHealth(JavFile $javFile, bool $strict, callable $cmdCallback): JavFile {
+    public function checkHealth(JavFile $javFile, bool $strict, callable $cmdCallback, bool $propogateException = false): JavFile {
         $this->logger->info('Checking video consistency', [
             'strict'     => $strict,
             'path'       => $javFile->getPath(),
@@ -84,6 +84,11 @@ class MediaProcessorService
                 ]
             ]);
             $consistent = false;
+
+            if($propogateException) {
+                $javFile->getInode()->setChecked(true)->setConsistent(false);
+                throw $exception;
+            }
         }
 
         $this->logger->info('video check completed', [
