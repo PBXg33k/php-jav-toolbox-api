@@ -4,7 +4,8 @@ namespace App\Service;
 use App\Entity\Inode;
 use App\Entity\Title;
 use App\Entity\JavFile;
-use App\Exception\PreProcessFileException;
+use App\Event\JavFileUpdatedEvent;
+use App\Event\TitleUpdatedEvent;
 use App\Message\CheckVideoMessage;
 use App\Message\GetVideoMetadataMessage;
 use App\Message\ProcessFileMessage;
@@ -14,7 +15,6 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use SplFileInfo;
 use Symfony\Component\Messenger\MessageBusInterface;
-use App\Service\FilenameParser;
 
 /**
  * Class JAVProcessorService
@@ -140,7 +140,7 @@ class JAVProcessorService
     public function checkVideoConsistency(JavFile $file, bool $strict = true, bool $force = false)
     {
         if(!$this->entityManager->contains($file)) {
-            $this->entityManager->persist($file);
+            $this->dispatcher->dispatch(JavFileUpdatedEvent::NAME, new JavFileUpdatedEvent($file));
         }
 
         $this->logger->notice('Dispatching message',[
@@ -176,7 +176,7 @@ class JAVProcessorService
         } else {
             $javTitleInfo = $this->extractIDFromFilename($file);
 
-//            try {
+            try {
                 /** @var \App\Entity\JavFile $javFile */
                 $javFile = $javTitleInfo->getFiles()->first();
 
@@ -210,13 +210,13 @@ class JAVProcessorService
                         'catalog-number' => $javTitleInfo->getCatalognumber(),
                         'filename' => $file->getFilename()
                     ]);
+
                     $title = $javTitleInfo;
-                    $this->entityManager->merge($title);
+                    $this->dispatcher->dispatch(TitleUpdatedEvent::NAME, new TitleUpdatedEvent($title));
                 }
                 $javFile->setTitle($title);
 
-                $this->entityManager->merge($javFile);
-                $this->entityManager->flush();
+                $this->dispatcher->dispatch(JavFileUpdatedEvent::NAME, new JavFileUpdatedEvent($javFile));
 
                 $this->processFile($javFile);
                 $this->logger->info('STORED TITLE: ' . $title->getCatalognumber());
@@ -227,7 +227,14 @@ class JAVProcessorService
 //                        'path' => $javFile->getPath()
 //                    ]
 //                ]);
-//            }
+            } catch (\Exception $exception) {
+                $this->logger->error($exception->getMessage(), [
+                    'javfile' => [
+                        'catalog' => $javTitleInfo->getCatalognumber(),
+                        'path' => $javFile->getPath()
+                    ]
+                ]);
+            }
         }
     }
 
