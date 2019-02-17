@@ -58,19 +58,17 @@ class JavCleanupCommand extends SectionedCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        parent::execute($input, $output);
-
         if($output instanceof ConsoleOutput) {
+            $tableSection = $output->section();
             $this->cmdSection = $output->section();
         }
-
+        parent::execute($input, $output);
+        
 
         $io = new SymfonyStyle($input, $output);
 
         if($output instanceof ConsoleOutput) {
             /** @var ConsoleOutput $output */
-
-            $tableSection = $output->section();
 
             $this->updateStateMessage('Looking up inconsistend files in database');
             $brokenTitles = $this->entityManager->getRepository(Title::class)->findWithBrokenFiles();
