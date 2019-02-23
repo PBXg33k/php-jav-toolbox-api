@@ -137,6 +137,84 @@ class JAVThumbsServiceTest extends TestCase
     }
 
     /**
+     * @test
+     */
+    public function willNotGenerateAlreadyGeneratedThumbs()
+    {
+        $inodeId  = 123;
+
+        $filename = 'sintel_trailer-720p';
+        $javFile = (new JavFile())
+            ->setInode((new Inode())->setId($inodeId))
+            ->setPath("{$this->rootFs->url()}/{$filename}.mp4")
+            ->setFilename($filename);
+
+        // Setup VFS
+        vfsStream::newFile("{$filename}.jpg")
+            ->withContent(LargeFileContent::withMegabytes(2))
+            ->at($this->rootFs);
+
+        $this->logger->expects($this->exactly(2))
+            ->method('debug');
+
+        $this->assertFalse($this->service->generateThumbs($javFile));
+
+        $this->assertFalse($this->rootFs->hasChild("{$filename}.jpg"));
+        $this->assertTrue($this->rootFs->hasChild("{$inodeId}.jpg"));
+    }
+
+    /**
+     * @test
+     * @expectedException \Exception
+     * @expectedExceptionMessage Path is not a file
+     */
+    public function willThrowExceptionIfFileDoesNotExistWhenGeneratingThumb()
+    {
+        $inodeId  = 123;
+
+        $filename = 'sintel_trailer-720p';
+        $javFile = (new JavFile())
+            ->setInode((new Inode())->setId($inodeId))
+            ->setPath("{$this->rootFs->url()}/{$filename}.mp4")
+            ->setFilename($filename);
+
+        $this->logger->expects($this->once())
+            ->method('error');
+
+        $this->service->generateThumbs($javFile);
+    }
+
+    /**
+     * @test
+     * @expectedException \Exception
+     * @expectedExceptionMessage File is not readable
+     */
+    public function willThrowExceptionIfFileIsNotReadableWhenGeneratingThumb()
+    {
+        $inodeId  = 123;
+
+        $filename = 'sintel_trailer-720p';
+        $javFile = (new JavFile())
+            ->setInode((new Inode())->setId($inodeId))
+            ->setPath("{$this->rootFs->url()}/{$filename}.mp4")
+            ->setFilename($filename);
+
+        // Setup VFS
+        vfsStream::newFile("{$filename}.mp4")
+            ->withContent(LargeFileContent::withMegabytes(2))
+            ->chmod(0000)
+            ->at($this->rootFs);
+
+        $this->logger->expects($this->once())
+            ->method('error');
+
+        $this->assertFalse($this->service->generateThumbs($javFile));
+
+        $this->assertFalse($this->rootFs->hasChild("{$filename}.jpg"));
+        $this->assertTrue($this->rootFs->hasChild("{$inodeId}.jpg"));
+    }
+
+    /**
      * Inject a real video file into vfs for testing mt command
      *
      * @param string $filename
