@@ -2,13 +2,13 @@
 namespace App\Command;
 
 use App\Event\DirectoryFoundEvent;
-use App\Event\FileFoundEvent;
 use App\Event\QualifiedVideoFileFound;
 use App\Event\VideoFileFoundEvent;
 use App\Service\FileScanService;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\ConsoleSectionOutput;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -61,26 +61,35 @@ class ScanCommand extends SectionedCommand
         $this
             ->setName('jav:scan')
             ->setDescription('Scan for JAV titles locally')
-            ->addArgument('path', InputArgument::OPTIONAL,'Root path');
+            ->addArgument('path', InputArgument::OPTIONAL,'Root path')
+            ->addOption('silent', 's', InputOption::VALUE_NONE,'Do not output anything besides errors and warnings');
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
     {
         parent::execute($input, $output);
-        if($output instanceof ConsoleOutput) {
-            $this->lastMatchSection = $output->section();
-            $this->updateLastMatch('none');
+
+        $silent = $input->getOption('silent');
+        $path = $input->getArgument('path') ?: $this->javMediaFileLocation;
+
+        if(!$silent) {
+            if ($output instanceof ConsoleOutput) {
+                $this->lastMatchSection = $output->section();
+                $this->updateLastMatch('none');
+            }
+
+            $this->setEventListeners($this->eventDispatcher);
+
+            $this->updateStateMessage('Scanning');
+            $this->updateProgressOutput("Starting scan for {$path}");
         }
 
-        $path = $input->getArgument('path') ?: $this->javMediaFileLocation;
-        $this->setEventListeners($this->eventDispatcher);
-
-        $this->updateStateMessage('Scanning');
-        $this->updateProgressOutput("Starting scan for {$path}");
         $this->fileScanService->scanDir($path);
 
-        $this->updateStateMessage('Finished');
-        $this->updateProgressOutput(sprintf('Found %s eligible files', $this->fileScanService->getFiles()->count()));
+        if(!$silent) {
+            $this->updateStateMessage('Finished');
+            $this->updateProgressOutput(sprintf('Found %s eligible files', $this->fileScanService->getFiles()->count()));
+        }
     }
 
     private function setEventListeners(EventDispatcherInterface $eventDispatcher)
