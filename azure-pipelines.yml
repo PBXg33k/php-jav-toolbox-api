@@ -11,7 +11,7 @@ pool:
   vmImage: 'Ubuntu-16.04'
 
 variables:
-  imageName: '$(dockerId)/$(imageName):$(build.buildId)'
+  imageName: 'pbxg33k/php-jav-toolbox-api:$(build.buildId)'
 
 steps:
 - script: docker build -f Dockerfile -t $(imageName) .
