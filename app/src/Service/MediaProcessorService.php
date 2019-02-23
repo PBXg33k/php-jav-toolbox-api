@@ -2,6 +2,7 @@
 namespace App\Service;
 
 use App\Entity\JavFile;
+use Doctrine\Common\Collections\ArrayCollection;
 use Mhor\MediaInfo\MediaInfo;
 use Mhor\MediaInfo\Type\Video;
 use Psr\Log\LoggerInterface;
@@ -113,7 +114,7 @@ class MediaProcessorService
         if ($mediaInfoContainer = $this->mediaInfo->getInfo($javFile->getPath())) {
             if ($videoInfo = $mediaInfoContainer->getVideos()) {
                 $this->videoInfo = [
-                    'video'   => $videoInfo,
+                    'video'   => new ArrayCollection($videoInfo),
                     'general' => $mediaInfoContainer->getGeneral(),
                 ];
             }
@@ -161,7 +162,7 @@ class MediaProcessorService
         }
 
         /** @var Video $vinfo */
-        $vinfo = $this->videoInfo['video'][0];
+        $vinfo = $this->videoInfo['video']->first();
         if($vinfo) {
             $inode->setCodec($vinfo->get('codec'));
             if($vinfo->get('duration')) {
