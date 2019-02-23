@@ -54,7 +54,7 @@ WORKDIR /var/www
 COPY . /var/www
 WORKDIR /var/www/app
 RUN apk add --no-cache --update ffmpeg xxhash \
-    && composer update --no-dev --optimize-autoloader --prefer-dist --no-scripts
+    && composer install --no-dev --optimize-autoloader --prefer-dist --no-scripts
 
 # Cleanup
 RUN rm -rf /tmp/* && chmod +x /var/www/start.sh
