@@ -164,10 +164,10 @@ class MediaProcessorService
         /** @var Video $vinfo */
         $vinfo = $this->videoInfo['video']->first();
         if($vinfo) {
-            $inode->setCodec($vinfo->get('codec'));
-            if($vinfo->get('duration')) {
+            if($vinfo->get('codec'))
+                $inode->setCodec($vinfo->get('codec'));
+            if($vinfo->get('duration'))
                 $inode->setLength($vinfo->get('duration')->getMilliseconds());
-            }
             if($vinfo->get('bit_rate')) {
                 $inode->setBitrate($vinfo->get('bit_rate')->getAbsoluteValue());
             } elseif($vinfo->get('nominal_bit_rate')) {
