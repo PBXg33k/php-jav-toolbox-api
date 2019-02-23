@@ -46,6 +46,19 @@ class JAVThumbsServiceTest extends TestCase
         );
     }
 
+    /**
+     * @test
+     * @expectedException \Exception
+     */
+    public function willThrowExceptionIfInvalidPathIsGivenToConstructor()
+    {
+        $this->service = new JAVThumbsService(
+            $this->logger,
+            $this->configPath,
+            sprintf("/nonexisting/path/%s", md5(mt_rand(0,999)))
+        );
+    }
+
     public function testConfigPathGetter()
     {
         $this->assertSame($this->configPath, $this->service->getMtConfigPath());
