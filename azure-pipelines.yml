@@ -11,16 +11,28 @@ pool:
   vmImage: 'Ubuntu-16.04'
 
 variables:
-  imageName: 'pbxg33k/php-jav-toolbox-api:$(build.buildId)'
+  imageName: 'pbxg33k/php-jav-toolbox-api:$(build.SourceBranchName)'
 
-steps:
-- script: docker build -f Dockerfile -t $(imageName) .
-  displayName: 'docker build'
-- script: docker run $(imageName) composer install
-  displayName: 'Install dependencies'
-- script: docker run $(imageName) composer install && bin/phpunit
-  displayName: 'Unit tests'
-- script: |
-    docker login -u $(dockerId) -p $(pswd)
-    docker push $(dockerId)/$(imageName)
-  displayName: 'push image'
+jobs:
+- job: build
+  steps:
+  - script: docker build -f Dockerfile -t $(imageName) .
+    displayName: 'docker build'
+  - script: docker run $(imageName) composer install
+    displayName: 'Install dependencies'
+
+- job: tests
+  dependsOn: build
+  condition: succeeded()
+  steps:
+  - script: docker run $(imageName) composer install && bin/phpunit
+    displayName: 'Unit tests'
+
+- job: deploy
+  dependsOn: tests
+  condition: succeeded()
+  steps:
+  - script: |
+      docker login -u $(dockerId) -p $(dockerPswd)
+      docker push $(dockerId)/$(imageName)
+    displayName: 'push image'
