@@ -140,7 +140,7 @@ class FileScanService
     {
         if($this->javProcessorService->filenameContainsID($file)) {
             $this->logger->debug(sprintf('file found: %s', $file->getPathname()));
-            $this->messageBus->dispatch(new ScanFileMessage($file));
+            $this->messageBus->dispatch(new ScanFileMessage($file->getPathname(), $file->getRelativePath(), $file->getRelativePathname()));
             $this->files->add($file);
         }
     }
