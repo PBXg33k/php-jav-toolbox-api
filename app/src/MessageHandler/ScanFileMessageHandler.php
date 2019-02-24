@@ -29,6 +29,6 @@ class ScanFileMessageHandler
 
     public function __invoke(ScanFileMessage $message)
     {
-        $this->eventDispatcher->dispatch(QualifiedVideoFileFound::NAME, new QualifiedVideoFileFound($message->getFileInfo()));
+        $this->eventDispatcher->dispatch(QualifiedVideoFileFound::NAME, new QualifiedVideoFileFound($message->constructFileInfo()));
     }
 }

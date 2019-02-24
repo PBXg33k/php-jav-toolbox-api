@@ -29,9 +29,35 @@ class ScanFileMessage
     }
 
     /**
+     * @return string
+     */
+    public function getFile(): string
+    {
+        return $this->file;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRelativePath(): string
+    {
+        return $this->relativePath;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRelativePathname(): string
+    {
+        return $this->relativePathname;
+    }
+
+
+
+    /**
      * @return SplFileInfo
      */
-    public function getFileInfo(): SplFileInfo
+    public function constructFileInfo(): SplFileInfo
     {
         if(!$this->fileInfo) {
             $this->fileInfo = new SplFileInfo($this->file, $this->relativePath, $this->relativePathname);
