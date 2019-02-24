@@ -10,3 +10,4 @@ framework:
             'App\Message\GenerateThumbnailMessage': amqp
             'App\Message\GetVideoMetadataMessage': amqp
             'App\Message\ProcessFileMessage': amqp
+            '*': amqp

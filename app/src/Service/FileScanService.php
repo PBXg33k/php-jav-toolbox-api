@@ -5,11 +5,13 @@ use App\Event\DirectoryFoundEvent;
 use App\Event\FileFoundEvent;
 use App\Event\QualifiedVideoFileFound;
 use App\Event\VideoFileFoundEvent;
+use App\Message\ScanFileMessage;
 use Doctrine\Common\Collections\ArrayCollection;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class FileScanService
 {
@@ -39,21 +41,37 @@ class FileScanService
     /** @var Filesystem */
     private $filesystem;
 
+    /**
+     * @var JAVProcessorService
+     */
     private $javProcessorService;
 
+    /**
+     * @var MessageBusInterface
+     */
+    private $messageBus;
+
+    /**
+     * @var
+     */
     private $rootPath;
 
+    /**
+     * @var string
+     */
     private $extensionRegex;
 
     public function __construct(
         LoggerInterface $logger,
         EventDispatcherInterface $dispatcher,
-        JAVProcessorService $JAVProcessorService
+        JAVProcessorService $JAVProcessorService,
+        MessageBusInterface $messageBus
     )
     {
         $this->setLogger($logger);
         $this->dispatcher           = $dispatcher;
         $this->javProcessorService  = $JAVProcessorService;
+        $this->messageBus           = $messageBus;
         $this->files                = new ArrayCollection();
         $this->filesystem           = new Filesystem();
         $this->extensionRegex       = sprintf('/.%s$/i', implode('|.', $this->videoExtensions));
@@ -122,7 +140,7 @@ class FileScanService
     {
         if($this->javProcessorService->filenameContainsID($file)) {
             $this->logger->debug(sprintf('file found: %s', $file->getPathname()));
-            $this->dispatcher->dispatch(QualifiedVideoFileFound::NAME, new QualifiedVideoFileFound($file));
+            $this->messageBus->dispatch(new ScanFileMessage($file));
             $this->files->add($file);
         }
     }
