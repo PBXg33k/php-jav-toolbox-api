@@ -5,6 +5,7 @@ use App\Event\DirectoryFoundEvent;
 use App\Event\FileFoundEvent;
 use App\Event\QualifiedVideoFileFound;
 use App\Event\VideoFileFoundEvent;
+use App\Message\ScanFileMessage;
 use App\Service\FileScanService;
 use App\Service\JAVProcessorService;
 use org\bovigo\vfs\content\LargeFileContent;
@@ -14,6 +15,8 @@ use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Messenger\Envelope;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class FileScanServiceTest extends TestCase
 {
@@ -38,6 +41,11 @@ class FileScanServiceTest extends TestCase
     private $javProcessorService;
 
     /**
+     * @var MockObject|MessageBusInterface
+     */
+    private $messageBus;
+
+    /**
      * @var FileScanService
      */
     private $fileScanService;
@@ -47,10 +55,12 @@ class FileScanServiceTest extends TestCase
         $this->logger               = $this->createMock(LoggerInterface::class);
         $this->eventDispatcher      = $this->createMock(EventDispatcherInterface::class);
         $this->javProcessorService  = $this->createMock(JAVProcessorService::class);
+        $this->messageBus           = $this->createMock(MessageBusInterface::class);
         $this->fileScanService      = new FileScanService(
             $this->logger,
             $this->eventDispatcher,
-            $this->javProcessorService
+            $this->javProcessorService,
+            $this->messageBus
         );
 
         $this->rootFs = vfsStream::setup('testDir');
@@ -64,7 +74,7 @@ class FileScanServiceTest extends TestCase
     public function willFindFile()
     {
         // Mock file which will be processed
-        vfsStream::newFile('ABC-123.mkv')
+        $videoFile = vfsStream::newFile('ABC-123.mkv')
             ->withContent(new LargeFileContent(500000000))
             ->at($this->rootFs);
 
@@ -73,23 +83,36 @@ class FileScanServiceTest extends TestCase
             ->withContent(LargeFileContent::withMegabytes(5))
             ->at($this->rootFs);
 
-        $this->eventDispatcher->expects($this->exactly(7))
+        $this->eventDispatcher->expects($this->exactly(6))
             ->method('dispatch')
             ->withConsecutive(
                 [$this->equalTo(DirectoryFoundEvent::NAME), $this->isInstanceOf(DirectoryFoundEvent::class)],
                 [$this->equalTo(DirectoryFoundEvent::NAME), $this->isInstanceOf(DirectoryFoundEvent::class)],
                 [$this->equalTo(FileFoundEvent::NAME), $this->isInstanceOf(FileFoundEvent::class)],
                 [$this->equalTo(VideoFileFoundEvent::NAME), $this->isInstanceOf(VideoFileFoundEvent::class)],
-                [$this->equalTo(QualifiedVideoFileFound::NAME), $this->isInstanceOf(QualifiedVideoFileFound::class)],
                 [$this->equalTo(FileFoundEvent::NAME), $this->isInstanceOf(FileFoundEvent::class)],
-                [$this->equalTo(VideoFileFoundEvent::NAME), $this->isInstanceOf(VideoFileFoundEvent::class)]
+                [$this->equalTo(VideoFileFoundEvent::NAME), $this->isInstanceOf(VideoFileFoundEvent::class)],
+                [$this->equalTo(QualifiedVideoFileFound::NAME), $this->isInstanceOf(QualifiedVideoFileFound::class)],
             );
+
+        $this->messageBus->expects($this->once())
+            ->method('dispatch')
+            ->with(
+                $this->callback(function($subject) use ($videoFile){
+                    /** @var $subject ScanFileMessage */
+                    return $this->isInstanceOf(ScanFileMessage::class)
+                        && $subject->getFile() === $videoFile->url();
+                })
+            )
+            ->willReturn(new Envelope(new ScanFileMessage('/','','')));
 
         $this->javProcessorService->expects($this->once())
             ->method('filenameContainsID')
             ->willReturn(true);
 
         $this->fileScanService->scanDir($this->rootFs->url());
+
+//        var_dump($this->fileScanService->getFiles());die();
 
         $this->assertInstanceOf(\SplFileInfo::class, $this->fileScanService->getFiles()->first());
     }
