@@ -216,6 +216,12 @@ class MediaProcessorService
             ]);
 
             var_dump($files);
+
+//            /** @var JavFile $file */
+//            foreach($files as $file) {
+//
+//            }
+
             die();
         }
     }

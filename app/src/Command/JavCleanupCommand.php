@@ -166,7 +166,7 @@ class JavCleanupCommand extends SectionedCommand
                         // Delete file from disk
                         // Remove all javfile entities linked to inode
                         // If all Success, mark success
-                        $this->mediaProcessorService->delete($javFile);
+                        $this->mediaProcessorService->delete($javFile, true);
                     }
                 }
             }
