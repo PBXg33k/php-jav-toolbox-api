@@ -183,7 +183,7 @@ class MediaProcessorService
                 $inode->setBitrate($vinfo->get('bit_rate')->getAbsoluteValue());
             } elseif($vinfo->get('nominal_bit_rate')) {
                 $inode->setBitrate($vinfo->get('nominal_bit_rate')->getAbsoluteValue());
-            } else {
+            } elseif($vinfo->get('maximum_bit_rate')) {
                 $inode->setBitrate($vinfo->get('maximum_bit_rate')->getAbsoluteValue());
             }
             $inode->setWidth($vinfo->get('width')->getAbsoluteValue());
