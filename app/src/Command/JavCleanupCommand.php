@@ -6,6 +6,7 @@ use App\Entity\JavFile;
 use App\Entity\Title;
 use App\Service\MediaProcessorService;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -33,6 +34,21 @@ class JavCleanupCommand extends SectionedCommand
      */
     private $cmdSection;
 
+    /**
+     * @var ProgressBar
+     */
+    private $overallProgressBar;
+
+    /**
+     * @var ProgressBar
+     */
+    private $stepProgressBar;
+
+    /**
+     * @var ProgressBar
+     */
+    private $ffmpegProgressBar;
+
     public function __construct(
         EntityManagerInterface $entityManager,
         MediaProcessorService $mediaProcessorService,
@@ -53,10 +69,23 @@ class JavCleanupCommand extends SectionedCommand
         ;
     }
 
+    protected function updateProgressBarWithMessage(ProgressBar $progressBar, string $message, int $steps = 1)
+    {
+        $progressBar->setMessage($message);
+        $progressBar->advance($steps);
+    }
+
+    protected function initProgressBar(ProgressBar $progressBar)
+    {
+        $progressBar->setFormat(' %current%/%max% [%bar%] %percent:3s%% %elapsed:6s%/%estimated:-6s% %memory:6s%');
+        $progressBar->setRedrawFrequency(100);
+
+        return $progressBar;
+    }
+
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         if($output instanceof ConsoleOutput) {
-            $tableSection = $output->section();
             $this->cmdSection = $output->section();
         }
         parent::execute($input, $output);
@@ -66,30 +95,27 @@ class JavCleanupCommand extends SectionedCommand
 
         if($output instanceof ConsoleOutput) {
             /** @var ConsoleOutput $output */
+            $this->overallProgressBar = $this->initProgressBar(new ProgressBar($output, 5));
+            $this->stepProgressBar    = $this->initProgressBar(new ProgressBar($output));
+            $this->ffmpegProgressBar  = $this->initProgressBar(new ProgressBar($output, 100));
 
-            $this->updateStateMessage('Looking up inconsistend files in database');
-            $brokenTitles = $this->entityManager->getRepository(Title::class)->findWithBrokenFiles();
-            $brokenTitlesCount = count($brokenTitles);
-            $this->updateProgressOutput(sprintf('Found %d inconsistent files in database', $brokenTitlesCount));
+            $this->updateProgressBarWithMessage($this->overallProgressBar, 'Looking up inconsistent files in database');
+            $brokenTitles       = $this->entityManager->getRepository(Title::class)->findWithBrokenFiles();
+            $brokenTitlesCount  = count($brokenTitles);
+            $this->updateProgressBarWithMessage($this->overallProgressBar, sprintf('Found %d inconsistent files in database', $brokenTitlesCount));
 
             if ($brokenTitles) {
-                $table = new Table($tableSection);
-                $table->setHeaders([
-                    'CatalogID',
-                    'Inode',
-                    'Part',
-                    'Filesize',
-                    'Filename',
-                ]);
+                $ioTableRows = [];
+
+                $this->stepProgressBar->setMaxSteps($brokenTitlesCount);
 
                 $collectiveSize = 0;
-
                 $i=1;
                 /** @var Title $title */
                 foreach ($brokenTitles as $title) {
-                    $this->updateProgressOutput(sprintf('%d/%d Processing %s', $i, $brokenTitlesCount, $title->getCatalognumber()));
+                    $this->updateProgressBarWithMessage($this->stepProgressBar, sprintf('%d/%d Processing %s', $i, $brokenTitlesCount, $title->getCatalognumber()));
                     foreach ($title->getFiles() as $file) {
-                        $tableRow = [
+                        $ioTableRows[] = [
                             'catalog-id' => $title->getCatalognumber(),
                             'inode' => $file->getInode()->getId(),
                             'part' => $file->getPart(),
@@ -97,59 +123,85 @@ class JavCleanupCommand extends SectionedCommand
                             'filename' => $file->getFilename()
                         ];
 
-                        $table->addRow($tableRow);
+                        $this->stepProgressBar->advance();
 
                         $collectiveSize += $file->getInode()->getFilesize();
                     }
                     $i++;
                 }
 
-                $this->updateStateMessage('Rendering table');
-                $table->setFooterTitle(sprintf('Titles %d  Size %d bytes', count($brokenTitles), $collectiveSize));
-                $table->render();
-                $this->updateStateMessage('Confirming files marked for deletion');
+                $this->updateProgressBarWithMessage($this->overallProgressBar, 'Rendering table');
+                $io->table([
+                    'CatalogID',
+                    'Inode',
+                    'Part',
+                    'Filesize',
+                    'Filename',
+                ], $ioTableRows);
+
+                $this->updateProgressBarWithMessage($this->overallProgressBar, 'Confirming files marked for deletion');
 
                 // Do the actual checking before deleting files
-                $this->checkTitleConsistencies(...$brokenTitles);
+                $this->checkTitleConsistencies($io, ...$brokenTitles);
 
-                $this->updateProgressOutput('Complete');
+                $this->updateProgressBarWithMessage($this->overallProgressBar, 'Complete');
             } else {
                 $io->success('No broken titles found');
             }
         }
     }
 
-    private function checkTitleConsistencies(Title ...$titles) {
+    private function checkTitleConsistencies(SymfonyStyle $io, Title ...$titles) {
+        $this->stepProgressBar->start();
         foreach($titles as $brokenTitle) {
             foreach($brokenTitle->getFiles() as $javFile) {
-                $this->checkFileConsistency($javFile);
+                try {
+                    $this->checkFileConsistency($javFile);
+                } catch (\Throwable $exception) {
+                    if($io->confirm(sprintf(
+                        "%s did not pass ffmpeg test. Delete file?",
+                        $brokenTitle->getFiles()->first()->getFilename()
+                    ), true)) {
+                        // Lookup all javfiles linked to inode
+                        // Delete file from disk
+                        // Remove all javfile entities linked to inode
+                        // If all Success, mark success
+                        $this->mediaProcessorService->delete($javFile);
+                    }
+                }
             }
         }
     }
 
     private function checkFileConsistency(JavFile $file) {
         $starttime = time();
-        $this->updateProgressOutput("Processing title {$file->getTitle()->getCatalognumber()}. File: {$file->getPath()}");
-        try {
-            $this->mediaProcessorService->checkHealth(
-                $file,
-                true,
-                function ($type, $buffer) use ($starttime) {
-                    if ((time() - $starttime) >= 30) {
-                        $this->entityManager->getConnection()->ping();
-                        $starttime = time();
+        $this->stepProgressBar->setMessage("Processing title {$file->getTitle()->getCatalognumber()}. File: {$file->getPath()}");
+
+        $ffmpegBuffer = [];
+
+        $length = $file->getInode()->getLength();
+
+        $this->mediaProcessorService->checkHealth(
+            $file,
+            true,
+            function ($type, $buffer) use ($starttime, $length, $ffmpegBuffer) {
+                if ((time() - $starttime) >= 30) {
+                    $this->entityManager->getConnection()->ping();
+                    $starttime = time();
+                }
+
+                if (strpos($buffer, ' time=') !== FALSE) {
+                    // Calculate/estimate progress
+                    if (preg_match('~time=(?<hours>[\d]{1,2})\:(?<minutes>[\d]{2})\:(?<seconds>[\d]{2})?(?:\.(?<millisec>[\d]{0,3}))\sbitrate~', $buffer, $matches)) {
+                        $time = ($matches['hours'] * 3600 + $matches['minutes'] * 60 + $matches['seconds']) * 1000 + ($matches['millisec'] * 10);
+
+                        $this->ffmpegProgressBar->setProgress((int) ($time / $length) * 100);
                     }
+                }
 
-                    // Calculate progress for progress bar
-                    $this->cmdSection->overwrite("FFMPEG Output: {$buffer}");
-                },
-                true);
-
-            // If we reach this line the file seems A-OK (since no exception is thrown)
-        } catch (\Throwable $exception) {
-            // FFMPEG failed.
-            var_dump($exception);
-            die();
-        }
+                $this->ffmpegProgressBar->setMessage($buffer);
+                $ffmpegBuffer[] = $buffer;
+            },
+            true);
     }
 }

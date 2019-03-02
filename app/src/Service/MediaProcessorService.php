@@ -3,6 +3,7 @@ namespace App\Service;
 
 use App\Entity\JavFile;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManagerInterface;
 use Mhor\MediaInfo\MediaInfo;
 use Mhor\MediaInfo\Type\Video;
 use Psr\Log\LoggerInterface;
@@ -30,10 +31,20 @@ class MediaProcessorService
      */
     private $thumbService;
 
-    public function __construct(LoggerInterface $logger, JAVThumbsService $thumbService)
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
+
+    public function __construct(
+        LoggerInterface $logger,
+        JAVThumbsService $thumbService,
+        EntityManagerInterface $entityManager
+    )
     {
-        $this->logger       = $logger;
-        $this->thumbService = $thumbService;
+        $this->logger           = $logger;
+        $this->thumbService     = $thumbService;
+        $this->entityManager    = $entityManager;
 
         $this->mediaInfo    = new MediaInfo();
         $this->mediaInfo->setConfig('use_oldxml_mediainfo_output_format', true);
@@ -196,5 +207,16 @@ class MediaProcessorService
 
     public function generateThumbnails(JavFile $javFile): bool {
         return $this->thumbService->generateThumbs($javFile);
+    }
+
+    public function delete(JavFile $javFile, bool $deleteAllLinked = false) {
+        if($deleteAllLinked) {
+            $files = $this->entityManager->getRepository(JavFile::class)->findBy([
+                'inode' => $javFile->getInode()->getId()
+            ]);
+
+            var_dump($files);
+            die();
+        }
     }
 }
