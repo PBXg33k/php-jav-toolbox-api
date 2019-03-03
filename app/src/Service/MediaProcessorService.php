@@ -216,7 +216,7 @@ class MediaProcessorService
         return $this->thumbService->generateThumbs($javFile);
     }
 
-    public function delete(JavFile $javFile, bool $deleteAllLinked = false)
+    public function delete(JavFile $javFile, bool $deleteAllLinked = false, bool $dryRun = false)
     {
         if ($deleteAllLinked) {
             $files = $this->entityManager->getRepository(JavFile::class)->findBy([
@@ -231,6 +231,19 @@ class MediaProcessorService
 //            }
 
             die();
+        } else {
+            $files = [$javFile];
+        }
+
+        /** @var JavFile $file */
+        foreach ($files as $file) {
+            if($dryRun) {
+                $this->logger->notice('DRYRUN: Deleting file', [
+                    'path' => $file->getPath()
+                ]);
+            } else {
+
+            }
         }
     }
 }
