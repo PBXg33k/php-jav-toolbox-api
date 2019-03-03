@@ -2,7 +2,8 @@
 
 return PhpCsFixer\Config::create()
     ->setRules([
-        '@Symfony' => true,
-        'array_syntax' => ['syntax' => 'short'],
+        '@Symfony'      => true,
+        '@PSR2'         => true,
+        'array_syntax'  => ['syntax' => 'short'],
     ])
 ;

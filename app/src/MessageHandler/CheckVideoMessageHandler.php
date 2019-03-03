@@ -85,7 +85,8 @@ class CheckVideoMessageHandler implements MessageHandlerInterface
                             $this->logger->debug($buffer);
                         }
                     }
-                });
+                }
+            );
 
             $this->entityManager->persist($javFile);
             $this->entityManager->persist($javFile->getInode());

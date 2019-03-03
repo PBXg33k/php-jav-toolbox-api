@@ -200,6 +200,7 @@ class JavCleanupCommand extends SectionedCommand
                 $this->ffmpegProgressBar->setMessage($buffer);
                 $ffmpegBuffer[] = $buffer;
             },
-            true);
+            true
+        );
     }
 }

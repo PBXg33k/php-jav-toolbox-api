@@ -111,7 +111,7 @@ class FileScanService
     {
         $items = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path), \RecursiveIteratorIterator::SELF_FIRST);
 
-        /**
+        /*
          * @var \SplFileInfo
          */
         foreach ($items as $ik => $iv) {
