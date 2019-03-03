@@ -14,6 +14,7 @@
         "enqueue/enqueue-bundle": "^0.9.3",
         "enqueue/messenger-adapter": "^0.2.0",
         "facile-it/doctrine-mysql-come-back": "^1.6",
+        "friendsofphp/php-cs-fixer": "^2.14",
         "mhor/php-mediainfo": "^4.1",
         "pbxg33k/jav-info": "dev-master",
         "php-coveralls/php-coveralls": "^2.1",
