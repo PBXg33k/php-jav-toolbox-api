@@ -28,7 +28,7 @@ class MediaController extends AbstractController
         $titles = $titleRepository->findAll();
 
         return $this->json([
-            'titles' => $titles
+            'titles' => $titles,
         ]);
     }
 

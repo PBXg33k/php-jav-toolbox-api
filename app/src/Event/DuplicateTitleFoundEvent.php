@@ -3,11 +3,10 @@
  * Created by PhpStorm.
  * User: PBX_g33k
  * Date: 4/12/2018
- * Time: 10:41 PM
+ * Time: 10:41 PM.
  */
 
 namespace App\Event;
-
 
 use App\Model\JAVTitle;
 use Symfony\Component\EventDispatcher\Event;
@@ -47,6 +46,4 @@ class DuplicateTitleFoundEvent extends Event
     {
         return $this->right;
     }
-
-
 }

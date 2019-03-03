@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Service;
 
 use App\Entity\JavFile;
@@ -28,9 +29,8 @@ class JAVThumbsService
         LoggerInterface $logger,
         string $javToolboxMtConfigPath,
         string $javToolboxMediaThumbDirectory
-    )
-    {
-        $this->logger   = $logger;
+    ) {
+        $this->logger = $logger;
         $this->setJavToolboxMediaThumbDirectory($javToolboxMediaThumbDirectory);
         $this->setMtConfigPath($javToolboxMtConfigPath);
     }
@@ -45,6 +45,7 @@ class JAVThumbsService
 
     /**
      * @param string $mtConfigPath
+     *
      * @return JAVThumbsService
      */
     public function setMtConfigPath(string $mtConfigPath): self
@@ -64,80 +65,86 @@ class JAVThumbsService
 
     /**
      * @param string $javToolboxMediaThumbDirectory
+     *
      * @return JAVThumbsService
+     *
      * @throws \Exception
      */
     public function setJavToolboxMediaThumbDirectory(string $javToolboxMediaThumbDirectory): JAVThumbsService
     {
-        if(!is_dir($javToolboxMediaThumbDirectory)) {
-            throw new \Exception('Path not a directory: '. $javToolboxMediaThumbDirectory);
+        if (!is_dir($javToolboxMediaThumbDirectory)) {
+            throw new \Exception('Path not a directory: '.$javToolboxMediaThumbDirectory);
         }
 
         $this->javToolboxMediaThumbDirectory = $javToolboxMediaThumbDirectory;
+
         return $this;
     }
 
     /**
      * @param JavFile $javFile
+     *
      * @return bool
+     *
      * @throws \Exception
      *
      * @todo refactor to make more testable
      */
     public function generateThumbs(JavFile $javFile)
     {
-        $this->logger->debug("Generating thumbs for file", [
-            'path'  => $javFile->getPath()
+        $this->logger->debug('Generating thumbs for file', [
+            'path' => $javFile->getPath(),
         ]);
 
         // Check for old path
-        if($this->getThumbnail($javFile)) {
+        if ($this->getThumbnail($javFile)) {
             return false;
         }
 
         $finfo = new \SplFileInfo($javFile->getPath());
-        if(!$finfo->isFile()) {
+        if (!$finfo->isFile()) {
             $this->logger->error('Path is not a file', [
-                'path' => $javFile->getPath()
+                'path' => $javFile->getPath(),
             ]);
             throw new \Exception('Path is not a file');
         }
 
-        if(!$finfo->isReadable()) {
-            $this->logger->error('File is not readable',[
-                'path' => $javFile->getPath()
+        if (!$finfo->isReadable()) {
+            $this->logger->error('File is not readable', [
+                'path' => $javFile->getPath(),
             ]);
             throw new \Exception('File is not readable');
         }
 
         $process = (new Process([
-            "test",
-            "-r",
-            "\"{$javFile->getPath()}\""
+            'test',
+            '-r',
+            "\"{$javFile->getPath()}\"",
         ]));
 
-        if($process->getExitCode()) {
+        if ($process->getExitCode()) {
             $this->logger->error('FILE NOT READABLE BY CMD', [
-                'path' => $javFile->getPath()
+                'path' => $javFile->getPath(),
             ]);
+
             return false;
         }
 
         $process = (new Process([
-            "mt",
-            "--config-file",
+            'mt',
+            '--config-file',
             $this->getMtConfigPath(),
-            "--output",
+            '--output',
             $this->getThumbPath($javFile),
-            $javFile->getPath()
-        ]))->setTimeout(10*60);
-        $this->logger->debug("Running MT CMD", [
+            $javFile->getPath(),
+        ]))->setTimeout(10 * 60);
+        $this->logger->debug('Running MT CMD', [
             'cmd' => $process->getCommandLine(),
         ]);
-        try{
-            $process->mustRun(function($type, $buffer) {
-                if(preg_match('~(?<level>[^\[]+)\[(\d+)\]\s(?<message>.*)~', $buffer, $matches)) {
-                    switch($matches['level']) {
+        try {
+            $process->mustRun(function ($type, $buffer) {
+                if (preg_match('~(?<level>[^\[]+)\[(\d+)\]\s(?<message>.*)~', $buffer, $matches)) {
+                    switch ($matches['level']) {
                         case 'DEBU':
                             $loglevel = 'debug';
                             break;
@@ -149,32 +156,32 @@ class JAVThumbsService
                     }
 
                     $this->logger->log($loglevel, $matches['level'], [
-                        'process'    => [
-                            'type'   => $type,
-                            'buffer' => $buffer
-                        ]
+                        'process' => [
+                            'type' => $type,
+                            'buffer' => $buffer,
+                        ],
                     ]);
                 } else {
                     $this->logger->debug('CMD OUTPUT', [
-                        'buffer' => $buffer
+                        'buffer' => $buffer,
                     ]);
                 }
             });
 
-            return $process->getExitCode() === 0;
+            return 0 === $process->getExitCode();
         } catch (ProcessFailedException $exception) {
             $this->logger->error($exception->getMessage(), [
-                'cmd'              => $process->getCommandLine(),
-                'file'             => $javFile->getPath(),
-                'exception_code'   => $exception->getCode(),
+                'cmd' => $process->getCommandLine(),
+                'file' => $javFile->getPath(),
+                'exception_code' => $exception->getCode(),
                 'process_exitcode' => $exception->getProcess()->getExitCode(),
-                'process_output'   => $exception->getProcess()->getOutput(),
-                'proc'             => [
-                    'isTty'        => $process->isTty(),
-                    'isPty'        => $process->isPty(),
-                    'working_dir'  => $process->getWorkingDirectory(),
-                    'env'          => $process->getEnv()
-                ]
+                'process_output' => $exception->getProcess()->getOutput(),
+                'proc' => [
+                    'isTty' => $process->isTty(),
+                    'isPty' => $process->isPty(),
+                    'working_dir' => $process->getWorkingDirectory(),
+                    'env' => $process->getEnv(),
+                ],
             ]);
         }
 
@@ -182,7 +189,7 @@ class JAVThumbsService
     }
 
     /**
-     * Method for addressing issue #38
+     * Method for addressing issue #38.
      *
      * @param JavFile $javFile
      */
@@ -191,21 +198,19 @@ class JAVThumbsService
         $filesystem = new Filesystem();
         $pathInfo = pathinfo($javFile->getPath());
 
-
         $oldPath = "{$pathInfo['dirname']}/{$pathInfo['filename']}.jpg";
 
-        if($filesystem->exists($oldPath))
-        {
-            if(!$filesystem->exists($this->getThumbPath($javFile))) {
+        if ($filesystem->exists($oldPath)) {
+            if (!$filesystem->exists($this->getThumbPath($javFile))) {
                 $this->logger->debug('Renaming thumbnail', [
                     'oldpath' => $oldPath,
-                    'newpath' => $this->getThumbPath($javFile)
+                    'newpath' => $this->getThumbPath($javFile),
                 ]);
                 $filesystem->rename($oldPath, $this->getThumbPath($javFile));
             } else {
                 $this->logger->debug('Duplicate thumbnail detected during rename', [
                     'oldpath' => $oldPath,
-                    'newPath' => $this->getThumbPath($javFile)
+                    'newPath' => $this->getThumbPath($javFile),
                 ]);
                 $filesystem->remove($oldPath);
             }
@@ -216,7 +221,7 @@ class JAVThumbsService
     {
         $this->renameFromFilenameToInode($javFile);
 
-        if(file_exists($this->getThumbPath($javFile))) {
+        if (file_exists($this->getThumbPath($javFile))) {
             return new \SplFileInfo($this->getThumbPath($javFile));
         }
 

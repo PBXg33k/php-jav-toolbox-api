@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Service;
 
 use App\Event\DirectoryFoundEvent;
@@ -20,7 +21,7 @@ class FileScanService
         'mpg',
         'mpeg',
         'iso',
-        'wmv'
+        'wmv',
     ];
 
     /**
@@ -64,13 +65,12 @@ class FileScanService
         EventDispatcherInterface $dispatcher,
         JAVProcessorService $JAVProcessorService,
         MessageBusInterface $messageBus
-    )
-    {
+    ) {
         $this->setLogger($logger);
-        $this->dispatcher           = $dispatcher;
-        $this->javProcessorService  = $JAVProcessorService;
-        $this->messageBus           = $messageBus;
-        $this->files                = new ArrayCollection();
+        $this->dispatcher = $dispatcher;
+        $this->javProcessorService = $JAVProcessorService;
+        $this->messageBus = $messageBus;
+        $this->files = new ArrayCollection();
     }
 
     public function setLogger(LoggerInterface $logger): self
@@ -88,11 +88,11 @@ class FileScanService
         $item = $this->scanRecursiveIterator($directory);
 
         /** @var \SplFileInfo $value */
-        foreach($item as $value) {
+        foreach ($item as $value) {
             if ($value->getSize() < 300000000) {
                 $this->logger->warning('File did not meer filesize requirements', [
-                    'path'  => $value->getPathname(),
-                    'size'  => $value->getSize()
+                    'path' => $value->getPathname(),
+                    'size' => $value->getSize(),
                 ]);
                 continue;
             }
@@ -112,11 +112,10 @@ class FileScanService
         $items = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path), \RecursiveIteratorIterator::SELF_FIRST);
 
         /**
-         * @var $iv \SplFileInfo
+         * @var \SplFileInfo
          */
-        foreach($items as $ik => $iv)
-        {
-            if(
+        foreach ($items as $ik => $iv) {
+            if (
                 $iv->isFile()
             ) {
                 $this->dispatcher->dispatch(FileFoundEvent::NAME, new FileFoundEvent($iv));
@@ -133,7 +132,7 @@ class FileScanService
 
     public function processFile(\SplFileInfo $file): void
     {
-        if($this->javProcessorService->filenameContainsID($file)) {
+        if ($this->javProcessorService->filenameContainsID($file)) {
             $this->logger->debug(sprintf('file found: %s', $file->getPathname()));
             $this->messageBus->dispatch(new ScanFileMessage($file->getPathname(), ltrim($file->getPath(), $this->rootPath), ltrim($file->getPathname(), $this->rootPath)));
             $this->files->add($file);

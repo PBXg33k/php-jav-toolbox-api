@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Service\FilenameParser;
 
 class Hack1Parser extends BaseParser

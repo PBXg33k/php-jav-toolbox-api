@@ -1,4 +1,5 @@
 <?php
+
 namespace App\MessageHandler;
 
 use App\Entity\JavFile;
@@ -31,7 +32,7 @@ class GenerateThumbnailMessageHandler
     ) {
         $this->thumbsService = $thumbsService;
         $this->entityManager = $entityManager;
-        $this->logger        = $logger;
+        $this->logger = $logger;
     }
 
     public function __invoke(GenerateThumbnailMessage $message)
@@ -42,9 +43,9 @@ class GenerateThumbnailMessageHandler
             $this->thumbsService->generateThumbs($javFile);
         } else {
             $this->logger->error('File conditions not met for thumbnail', [
-                'path'       => $javFile->getPath(),
-                'checked'    => $javFile->getInode()->isChecked(),
-                'consistent' => $javFile->getInode()->isConsistent()
+                'path' => $javFile->getPath(),
+                'checked' => $javFile->getInode()->isChecked(),
+                'consistent' => $javFile->getInode()->isConsistent(),
             ]);
         }
     }

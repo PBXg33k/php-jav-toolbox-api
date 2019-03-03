@@ -7,7 +7,6 @@ use App\Entity\Title;
 use App\Service\MediaProcessorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Helper\ProgressBar;
-use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutput;
@@ -53,10 +52,9 @@ class JavCleanupCommand extends SectionedCommand
         EntityManagerInterface $entityManager,
         MediaProcessorService $mediaProcessorService,
         ?string $name = null
-    )
-    {
-        $this->entityManager            = $entityManager;
-        $this->mediaProcessorService    = $mediaProcessorService;
+    ) {
+        $this->entityManager = $entityManager;
+        $this->mediaProcessorService = $mediaProcessorService;
         parent::__construct($name);
     }
 
@@ -85,23 +83,22 @@ class JavCleanupCommand extends SectionedCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        if($output instanceof ConsoleOutput) {
+        if ($output instanceof ConsoleOutput) {
             $this->cmdSection = $output->section();
         }
         parent::execute($input, $output);
 
-
         $io = new SymfonyStyle($input, $output);
 
-        if($output instanceof ConsoleOutput) {
-            /** @var ConsoleOutput $output */
+        if ($output instanceof ConsoleOutput) {
+            /* @var ConsoleOutput $output */
             $this->overallProgressBar = $this->initProgressBar(new ProgressBar($output, 5));
-            $this->stepProgressBar    = $this->initProgressBar(new ProgressBar($output));
-            $this->ffmpegProgressBar  = $this->initProgressBar(new ProgressBar($output, 100));
+            $this->stepProgressBar = $this->initProgressBar(new ProgressBar($output));
+            $this->ffmpegProgressBar = $this->initProgressBar(new ProgressBar($output, 100));
 
             $this->updateProgressBarWithMessage($this->overallProgressBar, 'Looking up inconsistent files in database');
-            $brokenTitles       = $this->entityManager->getRepository(Title::class)->findWithBrokenFiles();
-            $brokenTitlesCount  = count($brokenTitles);
+            $brokenTitles = $this->entityManager->getRepository(Title::class)->findWithBrokenFiles();
+            $brokenTitlesCount = count($brokenTitles);
             $this->updateProgressBarWithMessage($this->overallProgressBar, sprintf('Found %d inconsistent files in database', $brokenTitlesCount));
 
             if ($brokenTitles) {
@@ -110,7 +107,7 @@ class JavCleanupCommand extends SectionedCommand
                 $this->stepProgressBar->setMaxSteps($brokenTitlesCount);
 
                 $collectiveSize = 0;
-                $i=1;
+                $i = 1;
                 /** @var Title $title */
                 foreach ($brokenTitles as $title) {
                     $this->updateProgressBarWithMessage($this->stepProgressBar, sprintf('%d/%d Processing %s', $i, $brokenTitlesCount, $title->getCatalognumber()));
@@ -120,14 +117,14 @@ class JavCleanupCommand extends SectionedCommand
                             'inode' => $file->getInode()->getId(),
                             'part' => $file->getPart(),
                             'filesize' => $file->getInode()->getFilesize(),
-                            'filename' => $file->getFilename()
+                            'filename' => $file->getFilename(),
                         ];
 
                         $this->stepProgressBar->advance();
 
                         $collectiveSize += $file->getInode()->getFilesize();
                     }
-                    $i++;
+                    ++$i;
                 }
 
                 $this->updateProgressBarWithMessage($this->overallProgressBar, 'Rendering table');
@@ -151,15 +148,16 @@ class JavCleanupCommand extends SectionedCommand
         }
     }
 
-    private function checkTitleConsistencies(SymfonyStyle $io, Title ...$titles) {
+    private function checkTitleConsistencies(SymfonyStyle $io, Title ...$titles)
+    {
         $this->stepProgressBar->start();
-        foreach($titles as $brokenTitle) {
-            foreach($brokenTitle->getFiles() as $javFile) {
+        foreach ($titles as $brokenTitle) {
+            foreach ($brokenTitle->getFiles() as $javFile) {
                 try {
                     $this->checkFileConsistency($javFile);
                 } catch (\Throwable $exception) {
-                    if($io->confirm(sprintf(
-                        "%s did not pass ffmpeg test. Delete file?",
+                    if ($io->confirm(sprintf(
+                        '%s did not pass ffmpeg test. Delete file?',
                         $brokenTitle->getFiles()->first()->getFilename()
                     ), true)) {
                         // Lookup all javfiles linked to inode
@@ -173,7 +171,8 @@ class JavCleanupCommand extends SectionedCommand
         }
     }
 
-    private function checkFileConsistency(JavFile $file) {
+    private function checkFileConsistency(JavFile $file)
+    {
         $starttime = time();
         $this->stepProgressBar->setMessage("Processing title {$file->getTitle()->getCatalognumber()}. File: {$file->getPath()}");
 
@@ -187,10 +186,9 @@ class JavCleanupCommand extends SectionedCommand
             function ($type, $buffer) use ($starttime, $length, $ffmpegBuffer) {
                 if ((time() - $starttime) >= 30) {
                     $this->entityManager->getConnection()->ping();
-                    $starttime = time();
                 }
 
-                if (strpos($buffer, ' time=') !== FALSE) {
+                if (false !== strpos($buffer, ' time=')) {
                     // Calculate/estimate progress
                     if (preg_match('~time=(?<hours>[\d]{1,2})\:(?<minutes>[\d]{2})\:(?<seconds>[\d]{2})?(?:\.(?<millisec>[\d]{0,3}))\sbitrate~', $buffer, $matches)) {
                         $time = ($matches['hours'] * 3600 + $matches['minutes'] * 60 + $matches['seconds']) * 1000 + ($matches['millisec'] * 10);

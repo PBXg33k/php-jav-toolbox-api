@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Service\FilenameParser;
 
 class Level3Parser extends BaseParser
@@ -18,7 +19,7 @@ class Level3Parser extends BaseParser
             "\-*?",
             self::PREG_RELEASE,
             self::PREG_PART,
-            "_?"
+            '_?'
         );
     }
 }

@@ -112,7 +112,7 @@ class Title
     {
         $matchingRecord = $this->files->filter(
             /** @var JavFile $entry */
-            function($entry) use ($file) {
+            function ($entry) use ($file) {
                 return $entry->getPath = $file->getPath();
             }
         );

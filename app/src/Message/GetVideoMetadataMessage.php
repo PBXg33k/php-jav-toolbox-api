@@ -1,8 +1,7 @@
 <?php
-namespace App\Message;
 
+namespace App\Message;
 
 class GetVideoMetadataMessage extends JavFileMessage
 {
-
 }

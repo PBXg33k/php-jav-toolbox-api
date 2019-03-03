@@ -30,9 +30,10 @@ class ThumbnailController extends AbstractController
 
     /**
      * ThumbnailController constructor.
+     *
      * @param EntityManagerInterface $entityManager
-     * @param LoggerInterface $logger
-     * @param string $javToolboxMediaThumbDirectory
+     * @param LoggerInterface        $logger
+     * @param string                 $javToolboxMediaThumbDirectory
      */
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -40,8 +41,8 @@ class ThumbnailController extends AbstractController
         string $javToolboxMediaThumbDirectory
     ) {
         $this->entityManager = $entityManager;
-        $this->logger        = $logger;
-        $this->thumbDir      = $javToolboxMediaThumbDirectory;
+        $this->logger = $logger;
+        $this->thumbDir = $javToolboxMediaThumbDirectory;
     }
 
     /**
@@ -56,7 +57,7 @@ class ThumbnailController extends AbstractController
 
             $pathInfo = pathinfo($javFile->getPath());
 
-            if(!$javFile) {
+            if (!$javFile) {
                 throw new EntityNotFoundException('File not found');
             }
 
@@ -67,15 +68,14 @@ class ThumbnailController extends AbstractController
                 throw new \Exception('path is not readable');
             }
 
-            if(!$imageInfo->isFile()) {
+            if (!$imageInfo->isFile()) {
                 throw new \Exception('path is not a file');
             }
 
-            $response =  new BinaryFileResponse($imageInfo);
+            $response = new BinaryFileResponse($imageInfo);
             $response->setAutoEtag();
 
             return $response;
-
         } catch (EntityNotFoundException $exception) {
             throw $this->createNotFoundException($exception->getMessage());
         } catch (\Exception $exception) {

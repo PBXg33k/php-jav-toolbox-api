@@ -1,6 +1,6 @@
 <?php
-namespace App\Message;
 
+namespace App\Message;
 
 use Symfony\Component\Finder\SplFileInfo;
 
@@ -21,10 +21,9 @@ class ScanFileMessage
         string $file,
         string $relativePath,
         string $relativePathname
-    )
-    {
-        $this->file             = $file;
-        $this->relativePath     = $relativePath;
+    ) {
+        $this->file = $file;
+        $this->relativePath = $relativePath;
         $this->relativePathname = $relativePathname;
     }
 
@@ -52,14 +51,12 @@ class ScanFileMessage
         return $this->relativePathname;
     }
 
-
-
     /**
      * @return SplFileInfo
      */
     public function constructFileInfo(): SplFileInfo
     {
-        if(!$this->fileInfo) {
+        if (!$this->fileInfo) {
             $this->fileInfo = new SplFileInfo($this->file, $this->relativePath, $this->relativePathname);
         }
 

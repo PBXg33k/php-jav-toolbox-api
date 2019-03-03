@@ -6,8 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Config\Definition\Exception\DuplicateKeyException;
 
 /**
- * Class JAVTitle
- * @package App\Model
+ * Class JAVTitle.
  */
 class JAVTitle
 {
@@ -61,11 +60,13 @@ class JAVTitle
 
     /**
      * @param string $label
+     *
      * @return JAVTitle
      */
     public function setLabel(string $label): JAVTitle
     {
         $this->label = strtoupper($label);
+
         return $this;
     }
 
@@ -79,11 +80,13 @@ class JAVTitle
 
     /**
      * @param int $release
+     *
      * @return JAVTitle
      */
     public function setRelease(int $release): JAVTitle
     {
         $this->release = $release;
+
         return $this;
     }
 
@@ -96,15 +99,15 @@ class JAVTitle
 
     public function setFile($key, JAVFile $file): JAVTitle
     {
-        if($this->files->get($key))
+        if ($this->files->get($key)) {
             throw new DuplicateKeyException("{$key} already exists");
-
+        }
         $this->files->set($key, $file);
 
         return $this;
     }
 
-    public function removeFile(JAVFile $file) : JAVTitle
+    public function removeFile(JAVFile $file): JAVTitle
     {
         $this->files->removeElement($file);
 
@@ -126,11 +129,13 @@ class JAVTitle
 
     /**
      * @param bool $multipart
+     *
      * @return JAVTitle
      */
     public function setMultipart(bool $multipart): JAVTitle
     {
         $this->multipart = $multipart;
+
         return $this;
     }
 
@@ -144,12 +149,14 @@ class JAVTitle
 
     /**
      * @param int|string $part
+     *
      * @return JAVTitle
+     *
      * @throws \Exception If $part is neither an integer or a string
      */
     public function setPart($part): JAVTitle
     {
-        if(is_string($part)) {
+        if (is_string($part)) {
             // convert to integer
             $part = ord(strtolower($part)) - 96;
         } elseif (!is_int($part)) {
@@ -157,6 +164,7 @@ class JAVTitle
         }
 
         $this->part = $part;
+
         return $this;
     }
 
@@ -170,11 +178,13 @@ class JAVTitle
 
     /**
      * @param string $parser
+     *
      * @return JAVTitle
      */
     public function setParser(string $parser): JAVTitle
     {
         $this->parser = $parser;
+
         return $this;
     }
 
@@ -188,11 +198,13 @@ class JAVTitle
 
     /**
      * @param string $cleanName
+     *
      * @return JAVTitle
      */
     public function setCleanName(string $cleanName): JAVTitle
     {
         $this->cleanName = $cleanName;
+
         return $this;
     }
 }

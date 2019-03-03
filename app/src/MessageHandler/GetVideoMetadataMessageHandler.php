@@ -1,6 +1,6 @@
 <?php
-namespace App\MessageHandler;
 
+namespace App\MessageHandler;
 
 use App\Entity\JavFile;
 use App\Message\GetVideoMetadataMessage;
@@ -29,18 +29,17 @@ class GetVideoMetadataMessageHandler
         MediaProcessorService $mediaProcessorService,
         EntityManagerInterface $entityManager,
         LoggerInterface $logger
-    )
-    {
+    ) {
         $this->mediaProcessorService = $mediaProcessorService;
-        $this->entityManager         = $entityManager;
-        $this->logger                = $logger;
+        $this->entityManager = $entityManager;
+        $this->logger = $logger;
     }
 
     public function __invoke(GetVideoMetadataMessage $message)
     {
         /** @var JavFile $javFile */
         $javFile = $this->entityManager->find(JavFile::class, $message->getJavFileId());
-        if(!$javFile->getInode()->getMeta()) {
+        if (!$javFile->getInode()->getMeta()) {
             try {
                 $javFile = $this->mediaProcessorService->getMetadata($javFile);
                 $this->entityManager->persist($javFile);

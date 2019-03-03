@@ -6,25 +6,12 @@ use App\Entity\JavFile;
 use App\Exception\PreProcessFileException;
 use App\Model\JAVTitle;
 use App\Repository\JavFileRepository;
-use App\Service\FilenameParser\Hack5Parser;
-use App\Service\FilenameParser\Level10Parser;
-use App\Service\FilenameParser\Level11Parser;
 use App\Service\FilenameParser\Level3Parser;
-use App\Service\FilenameParser\CustomParserHjd2048;
-use App\Service\FilenameParser\CustomMarozParser;
-use App\Service\FilenameParser\Level1Parser;
-use App\Service\FilenameParser\Level4Parser;
-use App\Service\FilenameParser\Level5Parser;
-use App\Service\FilenameParser\ProcessedFilenameParser;
-use App\Service\FilenameParser\Level2Parser;
-use App\Service\FilenameParser\CustomSkyParser;
 use App\Service\JAVProcessorService;
 use App\Service\MediaProcessorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
@@ -46,10 +33,9 @@ class TestCommand extends Command
         MediaProcessorService $mediaProcessorService,
         EntityManagerInterface $entityManager,
         ?string $name = null
-    )
-    {
+    ) {
         $this->mediaProcessorService = $mediaProcessorService;
-        $this->entityManager         = $entityManager;
+        $this->entityManager = $entityManager;
         parent::__construct($name);
     }
 
@@ -87,19 +73,19 @@ class TestCommand extends Command
 //
 //                if (
 //                !in_array($result->getParser(), $doNotLog)
-////                && $result->getPart() !== NULL
+        ////                && $result->getPart() !== NULL
 //                ) {
-////                    $io->success(sprintf(
-////                        "(%d/%d)LABEL: %s  RELEASE: %d  PART: %d    \nRAW: %s\nCLEAN: %s\n%s",
-////                        $i,
-////                        count($jav_file),
-////                        $result->getLabel(),
-////                        $result->getRelease(),
-////                        $result->getPart(),
-////                        $iv['filename'],
-////                        $result->getCleanName(),
-////                        $result->getParser()
-////                    ));
+        ////                    $io->success(sprintf(
+        ////                        "(%d/%d)LABEL: %s  RELEASE: %d  PART: %d    \nRAW: %s\nCLEAN: %s\n%s",
+        ////                        $i,
+        ////                        count($jav_file),
+        ////                        $result->getLabel(),
+        ////                        $result->getRelease(),
+        ////                        $result->getPart(),
+        ////                        $iv['filename'],
+        ////                        $result->getCleanName(),
+        ////                        $result->getParser()
+        ////                    ));
 //
 //                    fputcsv($sockSucces, [
 //                        $iv['filename'],
@@ -118,12 +104,12 @@ class TestCommand extends Command
 //                    $cleaned
 //                ];
 //                fputcsv($sockFail, $csvLine);
-////                $io->error(sprintf(
-////                    "RAW: %s\nCLEAN: %s\nERR: %s",
-////                    $iv['filename'],
-////                    $cleaned,
-////                    $e->getMessage()
-////                ));
+        ////                $io->error(sprintf(
+        ////                    "RAW: %s\nCLEAN: %s\nERR: %s",
+        ////                    $iv['filename'],
+        ////                    $cleaned,
+        ////                    $e->getMessage()
+        ////                ));
 //            }
 //            $i++;
 //        }

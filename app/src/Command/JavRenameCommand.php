@@ -51,10 +51,9 @@ class JavRenameCommand extends ContainerAwareCommand
             $io->note(sprintf('You passed an argument: %s', $arg1));
         }
 
-        $dryRun = ($input->getOption('dry-run') !== false) ?: false;
+        $dryRun = (false !== $input->getOption('dry-run')) ?: false;
 
         if ($input->getOption('all')) {
-            //
         }
 
         $io->success('You have a new command! Now make it your own! Pass --help to see your options.');

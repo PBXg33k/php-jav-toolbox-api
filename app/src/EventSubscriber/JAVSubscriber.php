@@ -1,9 +1,8 @@
 <?php
+
 namespace App\EventSubscriber;
 
-
 use App\Event\JavFileUpdatedEvent;
-use App\Event\JAVTitlePreProcessedEvent;
 use App\Event\QualifiedVideoFileFound;
 use App\Event\TitleUpdatedEvent;
 use App\Service\JAVProcessorService;
@@ -32,11 +31,10 @@ class JAVSubscriber implements EventSubscriberInterface
         JAVProcessorService $JAVProcessorService,
         EntityManagerInterface $entityManager,
         EventDispatcherInterface $eventDispatcher
-    )
-    {
-        $this->JAVProcessorService  = $JAVProcessorService;
-        $this->entityManager        = $entityManager;
-        $this->eventDispatcher      = $eventDispatcher;
+    ) {
+        $this->JAVProcessorService = $JAVProcessorService;
+        $this->entityManager = $entityManager;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     public static function getSubscribedEvents()
@@ -49,11 +47,11 @@ class JAVSubscriber implements EventSubscriberInterface
     public function onVideoFileFoundEvent(QualifiedVideoFileFound $event)
     {
         // Set event listeners
-        $this->eventDispatcher->addListener(TitleUpdatedEvent::NAME, function(TitleUpdatedEvent $event) {
+        $this->eventDispatcher->addListener(TitleUpdatedEvent::NAME, function (TitleUpdatedEvent $event) {
             $this->entityManager->merge($event->getTitle());
         });
 
-        $this->eventDispatcher->addListener(JavFileUpdatedEvent::NAME, function(JavFileUpdatedEvent $event) {
+        $this->eventDispatcher->addListener(JavFileUpdatedEvent::NAME, function (JavFileUpdatedEvent $event) {
             $this->entityManager->merge($event->getJavFile());
             $this->entityManager->flush();
         });

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Event;
 
 class DirectoryFoundEvent extends SplFileEvent

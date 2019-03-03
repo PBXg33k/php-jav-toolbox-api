@@ -1,7 +1,6 @@
 <?php
-namespace App\Message;
 
-use App\Entity\JavFile;
+namespace App\Message;
 
 class CheckVideoMessage extends JavFileMessage
 {

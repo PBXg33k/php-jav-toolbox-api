@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Command;
 
 use App\Event\DirectoryFoundEvent;
@@ -46,11 +47,10 @@ class ScanCommand extends SectionedCommand
         LoggerInterface $logger,
         EventDispatcherInterface $eventDispatcher,
         string $javMediaFileLocation
-    )
-    {
-        $this->fileScanService      = $fileScanService;
-        $this->logger               = $logger;
-        $this->eventDispatcher     = $eventDispatcher;
+    ) {
+        $this->fileScanService = $fileScanService;
+        $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
         $this->javMediaFileLocation = $javMediaFileLocation;
 
         parent::__construct();
@@ -61,8 +61,8 @@ class ScanCommand extends SectionedCommand
         $this
             ->setName('jav:scan')
             ->setDescription('Scan for JAV titles locally')
-            ->addArgument('path', InputArgument::OPTIONAL,'Root path')
-            ->addOption('silent', 's', InputOption::VALUE_NONE,'Do not output anything besides errors and warnings');
+            ->addArgument('path', InputArgument::OPTIONAL, 'Root path')
+            ->addOption('silent', 's', InputOption::VALUE_NONE, 'Do not output anything besides errors and warnings');
     }
 
     public function execute(InputInterface $input, OutputInterface $output)
@@ -72,7 +72,7 @@ class ScanCommand extends SectionedCommand
         $silent = $input->getOption('silent');
         $path = $input->getArgument('path') ?: $this->javMediaFileLocation;
 
-        if(!$silent) {
+        if (!$silent) {
             if ($output instanceof ConsoleOutput) {
                 $this->lastMatchSection = $output->section();
                 $this->updateLastMatch('none');
@@ -86,7 +86,7 @@ class ScanCommand extends SectionedCommand
 
         $this->fileScanService->scanDir($path);
 
-        if(!$silent) {
+        if (!$silent) {
             $this->updateStateMessage('Finished');
             $this->updateProgressOutput(sprintf('Found %s eligible files', $this->fileScanService->getFiles()->count()));
         }
@@ -95,20 +95,21 @@ class ScanCommand extends SectionedCommand
     private function setEventListeners(EventDispatcherInterface $eventDispatcher)
     {
         // Set event on directory.found
-        $eventDispatcher->addListener(DirectoryFoundEvent::NAME, function(DirectoryFoundEvent $event) {
+        $eventDispatcher->addListener(DirectoryFoundEvent::NAME, function (DirectoryFoundEvent $event) {
             $this->updateProgressOutput("Scanning directory: {$event->getFile()->getPathname()}");
         });
 
-        $eventDispatcher->addListener(VideoFileFoundEvent::NAME, function(VideoFileFoundEvent $event) {
+        $eventDispatcher->addListener(VideoFileFoundEvent::NAME, function (VideoFileFoundEvent $event) {
             $this->updateProgressOutput("Scanning file: {$event->getFile()->getPathname()}");
         });
 
-        $eventDispatcher->addListener(QualifiedVideoFileFound::NAME, function(QualifiedVideoFileFound $event) {
+        $eventDispatcher->addListener(QualifiedVideoFileFound::NAME, function (QualifiedVideoFileFound $event) {
             $this->updateLastMatch($event->getFile()->getPathname());
         });
     }
 
-    private function updateLastMatch(string $path) {
+    private function updateLastMatch(string $path)
+    {
         $this->writeToSection("Last match: {$path}", $this->lastMatchSection);
     }
 }

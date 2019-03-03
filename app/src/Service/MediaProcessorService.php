@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Service;
 
 use App\Entity\JavFile;
@@ -40,21 +41,21 @@ class MediaProcessorService
         LoggerInterface $logger,
         JAVThumbsService $thumbService,
         EntityManagerInterface $entityManager
-    )
-    {
-        $this->logger           = $logger;
-        $this->thumbService     = $thumbService;
-        $this->entityManager    = $entityManager;
+    ) {
+        $this->logger = $logger;
+        $this->thumbService = $thumbService;
+        $this->entityManager = $entityManager;
 
-        $this->mediaInfo    = new MediaInfo();
+        $this->mediaInfo = new MediaInfo();
         $this->mediaInfo->setConfig('use_oldxml_mediainfo_output_format', true);
     }
 
-    public function checkHealth(JavFile $javFile, bool $strict, callable $cmdCallback, bool $propogateException = false): JavFile {
+    public function checkHealth(JavFile $javFile, bool $strict, callable $cmdCallback, bool $propogateException = false): JavFile
+    {
         $this->logger->info('Checking video consistency', [
-            'strict'     => $strict,
-            'path'       => $javFile->getPath(),
-            'filesize'   => $javFile->getInode()->getFilesize()
+            'strict' => $strict,
+            'path' => $javFile->getPath(),
+            'filesize' => $javFile->getInode()->getFilesize(),
         ]);
 
         // command: "ffmpeg -v verbose -err_detect explode -xerror -i \"{$file->getPath()}\" -map 0:1 -f null -"
@@ -68,8 +69,8 @@ class MediaProcessorService
             '-i',
             $javFile->getPath(),
         ];
-        if(!$strict) {
-            $processArgs = array_merge($processArgs,['-map','0:1']);
+        if (!$strict) {
+            $processArgs = array_merge($processArgs, ['-map', '0:1']);
         }
         $processArgs = array_merge($processArgs, [
             '-f',
@@ -82,31 +83,31 @@ class MediaProcessorService
             $process->setTimeout(3600);
             $process->mustRun($cmdCallback);
 
-            $consistent = $process->getExitCode() == 0;
+            $consistent = 0 == $process->getExitCode();
 
-            $this->logger->debug("ffmpeg output", [
-                'file'   => $javFile->getPath(),
-                'output' => $process->getOutput()
+            $this->logger->debug('ffmpeg output', [
+                'file' => $javFile->getPath(),
+                'output' => $process->getOutput(),
             ]);
-        } catch(\Throwable $exception) {
+        } catch (\Throwable $exception) {
             $this->logger->error('ffmpeg failed', [
-                'path'        => $javFile->getPath(),
-                'exception'   => [
-                    'message' => $exception->getMessage()
-                ]
+                'path' => $javFile->getPath(),
+                'exception' => [
+                    'message' => $exception->getMessage(),
+                ],
             ]);
             $consistent = false;
 
-            if($propogateException) {
+            if ($propogateException) {
                 $javFile->getInode()->setChecked(true)->setConsistent(false);
                 throw $exception;
             }
         }
 
         $this->logger->info('video check completed', [
-            'strict'  => $strict,
-            'result'  => ($process->getExitCode() > 0) ? 'FAILED' : 'SUCCESS',
-            'path'    => $javFile->getPath(),
+            'strict' => $strict,
+            'result' => ($process->getExitCode() > 0) ? 'FAILED' : 'SUCCESS',
+            'path' => $javFile->getPath(),
         ]);
 
         $javFile->getInode()->setChecked(true)->setConsistent($consistent);
@@ -115,17 +116,20 @@ class MediaProcessorService
     }
 
     /**
-     * Uses mediainfo to retrieve file's metadata such as codec, resolution, length, etc
+     * Uses mediainfo to retrieve file's metadata such as codec, resolution, length, etc.
      *
      * @param JavFile $javFile
+     *
      * @return JavFile
+     *
      * @throws \Mhor\MediaInfo\Exception\UnknownTrackTypeException
      */
-    public function getMetadata(JavFile $javFile): JavFile {
+    public function getMetadata(JavFile $javFile): JavFile
+    {
         if ($mediaInfoContainer = $this->mediaInfo->getInfo($javFile->getPath())) {
             if ($videoInfo = $mediaInfoContainer->getVideos()) {
                 $this->videoInfo = [
-                    'video'   => new ArrayCollection($videoInfo),
+                    'video' => new ArrayCollection($videoInfo),
                     'general' => $mediaInfoContainer->getGeneral(),
                 ];
             }
@@ -133,13 +137,13 @@ class MediaProcessorService
             $inode = $javFile->getInode();
 
             $meta = [
-                'general'   => $mediaInfoContainer->getGeneral()->jsonSerialize(),
-                'video'     => [],
-                'audio'     => [],
+                'general' => $mediaInfoContainer->getGeneral()->jsonSerialize(),
+                'video' => [],
+                'audio' => [],
                 'subtitles' => [],
-                'images'    => [],
-                'menus'     => [],
-                'others'    => []
+                'images' => [],
+                'menus' => [],
+                'others' => [],
             ];
 
             foreach ($mediaInfoContainer->getVideos() as $video) {
@@ -174,29 +178,31 @@ class MediaProcessorService
 
         /** @var Video $vinfo */
         $vinfo = $this->videoInfo['video']->first();
-        if($vinfo) {
-            if($vinfo->get('codec'))
+        if ($vinfo) {
+            if ($vinfo->get('codec')) {
                 $inode->setCodec($vinfo->get('codec'));
-            if($vinfo->get('duration'))
+            }
+            if ($vinfo->get('duration')) {
                 $inode->setLength($vinfo->get('duration')->getMilliseconds());
-            if($vinfo->get('bit_rate')) {
+            }
+            if ($vinfo->get('bit_rate')) {
                 $inode->setBitrate($vinfo->get('bit_rate')->getAbsoluteValue());
-            } elseif($vinfo->get('nominal_bit_rate')) {
+            } elseif ($vinfo->get('nominal_bit_rate')) {
                 $inode->setBitrate($vinfo->get('nominal_bit_rate')->getAbsoluteValue());
-            } elseif($vinfo->get('maximum_bit_rate')) {
+            } elseif ($vinfo->get('maximum_bit_rate')) {
                 $inode->setBitrate($vinfo->get('maximum_bit_rate')->getAbsoluteValue());
             }
             $inode->setWidth($vinfo->get('width')->getAbsoluteValue());
             $inode->setHeight($vinfo->get('height')->getAbsoluteValue());
             try {
-                if($frameRate = $vinfo->get('frame_rate')) {
+                if ($frameRate = $vinfo->get('frame_rate')) {
                     $inode->setFps($frameRate->getAbsoluteValue());
                 } else {
                     throw
-                    new \Exception("FPS unknown");
+                    new \Exception('FPS unknown');
                 }
             } catch (\Exception $e) {
-                if($vinfo->get('frame_rate_mode')->getShortName() !== 'VFR') {
+                if ('VFR' !== $vinfo->get('frame_rate_mode')->getShortName()) {
                     throw $e;
                 }
             }
@@ -205,14 +211,16 @@ class MediaProcessorService
         return $javFile;
     }
 
-    public function generateThumbnails(JavFile $javFile): bool {
+    public function generateThumbnails(JavFile $javFile): bool
+    {
         return $this->thumbService->generateThumbs($javFile);
     }
 
-    public function delete(JavFile $javFile, bool $deleteAllLinked = false) {
-        if($deleteAllLinked) {
+    public function delete(JavFile $javFile, bool $deleteAllLinked = false)
+    {
+        if ($deleteAllLinked) {
             $files = $this->entityManager->getRepository(JavFile::class)->findBy([
-                'inode' => $javFile->getInode()->getId()
+                'inode' => $javFile->getInode()->getId(),
             ]);
 
             var_dump($files);

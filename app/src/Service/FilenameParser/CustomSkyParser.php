@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Service\FilenameParser;
 
 class CustomSkyParser extends BaseParser

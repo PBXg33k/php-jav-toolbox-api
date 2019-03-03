@@ -46,12 +46,11 @@ class JavProcessFileCommand extends ContainerAwareCommand
         EntityManagerInterface $entityManager,
         FileScanService $fileScanService,
         LoggerInterface $logger
-    )
-    {
+    ) {
         $this->JAVProcessorService = $JAVProcessorService;
-        $this->entityManager       = $entityManager;
-        $this->fileScanService     = $fileScanService;
-        $this->logger              = $logger;
+        $this->entityManager = $entityManager;
+        $this->fileScanService = $fileScanService;
+        $this->logger = $logger;
 
         parent::__construct();
     }
@@ -75,18 +74,18 @@ class JavProcessFileCommand extends ContainerAwareCommand
             /** @var JavFileRepository $fileRepository */
             $fileRepository = $this->entityManager->getRepository(JavFile::class);
 
-            if($file = $fileRepository->findOneBy([
-                'path' => $path
+            if ($file = $fileRepository->findOneBy([
+                'path' => $path,
             ])) {
                 $this->processFile($file);
                 $io->success("Loaded metadata for {$file->getPath()}");
             } else {
-                if(is_file($path)) {
+                if (is_file($path)) {
                     $pathinfo = pathinfo($path);
                     $finder = Finder::create()->files()->in($pathinfo['dirname'])->name($pathinfo['basename']);
 
                     /** @var SplFileInfo $file */
-                    foreach($finder as $file) {
+                    foreach ($finder as $file) {
                         $this->fileScanService->processFile($file);
                     }
                 }
@@ -98,11 +97,11 @@ class JavProcessFileCommand extends ContainerAwareCommand
             /** @var Title $title */
             if ($title = $this->entityManager->getRepository(Title::class)
                 ->findOneBy([
-                    'catalognumber' => strtoupper($catalogID)
+                    'catalognumber' => strtoupper($catalogID),
                 ])) {
                 $files = $title->getFiles();
 
-                foreach($files as $file) {
+                foreach ($files as $file) {
                     $this->processFile($file);
                     $io->success("Loaded metadata for {$file->getPath()}");
                 }
@@ -110,7 +109,8 @@ class JavProcessFileCommand extends ContainerAwareCommand
         }
     }
 
-    protected function processFile(JavFile $file) {
+    protected function processFile(JavFile $file)
+    {
         $this->JAVProcessorService->processFile($file);
     }
 }

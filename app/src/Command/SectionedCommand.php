@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Command;
 
 use Symfony\Component\Console\Command\Command;
@@ -20,7 +21,7 @@ abstract class SectionedCommand extends Command
     protected $stateSection;
 
     /**
-     * Backup output if for some reasons ConsoleOutput is not used
+     * Backup output if for some reasons ConsoleOutput is not used.
      *
      * @var OutputInterface
      */
@@ -30,8 +31,8 @@ abstract class SectionedCommand extends Command
     {
         $this->output = $output;
         // Set sections if $output is an instance of ConsoleOutput (which it almost always is
-        if($output instanceof ConsoleOutput) {
-            $this->stateSection    = $output->section();
+        if ($output instanceof ConsoleOutput) {
+            $this->stateSection = $output->section();
             $this->progressSection = $output->section();
         }
     }
@@ -48,7 +49,7 @@ abstract class SectionedCommand extends Command
 
     protected function writeToSection(string $message, ?ConsoleSectionOutput $section)
     {
-        if($section) {
+        if ($section) {
             $section->clear();
             $section->overwrite($message);
         } else {

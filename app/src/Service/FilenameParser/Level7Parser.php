@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Service\FilenameParser;
 
 class Level7Parser extends BaseParser

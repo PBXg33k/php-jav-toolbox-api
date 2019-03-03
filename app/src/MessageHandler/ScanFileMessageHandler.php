@@ -1,4 +1,5 @@
 <?php
+
 namespace App\MessageHandler;
 
 use App\Event\QualifiedVideoFileFound;
@@ -21,10 +22,9 @@ class ScanFileMessageHandler
     public function __construct(
         EventDispatcherInterface $eventDispatcher,
         LoggerInterface $logger
-    )
-    {
-        $this->eventDispatcher  = $eventDispatcher;
-        $this->logger           = $logger;
+    ) {
+        $this->eventDispatcher = $eventDispatcher;
+        $this->logger = $logger;
     }
 
     public function __invoke(ScanFileMessage $message)

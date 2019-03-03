@@ -1,14 +1,14 @@
 <?php
+
 namespace App\Event;
 
 /**
- * Class VideoFileFoundEvent
- * @package App\Event
+ * Class VideoFileFoundEvent.
  */
 class QualifiedVideoFileFound extends SplFileEvent
 {
     /**
-     * Event name
+     * Event name.
      */
     const NAME = 'qualifiedvideofile.found';
 }

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Model;
 
 class JAVIDExtractionResult
@@ -53,11 +54,13 @@ class JAVIDExtractionResult
 
     /**
      * @param bool $success
+     *
      * @return JAVIDExtractionResult
      */
     public function setSuccess(bool $success): self
     {
         $this->success = $success;
+
         return $this;
     }
 
@@ -71,11 +74,13 @@ class JAVIDExtractionResult
 
     /**
      * @param string $label
+     *
      * @return JAVIDExtractionResult
      */
     public function setLabel(string $label): self
     {
         $this->label = $label;
+
         return $this;
     }
 
@@ -89,11 +94,13 @@ class JAVIDExtractionResult
 
     /**
      * @param int $release
+     *
      * @return JAVIDExtractionResult
      */
     public function setRelease(int $release): self
     {
         $this->release = $release;
+
         return $this;
     }
 
@@ -107,11 +114,13 @@ class JAVIDExtractionResult
 
     /**
      * @param string $filename
+     *
      * @return JAVIDExtractionResult
      */
     public function setFilename(string $filename): self
     {
         $this->filename = $filename;
+
         return $this;
     }
 
@@ -125,11 +134,13 @@ class JAVIDExtractionResult
 
     /**
      * @param int $part
+     *
      * @return JAVIDExtractionResult
      */
     public function setPart(int $part): self
     {
         $this->part = $part;
+
         return $this;
     }
 
@@ -143,11 +154,13 @@ class JAVIDExtractionResult
 
     /**
      * @param string $parser
+     *
      * @return JAVIDExtractionResult
      */
     public function setParser(string $parser): self
     {
         $this->parser = $parser;
+
         return $this;
     }
 
@@ -161,11 +174,13 @@ class JAVIDExtractionResult
 
     /**
      * @param string $cleanName
+     *
      * @return JAVIDExtractionResult
      */
     public function setCleanName(string $cleanName): self
     {
         $this->cleanName = $cleanName;
+
         return $this;
     }
 
@@ -179,13 +194,13 @@ class JAVIDExtractionResult
 
     /**
      * @param \SplFileInfo $fileInfo
+     *
      * @return JAVIDExtractionResult
      */
     public function setFileInfo(\SplFileInfo $fileInfo): self
     {
         $this->fileInfo = $fileInfo;
+
         return $this;
     }
-
-
 }
