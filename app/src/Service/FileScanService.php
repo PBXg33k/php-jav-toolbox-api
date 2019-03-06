@@ -104,6 +104,7 @@ class FileScanService
                 'path' => $file->getPathname()
             ]);
             $this->dispatcher->dispatch(VideoFileFoundEvent::NAME, new VideoFileFoundEvent($file));
+            $this->processFile($file);
         }
 
         return $this;
