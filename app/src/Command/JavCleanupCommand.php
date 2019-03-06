@@ -14,6 +14,7 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\ConsoleSectionOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Filesystem\Filesystem;
 
 class JavCleanupCommand extends SectionedCommand
 {
@@ -54,6 +55,21 @@ class JavCleanupCommand extends SectionedCommand
      */
     private $ffmpegProgressBar;
 
+    /**
+     * @var Filesystem
+     */
+    private $fileSystem;
+
+    /**
+     * @var bool
+     */
+    private $dryRun;
+
+    /**
+     * @var bool
+     */
+    private $confirmed;
+
     public function __construct(
         EntityManagerInterface $entityManager,
         MediaProcessorService $mediaProcessorService,
@@ -63,6 +79,8 @@ class JavCleanupCommand extends SectionedCommand
         $this->entityManager            = $entityManager;
         $this->mediaProcessorService    = $mediaProcessorService;
         $this->logger                   = $logger;
+        $this->fileSystem               = new Filesystem();
+
         parent::__construct($name);
     }
 
@@ -71,6 +89,7 @@ class JavCleanupCommand extends SectionedCommand
         $this
             ->setDescription('Will cleanup broken files')
             ->addOption('dry-run', null, InputOption::VALUE_OPTIONAL, 'Only print actions, do not execute', false)
+            ->addOption('yes', null, InputOption::VALUE_OPTIONAL, 'Auto agree to delete')
         ;
     }
 
@@ -98,7 +117,8 @@ class JavCleanupCommand extends SectionedCommand
 
         $this->cmdSection = $output->section();
 
-        $dryRun = ($input->getOption('dry-run') !== false);
+        $this->dryRun    = ($input->getOption('dry-run') !== false);
+        $this->confirmed = ($input->getOption('yes') !== false);
 
 
         if ($output instanceof ConsoleOutput) {
@@ -132,7 +152,7 @@ class JavCleanupCommand extends SectionedCommand
 
                 $this->updateProgressBarWithMessage($this->overallProgressBar, 'Checking files marked as inconsistent');
                 // Do the actual checking before deleting files
-                $this->checkTitleConsistencies($io, $dryRun, ...$brokenTitles);
+                $this->checkTitleConsistencies($io, ...$brokenTitles);
 
                 $this->updateProgressBarWithMessage($this->overallProgressBar, 'Complete');
             } else {
@@ -141,7 +161,7 @@ class JavCleanupCommand extends SectionedCommand
         }
     }
 
-    private function checkTitleConsistencies(SymfonyStyle $io, bool $dryRun, Title ...$titles)
+    private function checkTitleConsistencies(SymfonyStyle $io, Title ...$titles)
     {
         $this->logger->debug('Checking title consistencies', [
             'titleCount' => count($titles)
@@ -164,20 +184,22 @@ class JavCleanupCommand extends SectionedCommand
                     $this->entityManager->flush();
                     $this->logger->debug('FFMPEG CHECK PASSED');
                 } catch (\Throwable $exception) {
-                    if(!$dryRun) {
-                        if ($io->confirm(sprintf(
-                            '%s did not pass ffmpeg test. Delete file?',
-                            $brokenTitle->getFiles()->first()->getFilename()
-                        ), true)) {
+                    if(!$this->dryRun) {
+                        if(!$this->confirmed) {
+                            $delete = $io->confirm(sprintf(
+                                '%s did not pass ffmpeg test. Delete file?',
+                                $brokenTitle->getFiles()->first()->getFilename()
+                            ), true);
+                        } else {
+                            $delete = true;
+                        }
+
+                        if ($delete) {
                             $this->logger->debug('DELETING FILE', [
                                 'inode' => $javFile->getInode()->getId(),
                                 'path' => $javFile->getPath()
                             ]);
-                            // Lookup all javfiles linked to inode
-                            // Delete file from disk
-                            // Remove all javfile entities linked to inode
-                            // If all Success, mark success
-                            $this->mediaProcessorService->delete($javFile, true, $dryRun);
+                            $this->mediaProcessorService->delete($javFile, true, $this->dryRun);
                         }
                     } else {
                         $this->logger->notice('DRYRUN: FILE DELETE TRIGGER', [
@@ -202,6 +224,18 @@ class JavCleanupCommand extends SectionedCommand
 
         $length = $file->getInode()->getLength();
 
+        // inode not really processed properly
+        if(!$length) {
+            if($this->fileSystem->exists($file->getPath())) {
+                $fileInfo = new \SplFileInfo($file->getPath());
+                $length = $fileInfo->getSize();
+            }
+
+            if(!$length) {
+                return;
+            }
+        }
+
         $this->mediaProcessorService->checkHealth(
             $file,
             true,
@@ -219,12 +253,14 @@ class JavCleanupCommand extends SectionedCommand
                     if (preg_match('~time=(?<hours>[\d]{1,2})\:(?<minutes>[\d]{2})\:(?<seconds>[\d]{2})?(?:\.(?<millisec>[\d]{0,3}))\sbitrate~', $buffer, $matches)) {
                         $time = ($matches['hours'] * 3600 + $matches['minutes'] * 60 + $matches['seconds']) * 1000 + ($matches['millisec'] * 10);
 
-                        $this->logger->debug('PERC', [
-                            'time'      => $time,
-                            'length'    => $length,
-                            'perc'      => ($time / $length) * 100,
-                            'percInt'      => round(($time / $length) * 100)
-                        ]);
+                        if($time !== 0 && $length !== 0) {
+                            $this->logger->debug('PERC', [
+                                'time' => $time,
+                                'length' => $length,
+                                'perc' => ($time / $length) * 100,
+                                'percInt' => round(($time / $length) * 100)
+                            ]);
+                        }
 
                         $this->ffmpegProgressBar->setMessage($buffer);
                         $this->ffmpegProgressBar->setProgress(round(($time / $length) * 100));
