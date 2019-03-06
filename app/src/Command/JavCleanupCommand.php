@@ -14,6 +14,7 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\ConsoleSectionOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\Filesystem\Filesystem;
 
 class JavCleanupCommand extends SectionedCommand
@@ -229,6 +230,8 @@ class JavCleanupCommand extends SectionedCommand
             if($this->fileSystem->exists($file->getPath())) {
                 $fileInfo = new \SplFileInfo($file->getPath());
                 $length = $fileInfo->getSize();
+            } else {
+                throw new FileNotFoundException("Could not find file {$file->getPath()}");
             }
 
             if(!$length) {

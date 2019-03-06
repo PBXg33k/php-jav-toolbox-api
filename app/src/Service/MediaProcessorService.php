@@ -253,14 +253,12 @@ class MediaProcessorService
             } else {
                 if($this->fileSystem->exists($file->getPath())) {
                     $this->fileSystem->remove($file->getPath());
-                    $this->entityManager->remove($file);
-                    $this->entityManager->flush();
-                    $this->logger->notice("Deleted file", [
-                        'path' => $file->getPath()
-                    ]);
-                } else {
-                    throw new FileNotFoundException("Could not find file to delete: {$file->getPath()}");
                 }
+                $this->entityManager->remove($file);
+                $this->entityManager->flush();
+                $this->logger->notice("Deleted file", [
+                    'path' => $file->getPath()
+                ]);
             }
 
             $i++;
