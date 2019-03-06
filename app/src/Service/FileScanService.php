@@ -10,18 +10,20 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Finder\SplFileInfo;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 class FileScanService
 {
     private $videoExtensions = [
-        'mp4',
-        'mkv',
-        'avi',
-        'mpg',
-        'mpeg',
-        'iso',
-        'wmv',
+        '*.mp4',
+        '*.mkv',
+        '*.avi',
+        '*.mpg',
+        '*.mpeg',
+        '*.iso',
+        '*.wmv',
     ];
 
     /**
@@ -85,49 +87,26 @@ class FileScanService
         $this->rootPath = $directory;
         $this->logger->debug('Starting scan for videofiles', [$this->rootPath]);
 
-        $item = $this->scanRecursiveIterator($directory);
+        $finder = new Finder();
+        $finder->in($directory)
+            ->ignoreUnreadableDirs(true)
+            ->ignoreDotFiles(true)
+            ->size('> 100M')
+            ->followLinks()
+            ->name($this->videoExtensions);
 
-        /** @var \SplFileInfo $value */
-        foreach ($item as $value) {
-            if ($value->getSize() < 300000000) {
-                $this->logger->warning('File did not meer filesize requirements', [
-                    'path' => $value->getPathname(),
-                    'size' => $value->getSize(),
-                ]);
-                continue;
-            }
-
-            try {
-                $this->processFile($value);
-            } catch (\Exception $exception) {
-                $this->logger->error($exception->getMessage());
-            }
+        $i = 0;
+        /** @var SplFileInfo $file */
+        foreach($finder->files() as $file) {
+            $i++;
+            $this->logger->debug('file match', [
+                'i'    => $i,
+                'path' => $file->getPathname()
+            ]);
+            $this->dispatcher->dispatch(VideoFileFoundEvent::NAME, new VideoFileFoundEvent($file));
         }
 
         return $this;
-    }
-
-    protected function scanRecursiveIterator(string $path): \Generator
-    {
-        $items = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path), \RecursiveIteratorIterator::SELF_FIRST);
-
-        /*
-         * @var \SplFileInfo
-         */
-        foreach ($items as $ik => $iv) {
-            if (
-                $iv->isFile()
-            ) {
-                $this->dispatcher->dispatch(FileFoundEvent::NAME, new FileFoundEvent($iv));
-                if (in_array($iv->getExtension(), $this->videoExtensions, false)) {
-                    $this->dispatcher->dispatch(VideoFileFoundEvent::NAME, new VideoFileFoundEvent($iv));
-
-                    yield $iv;
-                }
-            } elseif ($iv->isDir()) {
-                $this->dispatcher->dispatch(DirectoryFoundEvent::NAME, new DirectoryFoundEvent($iv));
-            }
-        }
     }
 
     public function processFile(\SplFileInfo $file): void
