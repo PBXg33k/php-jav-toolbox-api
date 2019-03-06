@@ -5,7 +5,6 @@ namespace App\Command;
 use App\Entity\JavFile;
 use App\Entity\Title;
 use App\Service\MediaProcessorService;
-use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Helper\ProgressBar;
