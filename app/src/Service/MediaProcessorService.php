@@ -8,6 +8,8 @@ use Doctrine\ORM\EntityManagerInterface;
 use Mhor\MediaInfo\MediaInfo;
 use Mhor\MediaInfo\Type\Video;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Filesystem\Exception\FileNotFoundException;
+use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 
 class MediaProcessorService
@@ -37,16 +39,22 @@ class MediaProcessorService
      */
     private $entityManager;
 
+    /**
+     * @var Filesystem
+     */
+    private $fileSystem;
+
     public function __construct(
         LoggerInterface $logger,
         JAVThumbsService $thumbService,
         EntityManagerInterface $entityManager
     ) {
-        $this->logger = $logger;
-        $this->thumbService = $thumbService;
+        $this->logger        = $logger;
+        $this->thumbService  = $thumbService;
         $this->entityManager = $entityManager;
+        $this->fileSystem    = new Filesystem();
 
-        $this->mediaInfo = new MediaInfo();
+        $this->mediaInfo     = new MediaInfo();
         $this->mediaInfo->setConfig('use_oldxml_mediainfo_output_format', true);
     }
 
@@ -218,32 +226,44 @@ class MediaProcessorService
 
     public function delete(JavFile $javFile, bool $deleteAllLinked = false, bool $dryRun = false)
     {
+        $files = [$javFile];
+
         if ($deleteAllLinked) {
             $files = $this->entityManager->getRepository(JavFile::class)->findBy([
                 'inode' => $javFile->getInode()->getId(),
             ]);
-
-            var_dump($files);
-
-//            /** @var JavFile $file */
-//            foreach($files as $file) {
-//
-//            }
-
-            die();
         } else {
             $files = [$javFile];
         }
 
+        $i      = 0;
+        $length = count($files);
         /** @var JavFile $file */
         foreach ($files as $file) {
             if($dryRun) {
-                $this->logger->notice('DRYRUN: Deleting file', [
-                    'path' => $file->getPath()
-                ]);
+                if($i === $length - 1) {
+                    $this->logger->notice('DRYRUN: LAST FILE', [
+                        'path' => $file->getPath()
+                    ]);
+                } else {
+                    $this->logger->notice('DRYRUN: Deleting file', [
+                        'path' => $file->getPath()
+                    ]);
+                }
             } else {
-
+                if($this->fileSystem->exists($file->getPath())) {
+                    $this->fileSystem->remove($file->getPath());
+                    $this->entityManager->remove($file);
+                    $this->entityManager->flush();
+                    $this->logger->notice("Deleted file", [
+                        'path' => $file->getPath()
+                    ]);
+                } else {
+                    throw new FileNotFoundException("Could not find file to delete: {$file->getPath()}");
+                }
             }
+
+            $i++;
         }
     }
 }
