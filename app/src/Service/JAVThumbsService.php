@@ -141,8 +141,9 @@ class JAVThumbsService
         $this->logger->debug('Running MT CMD', [
             'cmd' => $process->getCommandLine(),
         ]);
+        $pid = null;
         try {
-            $process->mustRun(function ($type, $buffer) {
+            $process->start(function ($type, $buffer) {
                 if (preg_match('~(?<level>[^\[]+)\[(\d+)\]\s(?<message>.*)~', $buffer, $matches)) {
                     switch ($matches['level']) {
                         case 'DEBU':
@@ -168,6 +169,9 @@ class JAVThumbsService
                 }
             });
 
+            $pid = $process->getPid();
+            $process->wait();
+
             return 0 === $process->getExitCode();
         } catch (ProcessFailedException $exception) {
             $this->logger->error($exception->getMessage(), [
@@ -183,6 +187,12 @@ class JAVThumbsService
                     'env' => $process->getEnv(),
                 ],
             ]);
+
+            if($pid !== null && posix_getpgid($pid)) {
+                if (!posix_kill($pid)) {
+                    throw $exception;
+                }
+            }
         }
 
         return false;
