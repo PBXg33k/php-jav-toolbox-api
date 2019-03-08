@@ -175,16 +175,6 @@ class JAVThumbsService
 
             return 0 === $process->getExitCode();
         } catch (ProcessFailedException $exception) {
-            // Try to kill process if it's still running
-            if(posix_getpgid($pid)) {
-                $this->logger->warning('Process still running. Trying to forcefully kill');
-                if(posix_kill($pid, 9)) {
-                    $this->logger->notice('Succesfully killed process');
-                } else {
-                    $this->logger->error('Failed to kill process');
-                }
-            }
-
             $this->logger->error($exception->getMessage(), [
                 'cmd' => $process->getCommandLine(),
                 'file' => $javFile->getPath(),
