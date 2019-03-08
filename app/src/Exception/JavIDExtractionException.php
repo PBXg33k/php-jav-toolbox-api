@@ -23,7 +23,7 @@ class JavIDExtractionException extends \Exception
         $this->matchers = new ArrayCollection($matchers);
 
         if ('' == $message) {
-            $message = 'JAV ID Extraction failed';
+            $message = "JAV ID Extraction failed. filename: {$fileInfo->getFilename()}";
         }
 
         parent::__construct($message, $code, $previous);
