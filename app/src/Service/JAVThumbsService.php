@@ -142,8 +142,9 @@ class JAVThumbsService
             'cmd' => $process->getCommandLine(),
         ]);
 
+        $pid = null;
         try {
-            $process->mustRun(function ($type, $buffer) {
+            $process->start(function ($type, $buffer) {
                 if (preg_match('~(?<level>[^\[]+)\[(\d+)\]\s(?<message>.*)~', $buffer, $matches)) {
                     switch ($matches['level']) {
                         case 'DEBU':
@@ -169,12 +170,15 @@ class JAVThumbsService
                 }
             });
 
+            $pid = $process->getPid();
+            $process->wait();
+
             return 0 === $process->getExitCode();
         } catch (ProcessFailedException $exception) {
             // Try to kill process if it's still running
-            if(posix_getpgid($process->getPid())) {
+            if(posix_getpgid($pid)) {
                 $this->logger->warning('Process still running. Trying to forcefully kill');
-                if(posix_kill($process->getPid(), 9)) {
+                if(posix_kill($pid, 9)) {
                     $this->logger->notice('Succesfully killed process');
                 } else {
                     $this->logger->error('Failed to kill process');
@@ -194,6 +198,12 @@ class JAVThumbsService
                     'env' => $process->getEnv(),
                 ],
             ]);
+
+            if($pid !== null && posix_getpgid($pid)) {
+                if (!posix_kill($pid)) {
+                    throw $exception;
+                }
+            }
         }
 
         return false;
