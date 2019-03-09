@@ -1,5 +1,7 @@
 <?php
+
 namespace App\Model;
+
 use Symfony\Component\Finder\SplFileInfo;
 
 class JAVFile
@@ -64,11 +66,13 @@ class JAVFile
 
     /**
      * @param string $filename
+     *
      * @return JAVFile
      */
     public function setFilename(string $filename): JAVFile
     {
         $this->filename = $filename;
+
         return $this;
     }
 
@@ -82,11 +86,13 @@ class JAVFile
 
     /**
      * @param int $part
+     *
      * @return JAVFile
      */
     public function setPart(int $part): JAVFile
     {
         $this->part = $part;
+
         return $this;
     }
 
@@ -100,11 +106,13 @@ class JAVFile
 
     /**
      * @param int $length
+     *
      * @return JAVFile
      */
     public function setLength(int $length): JAVFile
     {
         $this->length = $length;
+
         return $this;
     }
 
@@ -118,11 +126,13 @@ class JAVFile
 
     /**
      * @param int $size
+     *
      * @return JAVFile
      */
     public function setSize(int $size): JAVFile
     {
         $this->size = $size;
+
         return $this;
     }
 
@@ -136,11 +146,13 @@ class JAVFile
 
     /**
      * @param int $height
+     *
      * @return JAVFile
      */
     public function setHeight(int $height): JAVFile
     {
         $this->height = $height;
+
         return $this;
     }
 
@@ -154,11 +166,13 @@ class JAVFile
 
     /**
      * @param int $width
+     *
      * @return JAVFile
      */
     public function setWidth(int $width): JAVFile
     {
         $this->width = $width;
+
         return $this;
     }
 
@@ -172,11 +186,13 @@ class JAVFile
 
     /**
      * @param string $xxhash
+     *
      * @return JAVFile
      */
     public function setXxhash(string $xxhash): JAVFile
     {
         $this->xxhash = $xxhash;
+
         return $this;
     }
 
@@ -190,11 +206,13 @@ class JAVFile
 
     /**
      * @param string $md5
+     *
      * @return JAVFile
      */
     public function setMd5(string $md5): JAVFile
     {
         $this->md5 = $md5;
+
         return $this;
     }
 
@@ -208,11 +226,13 @@ class JAVFile
 
     /**
      * @param string $sha1
+     *
      * @return JAVFile
      */
     public function setSha1(string $sha1): JAVFile
     {
         $this->sha1 = $sha1;
+
         return $this;
     }
 
@@ -226,13 +246,13 @@ class JAVFile
 
     /**
      * @param SplFileInfo $file
+     *
      * @return JAVFile
      */
     public function setFile(SplFileInfo $file): JAVFile
     {
         $this->file = $file;
+
         return $this;
     }
-
-
 }

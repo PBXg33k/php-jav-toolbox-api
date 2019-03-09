@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Service;
 
 use App\Entity\Inode;
@@ -6,7 +7,6 @@ use App\Entity\JavFile;
 use App\Entity\Title;
 use App\Exception\JavIDExtractionException;
 use App\Model\JAVIDExtractionResult;
-use App\Service\FilenameParser;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -37,27 +37,26 @@ class JAVNameMatcherService
         LoggerInterface $logger,
         EventDispatcherInterface $eventDispatcher,
         EntityManagerInterface $entityManager
-    )
-    {
-        $this->logger          = $logger;
+    ) {
+        $this->logger = $logger;
         $this->eventDispatcher = $eventDispatcher;
-        $this->entityManager   = $entityManager;
+        $this->entityManager = $entityManager;
     }
 
-    public function extractIDFromFileInfo(\SplFileInfo $fileInfo) : Title
+    public function extractIDFromFileInfo(\SplFileInfo $fileInfo): Title
     {
-            return $this->resultToEntity($this->extractID($fileInfo));
+        return $this->resultToEntity($this->extractID($fileInfo));
     }
 
-    private function resultToEntity(JAVIDExtractionResult $result) : Title
+    private function resultToEntity(JAVIDExtractionResult $result): Title
     {
         $fileinfo = $result->getFileInfo();
         $catalogNumber = sprintf('%s-%s', strtoupper($result->getLabel()), $result->getRelease());
         $title = $this->entityManager->getRepository(Title::class)->findOneBy([
-            'catalognumber' => $catalogNumber
+            'catalognumber' => $catalogNumber,
         ]);
 
-        if(!$title) {
+        if (!$title) {
             $title = (new Title())
                 ->setCatalognumber($catalogNumber);
 
@@ -66,9 +65,9 @@ class JAVNameMatcherService
 
         $javFile = $this->entityManager->getRepository(JavFile::class)->findOneByFileInfo($result->getFileInfo());
 
-        if(!$javFile) {
+        if (!$javFile) {
             $inode = $this->entityManager->getRepository(Inode::class)->find($fileinfo->getInode());
-            if(!$inode) {
+            if (!$inode) {
                 $inode = (new Inode())
                     ->setId($fileinfo->getInode())
                     ->setFilesize($fileinfo->getSize());
@@ -87,8 +86,9 @@ class JAVNameMatcherService
             $this->persist($javFile);
         }
 
-        if($this->flushRequired)
+        if ($this->flushRequired) {
             $this->entityManager->flush();
+        }
 
         return $title;
     }
@@ -99,7 +99,7 @@ class JAVNameMatcherService
         $this->flushRequired = true;
     }
 
-    private function extractID(\SplFileInfo $fileInfo) : JAVIDExtractionResult
+    private function extractID(\SplFileInfo $fileInfo): JAVIDExtractionResult
     {
         $filename = $fileInfo->getFilename();
         $matchers = [
@@ -124,15 +124,15 @@ class JAVNameMatcherService
             FilenameParser\Level12Parser::class,
         ];
 
-        foreach($matchers as $matcher) {
+        foreach ($matchers as $matcher) {
             /** @var FilenameParser\BaseParser $matcherInstance */
-            $matcherInstance = new $matcher;
+            $matcherInstance = new $matcher();
 
-            if($matcherInstance->hasMatch($filename)) {
+            if ($matcherInstance->hasMatch($filename)) {
                 return ($matcherInstance->getParts())->setFileInfo($fileInfo);
             }
         }
 
-        throw new JavIDExtractionException("", $fileInfo, $matchers);
+        throw new JavIDExtractionException('', $fileInfo, $matchers);
     }
 }

@@ -182,11 +182,13 @@ class Inode
 
     /**
      * @param bool $checked
+     *
      * @return Inode
      */
     public function setChecked(bool $checked): self
     {
         $this->checked = $checked;
+
         return $this;
     }
 
@@ -200,11 +202,13 @@ class Inode
 
     /**
      * @param int $height
+     *
      * @return Inode
      */
     public function setHeight(int $height): self
     {
         $this->height = $height;
+
         return $this;
     }
 
@@ -218,11 +222,13 @@ class Inode
 
     /**
      * @param int $width
+     *
      * @return Inode
      */
     public function setWidth(int $width): self
     {
         $this->width = $width;
+
         return $this;
     }
 
@@ -236,11 +242,13 @@ class Inode
 
     /**
      * @param float $fps
+     *
      * @return Inode
      */
     public function setFps(float $fps): self
     {
         $this->fps = $fps;
+
         return $this;
     }
 
@@ -254,11 +262,13 @@ class Inode
 
     /**
      * @param string $codec
+     *
      * @return Inode
      */
     public function setCodec(string $codec): self
     {
         $this->codec = $codec;
+
         return $this;
     }
 
@@ -272,11 +282,13 @@ class Inode
 
     /**
      * @param bool $consistent
+     *
      * @return Inode
      */
     public function setConsistent(bool $consistent): self
     {
         $this->consistent = $consistent;
+
         return $this;
     }
 
@@ -290,11 +302,13 @@ class Inode
 
     /**
      * @param mixed $meta
+     *
      * @return Inode
      */
     public function setMeta($meta)
     {
         $this->meta = $meta;
+
         return $this;
     }
 
@@ -308,11 +322,13 @@ class Inode
 
     /**
      * @param int $length
+     *
      * @return Inode
      */
     public function setLength(int $length): self
     {
         $this->length = $length;
+
         return $this;
     }
 
@@ -326,11 +342,13 @@ class Inode
 
     /**
      * @param int $bitrate
+     *
      * @return Inode
      */
     public function setBitrate(int $bitrate): self
     {
         $this->bitrate = $bitrate;
+
         return $this;
     }
 
@@ -344,11 +362,13 @@ class Inode
 
     /**
      * @param int $filesize
+     *
      * @return Inode
      */
     public function setFilesize(int $filesize): self
     {
         $this->filesize = $filesize;
+
         return $this;
     }
 
@@ -362,11 +382,13 @@ class Inode
 
     /**
      * @param bool $processed
+     *
      * @return Inode
      */
     public function setProcessed(bool $processed): self
     {
         $this->processed = $processed;
+
         return $this;
     }
 

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\MessageHandler;
 
 use App\Entity\JavFile;
@@ -9,7 +10,6 @@ use App\Message\ProcessFileMessage;
 use App\Service\MediaProcessorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
 class ProcessFileMessageHandler
@@ -41,9 +41,9 @@ class ProcessFileMessageHandler
         MessageBusInterface $messageBus
     ) {
         $this->mediaProcessorService = $mediaProcessorService;
-        $this->entityManager         = $entityManager;
-        $this->logger                = $logger;
-        $this->messageBus            = $messageBus;
+        $this->entityManager = $entityManager;
+        $this->logger = $logger;
+        $this->messageBus = $messageBus;
     }
 
     public function __invoke(ProcessFileMessage $message)

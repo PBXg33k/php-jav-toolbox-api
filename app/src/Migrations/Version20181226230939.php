@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace DoctrineMigrations;
 
@@ -10,10 +12,10 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version20181226230939 extends AbstractMigration
 {
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
+        $this->abortIf('mysql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('ALTER TABLE jav_file DROP FOREIGN KEY FK_C32B7B813F7D58D2');
         $this->addSql('CREATE TABLE inode (id BIGINT NOT NULL, md5 VARCHAR(32) DEFAULT NULL, sha1 VARCHAR(40) DEFAULT NULL, sha512 VARCHAR(128) DEFAULT NULL, xxhash VARCHAR(32) DEFAULT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci ENGINE = InnoDB');
@@ -29,10 +31,10 @@ final class Version20181226230939 extends AbstractMigration
         $this->addSql('ALTER TABLE title CHANGE name_romaji name_romaji VARCHAR(255) DEFAULT NULL, CHANGE name_japanese name_japanese VARCHAR(255) DEFAULT NULL');
     }
 
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
+        $this->abortIf('mysql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('ALTER TABLE jav_file DROP FOREIGN KEY FK_C32B7B8171E72450');
         $this->addSql('CREATE TABLE file_hash (id INT AUTO_INCREMENT NOT NULL, md5 VARCHAR(32) NOT NULL COLLATE utf8mb4_unicode_ci, sha1 VARCHAR(40) NOT NULL COLLATE utf8mb4_unicode_ci, sha512 VARCHAR(128) NOT NULL COLLATE utf8mb4_unicode_ci, xxhash VARCHAR(32) NOT NULL COLLATE utf8mb4_unicode_ci, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci ENGINE = InnoDB COMMENT = \'\' ');

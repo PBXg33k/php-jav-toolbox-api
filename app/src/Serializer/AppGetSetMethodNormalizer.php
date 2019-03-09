@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Serializer;
 
 use Symfony\Component\Serializer\Mapping\Factory\ClassMetadataFactoryInterface;
@@ -10,7 +11,6 @@ class AppGetSetMethodNormalizer extends GetSetMethodNormalizer
 {
     public function __construct(ClassMetadataFactoryInterface $classMetadataFactory = null, NameConverterInterface $nameConverter = null, PropertyTypeExtractorInterface $propertyTypeExtractor = null)
     {
-
         parent::__construct($classMetadataFactory, $nameConverter, $propertyTypeExtractor);
 
         $this->setCircularReferenceHandler(function ($object) {

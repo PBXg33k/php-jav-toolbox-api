@@ -1,23 +1,29 @@
 <?php
+
 namespace App\Service;
 
+use App\Event\DirectoryFoundEvent;
+use App\Event\FileFoundEvent;
 use App\Event\VideoFileFoundEvent;
+use App\Message\ScanFileMessage;
 use Doctrine\Common\Collections\ArrayCollection;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\Finder\Finder;
 use Symfony\Component\Finder\SplFileInfo;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class FileScanService
 {
     private $videoExtensions = [
-        'mp4',
-        'mkv',
-        'avi',
-        'mpg',
-        'mpeg',
-        'iso',
-        'wmv'
+        '*.mp4',
+        '*.mkv',
+        '*.avi',
+        '*.mpg',
+        '*.mpeg',
+        '*.iso',
+        '*.wmv',
     ];
 
     /**
@@ -36,76 +42,85 @@ class FileScanService
     /** @var Filesystem */
     private $filesystem;
 
+    /**
+     * @var JAVProcessorService
+     */
     private $javProcessorService;
 
+    /**
+     * @var MessageBusInterface
+     */
+    private $messageBus;
+
+    /**
+     * @var
+     */
     private $rootPath;
 
+    /**
+     * @var string
+     */
     private $extensionRegex;
 
     public function __construct(
         LoggerInterface $logger,
         EventDispatcherInterface $dispatcher,
-        JAVProcessorService $JAVProcessorService
-    )
-    {
+        JAVProcessorService $JAVProcessorService,
+        MessageBusInterface $messageBus
+    ) {
         $this->setLogger($logger);
-        $this->dispatcher           = $dispatcher;
-        $this->javProcessorService  = $JAVProcessorService;
-        $this->files                = new ArrayCollection();
-        $this->filesystem           = new Filesystem();
-        $this->extensionRegex       = sprintf('/.%s$/i', implode('|.', $this->videoExtensions));
+        $this->dispatcher = $dispatcher;
+        $this->javProcessorService = $JAVProcessorService;
+        $this->messageBus = $messageBus;
+        $this->files = new ArrayCollection();
     }
 
-    public function setLogger(LoggerInterface $logger)
+    public function setLogger(LoggerInterface $logger): self
     {
         $this->logger = $logger;
-    }
-
-    public function scanDir(string $directory): FileScanService
-    {
-        $this->rootPath = $directory;
-        $this->logger->debug('Starting scan for videofiles', [$this->rootPath]);
-
-        $this->scanRecursiveIterator($directory);
 
         return $this;
     }
 
-    protected function scanRecursiveIterator(string $path)
+    public function scanDir(string $directory): self
     {
-        $items = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path), \RecursiveIteratorIterator::SELF_FIRST);
+        $this->rootPath = $directory;
+        $this->logger->debug('Starting scan for videofiles', [$this->rootPath]);
 
-        /**
-         * @var $iv \SplFileInfo
-         */
-        foreach($items as $ik => $iv)
-        {
-            if(
-                $iv->isFile() &&
-                \in_array($iv->getExtension(), $this->videoExtensions, false) &&
-                $iv->getSize() >= 300000000
-            ) {
-                $finfo = new SplFileInfo(
-                    $iv->getPathname(),
-                    ltrim($iv->getPath(), $this->rootPath),
-                    ltrim($iv->getPathname(), $this->rootPath)
-                );
+        $finder = new Finder();
+        $finder->in($directory)
+            ->ignoreUnreadableDirs(true)
+            ->ignoreDotFiles(true)
+            ->size('> 100M')
+            ->followLinks()
+            ->name($this->videoExtensions);
 
-                try {
-                    $this->processFile($finfo);
-                } catch (\Exception $exception) {
-                    $this->logger->error($exception->getMessage(), [
-                        'path' => $finfo->getPathname()
-                    ]);
-                }
+        $i = 0;
+        /** @var SplFileInfo $file */
+        foreach($finder->files() as $file) {
+            $i++;
+            $this->logger->debug('file match', [
+                'i'    => $i,
+                'path' => $file->getPathname()
+            ]);
+            $this->dispatcher->dispatch(VideoFileFoundEvent::NAME, new VideoFileFoundEvent($file));
+            try {
+                $this->processFile($file);
+            } catch (\Exception $exception) {
+                $this->logger->error($exception->getMessage(), [
+                    'path'  => $file->getPathname()
+                ]);
             }
         }
+
+        return $this;
     }
 
-    public function processFile(SplFileInfo $file) {
-        if($this->javProcessorService->filenameContainsID($file)) {
+    public function processFile(\SplFileInfo $file): void
+    {
+        if ($this->javProcessorService->filenameContainsID($file)) {
             $this->logger->debug(sprintf('file found: %s', $file->getPathname()));
-            $this->dispatcher->dispatch(VideoFileFoundEvent::NAME, new VideoFileFoundEvent($file));
+            $this->messageBus->dispatch(new ScanFileMessage($file->getPathname(), ltrim($file->getPath(), $this->rootPath), ltrim($file->getPathname(), $this->rootPath)));
             $this->files->add($file);
         }
     }

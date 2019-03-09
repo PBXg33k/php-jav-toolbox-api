@@ -30,7 +30,16 @@ class FileHashRepository extends ServiceEntityRepository
         $count = $q->execute([], Query::HYDRATE_SINGLE_SCALAR);
         $q->free();
         unset($q);
+
         return (bool) $count > 0;
+    }
+
+    public function findBroken()
+    {
+        return $this->findBy([
+            'checked' => 1,
+            'consistent' => 0,
+        ]);
     }
 
 //    /**

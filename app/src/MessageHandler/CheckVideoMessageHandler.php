@@ -1,4 +1,5 @@
 <?php
+
 namespace App\MessageHandler;
 
 use App\Entity\JavFile;
@@ -39,19 +40,18 @@ class CheckVideoMessageHandler implements MessageHandlerInterface
         EntityManagerInterface $entityManager,
         LoggerInterface $logger,
         MessageBusInterface $messageBus
-    )
-    {
+    ) {
         $this->mediaProcessorService = $mediaProcessorService;
-        $this->entityManager         = $entityManager;
-        $this->logger                = $logger;
-        $this->messageBus       = $messageBus;
+        $this->entityManager = $entityManager;
+        $this->logger = $logger;
+        $this->messageBus = $messageBus;
     }
 
     public function __invoke(CheckVideoMessage $message)
     {
         /** @var JavFile $javFile */
         $javFile = $this->entityManager->find(JavFile::class, $message->getJavFileId());
-        $startTime  = time();
+        $startTime = time();
         if (!$javFile->getInode()->isChecked()) {
             $javFile = $this->mediaProcessorService->checkHealth(
                 $javFile,
@@ -69,30 +69,31 @@ class CheckVideoMessageHandler implements MessageHandlerInterface
                     if (is_callable($callback)) {
                         $callback($type, $buffer);
                     } else {
-                        if (strpos($buffer, ' time=') !== FALSE) {
+                        if (false !== strpos($buffer, ' time=')) {
                             // Calculate/estimate progress
                             if (preg_match('~time=(?<hours>[\d]{1,2})\:(?<minutes>[\d]{2})\:(?<seconds>[\d]{2})?(?:\.(?<millisec>[\d]{0,3}))\sbitrate~', $buffer, $matches)) {
                                 $time = ($matches['hours'] * 3600 + $matches['minutes'] * 60 + $matches['seconds']) * 1000 + ($matches['millisec'] * 10);
 
-                                $this->logger->debug('Progress ' . number_format(($time / $javFile->getInode()->getLength()) * 100, 2) . '%', [
+                                $this->logger->debug('Progress '.number_format(($time / $javFile->getInode()->getLength()) * 100, 2).'%', [
                                     'path' => $javFile->getPath(),
                                     'length' => $javFile->getInode()->getLength(),
                                     'mark' => $time,
-                                    'perc' => number_format($time / $javFile->getInode()->getLength() * 100, 2) . '%'
+                                    'perc' => number_format($time / $javFile->getInode()->getLength() * 100, 2).'%',
                                 ]);
                             }
                         } else {
                             $this->logger->debug($buffer);
                         }
                     }
-                });
+                }
+            );
 
             $this->entityManager->persist($javFile);
             $this->entityManager->persist($javFile->getInode());
             $this->entityManager->flush();
         }
 
-        if($javFile->getInode()->isChecked() && $javFile->getInode()->isConsistent()) {
+        if ($javFile->getInode()->isChecked() && $javFile->getInode()->isConsistent()) {
             $this->messageBus->dispatch(new GenerateThumbnailMessage($javFile->getId()));
             $this->messageBus->dispatch(new CalculateFileHashesMessage($javFile->getId(), CalculateFileHashesMessage::HASH_XXHASH | CalculateFileHashesMessage::HASH_MD5));
         }

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\MessageHandler;
 
 use App\Entity\JavFile;
@@ -36,9 +37,9 @@ class CalculateFileHashesMessageHandler
         MessageBusInterface $messageBus,
         FileHandleService $fileHandleService
     ) {
-        $this->entityManager     = $entityManager;
-        $this->logger            = $logger;
-        $this->messageBus        = $messageBus;
+        $this->entityManager = $entityManager;
+        $this->logger = $logger;
+        $this->messageBus = $messageBus;
         $this->fileHandleService = $fileHandleService;
     }
 
@@ -47,7 +48,7 @@ class CalculateFileHashesMessageHandler
         /** @var JavFile $javFile */
         $javFile = $this->entityManager->find(JavFile::class, $message->getJavFileId());
 
-        if($message->hasXxhash()) {
+        if ($message->hasXxhash()) {
             $this->logger->debug('Calculating hash', [
                 'method' => 'XXHASH',
                 'path' => $javFile->getPath(),
@@ -55,7 +56,7 @@ class CalculateFileHashesMessageHandler
             $javFile = $this->fileHandleService->calculateXxhash($javFile);
         }
 
-        if($message->hasMd5()) {
+        if ($message->hasMd5()) {
             $this->logger->debug('Calculating hash', [
                 'method' => 'MD5',
                 'path' => $javFile->getPath(),
@@ -63,7 +64,7 @@ class CalculateFileHashesMessageHandler
             $javFile = $this->fileHandleService->calculateMd5Hash($javFile);
         }
 
-        if($message->hasSha1()) {
+        if ($message->hasSha1()) {
             $this->logger->debug('Calculating hash', [
                 'method' => 'SHA1',
                 'path' => $javFile->getPath(),
@@ -71,7 +72,7 @@ class CalculateFileHashesMessageHandler
             $javFile = $this->fileHandleService->calculateSha1Hash($javFile);
         }
 
-        if($message->hasSha512()) {
+        if ($message->hasSha512()) {
             $this->logger->debug('Calculating hash', [
                 'method' => 'SHA512',
                 'path' => $javFile->getPath(),

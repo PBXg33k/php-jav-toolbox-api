@@ -23,15 +23,29 @@ class JavFileRepository extends ServiceEntityRepository
     {
         return $this->findOneBy([
             'inode' => $fileInfo->getInode(),
-            'path'  => $fileInfo->getPathname()
+            'path' => $fileInfo->getPathname(),
         ]);
     }
 
     public function findOneByPath(string $path)
     {
         return $this->findOneBy([
-            'path' => $path
+            'path' => $path,
         ]);
+    }
+
+    public function findOneByOrCreate(JavFile $javFile, array $lookupKeys)
+    {
+        $criteria = [];
+        foreach ($lookupKeys as $lookupKey) {
+            $criteria[$lookupKey] = $this->getClassMetadata()->getFieldValue($javFile, $lookupKey);
+        }
+
+        if ($lookup = $this->findOneBy($criteria)) {
+            return $lookup;
+        } else {
+            return $javFile;
+        }
     }
 
 //    /**

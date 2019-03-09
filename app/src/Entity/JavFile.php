@@ -91,7 +91,7 @@ class JavFile
 
     public function setPath(string $path): self
     {
-        if(!$this->getFilename()) {
+        if (!$this->getFilename()) {
             $this->setFilename(pathinfo($path, PATHINFO_BASENAME));
         }
         $this->path = $path;

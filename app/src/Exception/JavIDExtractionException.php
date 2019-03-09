@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Exception;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -16,13 +17,13 @@ class JavIDExtractionException extends \Exception
      */
     private $matchers;
 
-    public function __construct(string $message = "", \SplFileInfo $fileInfo, array $matchers, int $code = 0, Throwable $previous = null)
+    public function __construct(string $message = '', \SplFileInfo $fileInfo, array $matchers, int $code = 0, Throwable $previous = null)
     {
         $this->fileinfo = $fileInfo;
         $this->matchers = new ArrayCollection($matchers);
 
-        if($message == "") {
-            $message = "JAV ID Extraction failed";
+        if ('' == $message) {
+            $message = "JAV ID Extraction failed. filename: {$fileInfo->getFilename()}";
         }
 
         parent::__construct($message, $code, $previous);
@@ -43,6 +44,4 @@ class JavIDExtractionException extends \Exception
     {
         return $this->matchers;
     }
-
-
 }

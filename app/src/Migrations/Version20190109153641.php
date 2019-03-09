@@ -1,4 +1,6 @@
-<?php declare(strict_types=1);
+<?php
+
+declare(strict_types=1);
 
 namespace DoctrineMigrations;
 
@@ -10,10 +12,10 @@ use Doctrine\Migrations\AbstractMigration;
  */
 final class Version20190109153641 extends AbstractMigration
 {
-    public function up(Schema $schema) : void
+    public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
+        $this->abortIf('mysql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('ALTER TABLE title CHANGE name_romaji name_romaji VARCHAR(255) DEFAULT NULL, CHANGE name_japanese name_japanese VARCHAR(255) DEFAULT NULL');
         $this->addSql('ALTER TABLE inode ADD checked TINYINT(1) DEFAULT NULL, ADD height INT DEFAULT NULL, ADD width INT DEFAULT NULL, ADD fps DOUBLE PRECISION DEFAULT NULL, ADD codec VARCHAR(255) DEFAULT NULL, ADD consistent TINYINT(1) DEFAULT NULL, ADD meta LONGBLOB DEFAULT NULL, ADD length INT DEFAULT NULL, ADD bitrate INT DEFAULT NULL, ADD filesize BIGINT UNSIGNED NOT NULL, ADD processed TINYINT(1) NOT NULL, CHANGE md5 md5 VARCHAR(32) DEFAULT NULL, CHANGE sha1 sha1 VARCHAR(40) DEFAULT NULL, CHANGE sha512 sha512 VARCHAR(128) DEFAULT NULL, CHANGE xxhash xxhash VARCHAR(32) DEFAULT NULL');
@@ -24,10 +26,10 @@ final class Version20190109153641 extends AbstractMigration
         $this->addSql('ALTER TABLE model_alias CHANGE model_id model_id INT DEFAULT NULL');
     }
 
-    public function down(Schema $schema) : void
+    public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
+        $this->abortIf('mysql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('ALTER TABLE jav_file ADD filesize BIGINT UNSIGNED NOT NULL, ADD processed TINYINT(1) NOT NULL, ADD height INT DEFAULT NULL, ADD width INT DEFAULT NULL, ADD fps DOUBLE PRECISION DEFAULT \'NULL\', ADD codec VARCHAR(255) DEFAULT \'NULL\' COLLATE utf8mb4_unicode_ci, ADD consistent TINYINT(1) DEFAULT \'NULL\', ADD meta LONGBLOB DEFAULT NULL, ADD length INT DEFAULT NULL, ADD bitrate INT DEFAULT NULL, ADD checked TINYINT(1) DEFAULT \'NULL\', CHANGE title_id title_id INT DEFAULT NULL, CHANGE inode_id inode_id BIGINT DEFAULT NULL');
         // migrate data

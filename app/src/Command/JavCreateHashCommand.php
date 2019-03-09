@@ -6,7 +6,6 @@ use App\Entity\JavFile;
 use App\Entity\Title;
 use App\Repository\JavFileRepository;
 use App\Service\FileHandleService;
-use App\Service\JAVProcessorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
@@ -38,11 +37,10 @@ class JavCreateHashCommand extends Command
         FileHandleService $fileHandleService,
         EntityManagerInterface $entityManager,
         LoggerInterface $logger
-    )
-    {
-        $this->fileHandleService   = $fileHandleService;
-        $this->entityManager       = $entityManager;
-        $this->logger              = $logger;
+    ) {
+        $this->fileHandleService = $fileHandleService;
+        $this->entityManager = $entityManager;
+        $this->logger = $logger;
 
         parent::__construct();
     }
@@ -66,8 +64,8 @@ class JavCreateHashCommand extends Command
             /** @var JavFileRepository $fileRepository */
             $fileRepository = $this->entityManager->getRepository(JavFile::class);
 
-            if($file = $fileRepository->findOneBy([
-                'path' => $path
+            if ($file = $fileRepository->findOneBy([
+                'path' => $path,
             ])) {
                 $this->processFile($file, $io);
                 $io->success("Loaded metadata for {$file->getPath()}");
@@ -79,11 +77,11 @@ class JavCreateHashCommand extends Command
             /** @var Title $title */
             if ($title = $this->entityManager->getRepository(Title::class)
                 ->findOneBy([
-                    'catalognumber' => strtoupper($catalogID)
+                    'catalognumber' => strtoupper($catalogID),
                 ])) {
                 $files = $title->getFiles();
 
-                foreach($files as $file) {
+                foreach ($files as $file) {
                     $this->processFile($file, $io);
                     $io->success("Loaded metadata for {$file->getPath()}");
                 }
@@ -91,13 +89,14 @@ class JavCreateHashCommand extends Command
         }
     }
 
-    protected function processFile(JavFile $file, SymfonyStyle $output) {
+    protected function processFile(JavFile $file, SymfonyStyle $output)
+    {
         $file = $this->fileHandleService->calculateXxhash($file);
-        if($file->getInode()->getXxhash()) {
+        if ($file->getInode()->getXxhash()) {
             $output->success('Calculated XXHASH: '.$file->getInode()->getXxhash());
         }
         $file = $this->fileHandleService->calculateMd5Hash($file);
-        if($file->getInode()->getMd5()) {
+        if ($file->getInode()->getMd5()) {
             $output->success('Calculated MD5: '.$file->getInode()->getMd5());
         }
 

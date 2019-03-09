@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Service\FilenameParser;
 
 class Level40Parser extends BaseParser
@@ -12,7 +13,7 @@ class Level40Parser extends BaseParser
             self::PREG_RELEASE,
             "\W?",
             self::PREG_PART,
-            "(?:.*)?"
+            '(?:.*)?'
         );
     }
 }

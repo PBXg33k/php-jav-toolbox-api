@@ -1,10 +1,12 @@
 <?php
+
 namespace App\Service;
 
 use App\Entity\Inode;
 use App\Entity\Title;
 use App\Entity\JavFile;
-use App\Exception\PreProcessFileException;
+use App\Event\JavFileUpdatedEvent;
+use App\Event\TitleUpdatedEvent;
 use App\Message\CheckVideoMessage;
 use App\Message\GetVideoMetadataMessage;
 use App\Message\ProcessFileMessage;
@@ -14,25 +16,22 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use SplFileInfo;
 use Symfony\Component\Messenger\MessageBusInterface;
-use App\Service\FilenameParser;
 
 /**
- * Class JAVProcessorService
+ * Class JAVProcessorService.
  *
  * Service which processes videofiles which could contain JAV.
  *
  * It processes filenames and tries to extract JAV Titles.
  * Calculate hashes to create a fingerprint
- *
- * @package App\Service
  */
 class JAVProcessorService
 {
-    static $blacklistnames = [
-        'hentaikuindo'
+    public static $blacklistnames = [
+        'hentaikuindo',
     ];
 
-    const LOG_BLACKLIST_NAME  = 'Filename contains blacklisted string';
+    const LOG_BLACKLIST_NAME = 'Filename contains blacklisted string';
     const LOG_UNKNOWN_JAVJACK = 'Unknown JAVJACK file detected';
 
     /**
@@ -89,38 +88,38 @@ class JAVProcessorService
         JAVNameMatcherService $javNameMatcherService,
         $javToolboxMediaThumbDirectory,
         $javToolboxMtConfigPath
-    )
-    {
-        $this->logger                   = $logger;
-        $this->dispatcher               = $dispatcher;
-        $this->entityManager            = $entityManager;
-        $this->mediaProcessorService    = $mediaProcessorService;
-        $this->messageBus               = $messageBus;
-        $this->javNameMatcherService    = $javNameMatcherService;
+    ) {
+        $this->logger = $logger;
+        $this->dispatcher = $dispatcher;
+        $this->entityManager = $entityManager;
+        $this->mediaProcessorService = $mediaProcessorService;
+        $this->messageBus = $messageBus;
+        $this->javNameMatcherService = $javNameMatcherService;
 
-        $this->titles                   = new ArrayCollection();
+        $this->titles = new ArrayCollection();
 
-        $this->thumbnailDirectory       = $javToolboxMediaThumbDirectory;
-        $this->mtConfigPath             = $javToolboxMtConfigPath;
+        $this->thumbnailDirectory = $javToolboxMediaThumbDirectory;
+        $this->mtConfigPath = $javToolboxMtConfigPath;
     }
 
     public function processFile(JavFile $file)
     {
-        $this->logger->info('PROCESSING FILE '. $file->getFilename());
+        $this->logger->info('PROCESSING FILE '.$file->getFilename());
 
-        $this->logger->debug('Dispatching message',[
+        $this->logger->debug('Dispatching message', [
             'message' => 'ProcessFileMessage',
-            'id'      => $file->getId(),
-            'path'    => $file->getPath()
+            'id' => $file->getId(),
+            'path' => $file->getPath(),
         ]);
 
         $this->messageBus->dispatch(new ProcessFileMessage($file->getId()));
     }
 
-    public function getMetadata(JavFile $file, bool $refresh = true) {
-        $this->logger->notice('Dispatching message',[
-            'path'    => $file->getPath(),
-            'refresh' => $refresh
+    public function getMetadata(JavFile $file, bool $refresh = true)
+    {
+        $this->logger->notice('Dispatching message', [
+            'path' => $file->getPath(),
+            'refresh' => $refresh,
         ]);
 
         $this->messageBus->dispatch(new GetVideoMetadataMessage($file->getId()));
@@ -129,9 +128,8 @@ class JAVProcessorService
     public function checkJAVFilesConsistency(Title $title, bool $force = false)
     {
         /** @var JavFile $javFile */
-        foreach($title->getFiles() as $javFile)
-        {
-            if(!$javFile->getInode()->isChecked()) {
+        foreach ($title->getFiles() as $javFile) {
+            if (!$javFile->getInode()->isChecked()) {
                 $this->checkVideoConsistency($javFile, true, $force);
             }
         }
@@ -139,21 +137,21 @@ class JAVProcessorService
 
     public function checkVideoConsistency(JavFile $file, bool $strict = true, bool $force = false)
     {
-        if(!$this->entityManager->contains($file)) {
-            $this->entityManager->persist($file);
+        if (!$this->entityManager->contains($file)) {
+            $this->dispatcher->dispatch(JavFileUpdatedEvent::NAME, new JavFileUpdatedEvent($file));
         }
 
-        $this->logger->notice('Dispatching message',[
-            'path'   => $file->getPath(),
+        $this->logger->notice('Dispatching message', [
+            'path' => $file->getPath(),
             'strict' => $strict,
-            'force'  => $force
+            'force' => $force,
         ]);
         $this->messageBus->dispatch(new CheckVideoMessage($file->getId()));
     }
 
     private function fileExists(SplFileInfo $fileInfo)
     {
-        if($this->entityManager->getRepository(Inode::class)->exists($fileInfo->getInode())) {
+        if ($this->entityManager->getRepository(Inode::class)->exists($fileInfo->getInode())) {
             return (bool) $this->entityManager->getRepository(JavFile::class)->findOneByFileInfo($fileInfo);
         }
 
@@ -167,21 +165,22 @@ class JAVProcessorService
      */
     public function preProcessFile(SplFileInfo $file)
     {
-        if($this->fileExists($file)) {
+        if ($this->fileExists($file)) {
             $this->logger->debug('File already exists', [
-                'path' => $file->getPathname()
+                'path' => $file->getPathname(),
             ]);
 
             $this->processFile($this->entityManager->getRepository(JavFile::class)->findOneByFileInfo($file));
         } else {
             $javTitleInfo = $this->extractIDFromFilename($file);
 
-//            try {
+            try {
                 /** @var \App\Entity\JavFile $javFile */
                 $javFile = $javTitleInfo->getFiles()->first();
 
                 if (!self::shouldProcessFile($javFile, $this->logger)) {
                     $this->logger->warning("JAVFILE NOT VALID. SKIPPING {$javFile->getFilename()}");
+
                     return;
                 }
 
@@ -192,9 +191,9 @@ class JAVProcessorService
                 if (!$inode) {
                     $this->logger->debug('Inode entry not found, creating one', [
                         'path' => $file->getPathname(),
-                        'inode' => $file->getInode()
+                        'inode' => $file->getInode(),
                     ]);
-                    $inode = (new Inode)->setId($file->getInode());
+                    $inode = (new Inode())->setId($file->getInode());
                     $inode->setFilesize($file->getSize());
                 }
 
@@ -208,51 +207,53 @@ class JAVProcessorService
                 if (!$title) {
                     $this->logger->notice('New title', [
                         'catalog-number' => $javTitleInfo->getCatalognumber(),
-                        'filename' => $file->getFilename()
+                        'filename' => $file->getFilename(),
                     ]);
+
                     $title = $javTitleInfo;
-                    $this->entityManager->merge($title);
+                    $this->dispatcher->dispatch(TitleUpdatedEvent::NAME, new TitleUpdatedEvent($title));
                 }
                 $javFile->setTitle($title);
 
-                $this->entityManager->merge($javFile);
-                $this->entityManager->flush();
+                $this->dispatcher->dispatch(JavFileUpdatedEvent::NAME, new JavFileUpdatedEvent($javFile));
 
                 $this->processFile($javFile);
-                $this->logger->info('STORED TITLE: ' . $title->getCatalognumber());
-//            } catch (\Exception $exception) {
-//                $this->logger->error($exception->getMessage(), [
-//                    'javfile' => [
-//                        'catalog' => $javTitleInfo->getCatalognumber(),
-//                        'path' => $javFile->getPath()
-//                    ]
-//                ]);
-//            }
+                $this->logger->info('STORED TITLE: '.$title->getCatalognumber());
+            } catch (\Exception $exception) {
+                $this->logger->error($exception->getMessage(), [
+                    'javfile' => [
+                        'catalog' => $javTitleInfo->getCatalognumber(),
+                        'path' => $javFile->getPath(),
+                    ],
+                ]);
+            }
         }
-    }
-
-    public function extractIDFromFilename(SplFileInfo $fileInfo): Title
-    {
-        return $this->javNameMatcherService->extractIDFromFileInfo($fileInfo);
     }
 
     public static function shouldProcessFile(JavFile $javFile, LoggerInterface $logger)
     {
         $fileName = trim(pathinfo($javFile->getFilename(), PATHINFO_FILENAME));
 
-        if(ctype_xdigit($fileName) || $fileName === 'videoplayback') {
+        if (ctype_xdigit($fileName) || 'videoplayback' === $fileName) {
             $logger->warning(self::LOG_UNKNOWN_JAVJACK);
+
             return false;
         }
 
-        foreach(self::$blacklistnames as $blacklistname) {
-            if(stripos($javFile->getFilename(), $blacklistname) !== FALSE) {
+        foreach (self::$blacklistnames as $blacklistname) {
+            if (false !== stripos($javFile->getFilename(), $blacklistname)) {
                 $logger->warning(self::LOG_BLACKLIST_NAME);
+
                 return false;
             }
         }
 
         return true;
+    }
+
+    public function extractIDFromFilename(SplFileInfo $fileInfo): Title
+    {
+        return $this->javNameMatcherService->extractIDFromFileInfo($fileInfo);
     }
 
     public function filenameContainsID(SplFileInfo $filename): bool

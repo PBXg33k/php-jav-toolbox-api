@@ -1,4 +1,6 @@
-<?php declare(strict_types = 1);
+<?php
+
+declare(strict_types=1);
 
 namespace DoctrineMigrations;
 
@@ -13,7 +15,7 @@ class Version20180429121132 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
+        $this->abortIf('mysql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('ALTER TABLE jav_file CHANGE hash_id hash_id INT DEFAULT NULL, CHANGE title_id title_id INT DEFAULT NULL, CHANGE inode inode INT UNSIGNED DEFAULT NULL');
         $this->addSql('ALTER TABLE model_alias CHANGE model_id model_id INT DEFAULT NULL');
@@ -23,7 +25,7 @@ class Version20180429121132 extends AbstractMigration
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->abortIf($this->connection->getDatabasePlatform()->getName() !== 'mysql', 'Migration can only be executed safely on \'mysql\'.');
+        $this->abortIf('mysql' !== $this->connection->getDatabasePlatform()->getName(), 'Migration can only be executed safely on \'mysql\'.');
 
         $this->addSql('ALTER TABLE jav_file CHANGE hash_id hash_id INT DEFAULT NULL, CHANGE title_id title_id INT DEFAULT NULL, CHANGE inode inode BIGINT UNSIGNED NOT NULL');
         $this->addSql('ALTER TABLE model_alias CHANGE model_id model_id INT DEFAULT NULL');
