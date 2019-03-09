@@ -5,11 +5,31 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [Unreleased]
+### Added
+- Cleanup command
+  - Will run check (again) before deleing file from disk 
+    - use `--yes` to skip confirmation
+    - use `--dry-run` to do a dry run (will update consistency if checks passes)
+- Option to delete files from disk 
+  - Related JavFile entry will be deleted from the database
 ### Changed
+- CLI output updated
+  - Use of sections
+  - Progress bars
+- Scan command overhaul
+  - More use of events
+  - Option to mute output using the `--silent` argument
+- Refactored `FileScanService`
+  - Use Symfony Finder instead of directoryIterator
+    - Latter had a memory issue
+- Failure of thumbnail generation (because a stalled mt process) will try to send a SIGKILL signal to the process to kill it by force.
 - Changed the way thumbnails are handled
-  - thumnails are bound to inode instead of filenames
+  - Thumnails are bound to inode instead of filenames
 - Changed the way filenames are parsed
-  - Use multiple parsers instead of one single regular expression pattern 
+  - Use multiple parsers instead of one single regular expression pattern
+- Changed Dockerfile
+  - Add xdebug
+  - Run composer install instead of update on build 
 
 ## [0.1.3] - 2019-01-12
 ### Changed

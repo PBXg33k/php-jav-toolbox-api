@@ -30,15 +30,3 @@ This project is aimed to be used within a docker container, and thus is develope
     3. `php bin/console doctrine:database:create`
     4. `php bin/console doctrine:schema:update --force`
     5. `php bin/console doctrine:fixtures:load --no-interaction`
-
-## Features
-- (DONE) Scan local filesystem for JAV Titles
-- (DONE) Check video consistency, mark broken (video) files
-- (DONE) Filter/Only index actual video files
-- (WIP) Build database with local titles (and duplicates)
-- (WIP) Lookup external sources for title information and covers
-- (WIP) Generate metadata for found titles
-- (WIP) Generate thumbnails from files 
-- (TODO) Build a filesystem with hardlinks using IDs, tags and actresses in a tree structure
-- (TODO) Symlink extra/duplicate files
-- (TODO) Sharing system
