@@ -32,6 +32,7 @@ services:
         - THUMB_DIR=/media/thumbs
         - ENQUEUE_DSN=amqp://guest:guest@rabbitmq:5672
         - MESSENGER_TRANSPORT_DSN=amqp://guest:guest@rabbitmq:5672/%2f/messages
+        - REDIS_URI=redis://redis
 
     mariadb:
       image: mariadb
@@ -44,3 +45,6 @@ services:
 
     rabbitmq:
       image: rabbitmq:management-alpine
+
+    redis:
+      image: redis
