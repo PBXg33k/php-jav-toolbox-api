@@ -18,6 +18,8 @@ use org\bovigo\vfs\vfsStream;
 use org\bovigo\vfs\vfsStreamDirectory;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use Psr\Cache\CacheItemInterface;
+use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Messenger\Envelope;
@@ -61,6 +63,11 @@ class JAVProcessorServiceTest extends TestCase
     private $messageBus;
 
     /**
+     * @var MockObject|CacheItemPoolInterface
+     */
+    private $cache;
+
+    /**
      * @var MockObject|JAVNameMatcherService
      */
     private $javNameMatcherService;
@@ -79,7 +86,8 @@ class JAVProcessorServiceTest extends TestCase
         $this->entityManager            = $this->createMock(EntityManagerInterface::class);
         $this->mediaProcessorService    = $this->createMock(MediaProcessorService::class);
         $this->messageBus               = $this->createMock(MessageBusInterface::class);
-        $this->javNameMatcherService         = $this->createMock(JAVNameMatcherService::class);
+        $this->javNameMatcherService    = $this->createMock(JAVNameMatcherService::class);
+        $this->cache                    = $this->createMock(CacheItemPoolInterface::class);
 
         $this->mediaRoot                = vfsStream::setup('media');
         $this->mediaThumbRoot           = vfsStream::setup('thumb');
@@ -91,6 +99,7 @@ class JAVProcessorServiceTest extends TestCase
             $this->mediaProcessorService,
             $this->messageBus,
             $this->javNameMatcherService,
+            $this->cache,
             $this->mediaRoot->url(),
             $this->mediaThumbRoot->url()
         );
@@ -267,6 +276,15 @@ class JAVProcessorServiceTest extends TestCase
         $title->addFile((new JavFile())->setFilename($filenameVariation)->setPath($testFile->url()));
 
         $finfo = new \SplFileInfo($testFile->url());
+        $cachItem = $this->createMock(CacheItemInterface::class);
+
+        $cachItem->expects($this->once())
+            ->method('isHit')
+            ->willReturn(false);
+
+        $this->cache->expects($this->once())
+            ->method('getItem')
+            ->willReturn($cachItem);
 
         $this->javNameMatcherService->expects($this->once())
             ->method('extractIDFromFileInfo')
@@ -285,6 +303,16 @@ class JAVProcessorServiceTest extends TestCase
     public function testFilenameContainsID()
     {
         $input = new \SplFileInfo($this->mediaRoot->url());
+
+        $cachItem = $this->createMock(CacheItemInterface::class);
+
+        $cachItem->expects($this->once())
+            ->method('isHit')
+            ->willReturn(false);
+
+        $this->cache->expects($this->once())
+            ->method('getItem')
+            ->willReturn($cachItem);
 
         $this->javNameMatcherService->expects($this->once())
             ->method('extractIDFromFileInfo')
