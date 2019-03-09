@@ -36,8 +36,7 @@
         "symfony/serializer": "^4.0",
         "symfony/twig-bundle": "^4.0",
         "symfony/validator": "^4.0",
-        "symfony/yaml": "^4.0",
-        "ext-posix": "*"
+        "symfony/yaml": "^4.0"
     },
     "require-dev": {
         "mikey179/vfsstream": "2.0.x-dev",

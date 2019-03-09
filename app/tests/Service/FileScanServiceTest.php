@@ -86,7 +86,7 @@ class FileScanServiceTest extends TestCase
         $this->eventDispatcher->expects($this->exactly(1))
             ->method('dispatch')
             ->withConsecutive(
-                [$this->equalTo(VideoFileFoundEvent::NAME), $this->isInstanceOf(VideoFileFoundEvent::class)],
+                [$this->equalTo(VideoFileFoundEvent::NAME), $this->isInstanceOf(VideoFileFoundEvent::class)]
             );
 
         $this->messageBus->expects($this->once())
