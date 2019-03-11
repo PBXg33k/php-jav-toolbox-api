@@ -12,12 +12,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/colinodell/symfony-lts-or-current.git",
-                "reference": "033043f2606faae477b5a8aaf907a28b3f874482"
+                "reference": "19a0adb1bc9bef4aa790d4c5e2a00955fa05ae37"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/colinodell/symfony-lts-or-current/zipball/033043f2606faae477b5a8aaf907a28b3f874482",
-                "reference": "033043f2606faae477b5a8aaf907a28b3f874482",
+                "url": "https://api.github.com/repos/colinodell/symfony-lts-or-current/zipball/19a0adb1bc9bef4aa790d4c5e2a00955fa05ae37",
+                "reference": "19a0adb1bc9bef4aa790d4c5e2a00955fa05ae37",
                 "shasum": ""
             },
             "conflict": {
@@ -46,6 +46,7 @@
                 "symfony/inflector": ">=2.0,<2.8 | >=3.0,<3.4 | >=4.0,<4.2",
                 "symfony/intl": ">=2.0,<2.8 | >=3.0,<3.4 | >=4.0,<4.2",
                 "symfony/ldap": ">=2.0,<2.8 | >=3.0,<3.4 | >=4.0,<4.2",
+                "symfony/locale": ">=2.0,<2.8",
                 "symfony/lock": ">=3.0,<3.4 | >=4.0,<4.2",
                 "symfony/messenger": ">=4.0,<4.2",
                 "symfony/monolog-bridge": ">=2.0,<2.8 | >=3.0,<3.4 | >=4.0,<4.2",
@@ -94,7 +95,7 @@
             ],
             "description": "Enforces LTS or current versions of Symfony components",
             "homepage": "https://github.com/colinodell/symfony-lts-or-current",
-            "time": "2018-12-04T21:17:15+00:00"
+            "time": "2019-03-09T13:21:54+00:00"
         },
         {
             "name": "composer/semver",
@@ -7396,16 +7397,16 @@
         },
         {
             "name": "phpstan/phpstan",
-            "version": "0.11.2",
+            "version": "0.11.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan.git",
-                "reference": "8e185a74004920419ee97bf9dc62e6a175e8dca5"
+                "reference": "e4644b4a8fd393c346f1137305fb2f76a7dc20a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/8e185a74004920419ee97bf9dc62e6a175e8dca5",
-                "reference": "8e185a74004920419ee97bf9dc62e6a175e8dca5",
+                "url": "https://api.github.com/repos/phpstan/phpstan/zipball/e4644b4a8fd393c346f1137305fb2f76a7dc20a7",
+                "reference": "e4644b4a8fd393c346f1137305fb2f76a7dc20a7",
                 "shasum": ""
             },
             "require": {
@@ -7465,7 +7466,7 @@
                 "MIT"
             ],
             "description": "PHPStan - PHP Static Analysis Tool",
-            "time": "2019-02-12T14:54:38+00:00"
+            "time": "2019-03-10T16:25:30+00:00"
         },
         {
             "name": "phpstan/phpstan-doctrine",
@@ -7578,16 +7579,16 @@
         },
         {
             "name": "phpstan/phpstan-symfony",
-            "version": "0.11.1",
+            "version": "0.11.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpstan/phpstan-symfony.git",
-                "reference": "c5f7d3d7fe9b599ac083f481fc082af166926cf8"
+                "reference": "6b4d9f1719a67b733f0c0e9ae55f7612ccd2f17b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpstan/phpstan-symfony/zipball/c5f7d3d7fe9b599ac083f481fc082af166926cf8",
-                "reference": "c5f7d3d7fe9b599ac083f481fc082af166926cf8",
+                "url": "https://api.github.com/repos/phpstan/phpstan-symfony/zipball/6b4d9f1719a67b733f0c0e9ae55f7612ccd2f17b",
+                "reference": "6b4d9f1719a67b733f0c0e9ae55f7612ccd2f17b",
                 "shasum": ""
             },
             "require": {
@@ -7635,7 +7636,7 @@
                 }
             ],
             "description": "Symfony Framework extensions and rules for PHPStan",
-            "time": "2019-02-13T19:42:11+00:00"
+            "time": "2019-03-03T21:38:03+00:00"
         },
         {
             "name": "roave/security-advisories",
