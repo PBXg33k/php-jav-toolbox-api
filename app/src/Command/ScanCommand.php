@@ -7,6 +7,7 @@ use App\Event\QualifiedVideoFileFound;
 use App\Event\VideoFileFoundEvent;
 use App\Service\FileScanService;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -15,8 +16,10 @@ use Symfony\Component\Console\Output\ConsoleSectionOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class ScanCommand extends SectionedCommand
+class ScanCommand extends Command
 {
+    use SectionedCommandTrait;
+    
     /**
      * @var FileScanService
      */

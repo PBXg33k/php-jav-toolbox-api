@@ -8,6 +8,7 @@ use App\Service\MediaProcessorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -18,8 +19,11 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\Filesystem\Filesystem;
 
-class JavCleanupCommand extends SectionedCommand
+class JavCleanupCommand extends Command
 {
+    use SectionedCommandTrait;
+    use ProgressBarCommandTrait;
+
     protected static $defaultName = 'jav:cleanup';
 
     /**
@@ -100,22 +104,6 @@ class JavCleanupCommand extends SectionedCommand
             ->addOption('dry-run', null, InputOption::VALUE_OPTIONAL, 'Only print actions, do not execute', false)
             ->addOption('yes', null, InputOption::VALUE_OPTIONAL, 'Auto agree to delete')
         ;
-    }
-
-    protected function updateProgressBarWithMessage(ProgressBar $progressBar, string $message, int $steps = 1)
-    {
-        $progressBar->setMessage($message);
-        $progressBar->advance($steps);
-        $progressBar->display();
-    }
-
-    protected function initProgressBar(ProgressBar $progressBar)
-    {
-        $progressBar->setFormat(' %current%/%max% [%bar%] %percent:3s%% %elapsed:6s%/%estimated:-6s% %memory:6s% - %message%');
-        $progressBar->setRedrawFrequency(100);
-        $progressBar->display();
-
-        return $progressBar;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)

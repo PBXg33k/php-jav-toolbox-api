@@ -1,19 +1,22 @@
 <?php
 namespace App\Command;
 
-use App\Entity\Inode;
 use App\Entity\JavFile;
 use App\Message\ScanFileMessage;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 
-class CheckCommand extends SectionedCommand
+class CheckCommand extends Command
 {
+    use SectionedCommandTrait;
+    use ProgressBarCommandTrait;
+
     protected static $defaultName = 'jav:check';
 
     /**
@@ -84,21 +87,5 @@ class CheckCommand extends SectionedCommand
             }
         }
         $this->progressSection->overwrite('Finished');
-    }
-
-    protected function updateProgressBarWithMessage(ProgressBar $progressBar, string $message, int $steps = 1)
-    {
-        $progressBar->setMessage($message);
-        $progressBar->advance($steps);
-        $progressBar->display();
-    }
-
-    protected function initProgressBar(ProgressBar $progressBar)
-    {
-        $progressBar->setFormat(' %current%/%max% [%bar%] %percent:3s%% %elapsed:6s%/%estimated:-6s% %memory:6s% - %message%');
-        $progressBar->setRedrawFrequency(100);
-        $progressBar->display();
-
-        return $progressBar;
     }
 }
