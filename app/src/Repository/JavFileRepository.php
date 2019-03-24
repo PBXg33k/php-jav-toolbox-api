@@ -34,6 +34,14 @@ class JavFileRepository extends ServiceEntityRepository
         ]);
     }
 
+    public function findUnchecked()
+    {
+        return $this->createQueryBuilder('f')
+            ->join('f.inode', 'i', 'WITH', 'i.checked = 0')
+            ->getQuery()
+            ->execute();
+    }
+
     public function findOneByOrCreate(JavFile $javFile, array $lookupKeys)
     {
         $criteria = [];
