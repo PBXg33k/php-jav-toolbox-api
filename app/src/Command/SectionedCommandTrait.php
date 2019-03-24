@@ -27,7 +27,7 @@ trait SectionedCommandTrait
      */
     protected $output;
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $this->output = $output;
         // Set sections if $output is an instance of ConsoleOutput (which it almost always is
@@ -37,17 +37,17 @@ trait SectionedCommandTrait
         }
     }
 
-    protected function updateStateMessage(string $message)
+    protected function updateStateMessage(string $message): void
     {
         $this->writeToSection($message, $this->stateSection);
     }
 
-    protected function updateProgressOutput(string $message)
+    protected function updateProgressOutput(string $message): void
     {
         $this->writeToSection($message, $this->progressSection);
     }
 
-    protected function writeToSection(string $message, ?ConsoleSectionOutput $section)
+    protected function writeToSection(string $message, ?ConsoleSectionOutput $section): void
     {
         if ($section) {
             $section->clear();
