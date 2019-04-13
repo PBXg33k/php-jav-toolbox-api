@@ -110,7 +110,7 @@ class JavCleanupCommand extends Command
     {
         $io = new SymfonyStyle($input, $output);
 
-        parent::execute($input, $output);
+        $this->initSections($input, $output);
 
         $this->cmdSection = $output->section();
 

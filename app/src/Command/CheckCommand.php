@@ -64,7 +64,7 @@ class CheckCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        parent::execute($input, $output);
+        $this->initSections($input, $output);
 
         if($output instanceof ConsoleOutput) {
             $this->overallProgressBar = $this->initProgressBar(new ProgressBar($this->stateSection, 2));

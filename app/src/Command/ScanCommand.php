@@ -70,7 +70,7 @@ class ScanCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output): void
     {
-        parent::execute($input, $output);
+        $this->initSections($input, $output);
 
         $silent = $input->getOption('silent');
         $path = $input->getArgument('path') ?: $this->javMediaFileLocation;
