@@ -48,13 +48,14 @@ RUN curl -sS https://xdebug.org/files/xdebug-${XDEBUGVERSION}.tgz | tar -xz -C /
     && echo "xdebug.remote_enable=on" >> /usr/local/etc/php/conf.d/xdebug.ini \
     && echo "xdebug.remote_autostart=off" >> /usr/local/etc/php/conf.d/xdebug.ini
 
+RUN apk add --no-cache --update ffmpeg xxhash
+
 FROM build AS final
 WORKDIR /var/www
 
 COPY . /var/www
 WORKDIR /var/www/app
-RUN apk add --no-cache --update ffmpeg xxhash \
-    && composer install --no-dev --optimize-autoloader --prefer-dist --no-scripts
+RUN composer install --no-dev --optimize-autoloader --prefer-dist --no-scripts
 
 # Cleanup
 RUN rm -rf /tmp/* && chmod +x /var/www/start.sh
