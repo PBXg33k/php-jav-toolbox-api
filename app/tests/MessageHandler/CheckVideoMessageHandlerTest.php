@@ -2,6 +2,7 @@
 namespace App\Tests\MessageHandler;
 
 use App\Entity\Inode;
+use App\Entity\Title;
 use App\Message\CalculateFileHashesMessage;
 use App\Message\CheckVideoMessage;
 use App\Message\GenerateThumbnailMessage;
@@ -77,7 +78,7 @@ class CheckVideoMessageHandlerTest extends TestCase
         $message = new CheckVideoMessage(1, $callback);
 
         $inode    = (new Inode());
-        $javFile  = (new JavFile())->setId(1)->setInode($inode);
+        $javFile  = (new JavFile())->setId(1)->setInode($inode)->setTitle((new Title())->setCatalognumber("ABC-123"));
         $javFile2 = clone $javFile;
         $javFile2->setInode(clone $javFile->getInode());
 
@@ -125,7 +126,7 @@ class CheckVideoMessageHandlerTest extends TestCase
         $message = new CheckVideoMessage(1, $callback);
 
         $inode    = (new Inode());
-        $javFile  = (new JavFile())->setId(1)->setInode($inode);
+        $javFile  = (new JavFile())->setId(1)->setInode($inode)->setTitle((new Title())->setCatalognumber("ABC-123"));
         $javFile2 = clone $javFile;
         $javFile2->setInode(clone $javFile->getInode());
 
@@ -162,7 +163,7 @@ class CheckVideoMessageHandlerTest extends TestCase
         $message = new CheckVideoMessage(1, $callback);
 
         $inode    = (new Inode())->setConsistent(true)->setChecked(true);
-        $javFile  = (new JavFile())->setId(1)->setInode($inode);
+        $javFile  = (new JavFile())->setId(1)->setInode($inode)->setTitle((new Title())->setCatalognumber("ABC-123"));
 
         $this->entityManager->expects($this->once())
             ->method('find')
@@ -193,7 +194,7 @@ class CheckVideoMessageHandlerTest extends TestCase
         $message = new CheckVideoMessage(1, $callback);
 
         $inode    = (new Inode())->setConsistent(false)->setChecked(true);
-        $javFile  = (new JavFile())->setId(1)->setInode($inode);
+        $javFile  = (new JavFile())->setId(1)->setInode($inode)->setTitle((new Title())->setCatalognumber("ABC-123"));
 
         $this->entityManager->expects($this->once())
             ->method('find')
