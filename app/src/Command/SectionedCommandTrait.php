@@ -4,11 +4,12 @@ namespace App\Command;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\ConsoleSectionOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 
-abstract class SectionedCommand extends Command
+trait SectionedCommandTrait
 {
     /**
      * @var ConsoleSectionOutput
@@ -27,7 +28,7 @@ abstract class SectionedCommand extends Command
      */
     protected $output;
 
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function initSections(InputInterface $input, OutputInterface $output)
     {
         $this->output = $output;
         // Set sections if $output is an instance of ConsoleOutput (which it almost always is
@@ -37,17 +38,17 @@ abstract class SectionedCommand extends Command
         }
     }
 
-    protected function updateStateMessage(string $message)
+    protected function updateStateMessage(string $message): void
     {
         $this->writeToSection($message, $this->stateSection);
     }
 
-    protected function updateProgressOutput(string $message)
+    protected function updateProgressOutput(string $message): void
     {
         $this->writeToSection($message, $this->progressSection);
     }
 
-    protected function writeToSection(string $message, ?ConsoleSectionOutput $section)
+    protected function writeToSection(string $message, ?ConsoleSectionOutput $section): void
     {
         if ($section) {
             $section->clear();

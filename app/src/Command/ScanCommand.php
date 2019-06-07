@@ -7,6 +7,7 @@ use App\Event\QualifiedVideoFileFound;
 use App\Event\VideoFileFoundEvent;
 use App\Service\FileScanService;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
@@ -15,8 +16,10 @@ use Symfony\Component\Console\Output\ConsoleSectionOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-class ScanCommand extends SectionedCommand
+class ScanCommand extends Command
 {
+    use SectionedCommandTrait;
+
     /**
      * @var FileScanService
      */
@@ -56,7 +59,7 @@ class ScanCommand extends SectionedCommand
         parent::__construct();
     }
 
-    public function configure()
+    public function configure(): void
     {
         $this
             ->setName('jav:scan')
@@ -65,9 +68,9 @@ class ScanCommand extends SectionedCommand
             ->addOption('silent', 's', InputOption::VALUE_NONE, 'Do not output anything besides errors and warnings');
     }
 
-    public function execute(InputInterface $input, OutputInterface $output)
+    public function execute(InputInterface $input, OutputInterface $output): void
     {
-        parent::execute($input, $output);
+        $this->initSections($input, $output);
 
         $silent = $input->getOption('silent');
         $path = $input->getArgument('path') ?: $this->javMediaFileLocation;
@@ -92,7 +95,7 @@ class ScanCommand extends SectionedCommand
         }
     }
 
-    private function setEventListeners(EventDispatcherInterface $eventDispatcher)
+    private function setEventListeners(EventDispatcherInterface $eventDispatcher): void
     {
         // Set event on directory.found
         $eventDispatcher->addListener(DirectoryFoundEvent::NAME, function (DirectoryFoundEvent $event) {
@@ -108,7 +111,7 @@ class ScanCommand extends SectionedCommand
         });
     }
 
-    private function updateLastMatch(string $path)
+    private function updateLastMatch(string $path): void
     {
         $this->writeToSection("Last match: {$path}", $this->lastMatchSection);
     }

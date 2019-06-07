@@ -51,6 +51,14 @@ class CheckVideoMessageHandler implements MessageHandlerInterface
     {
         /** @var JavFile $javFile */
         $javFile = $this->entityManager->find(JavFile::class, $message->getJavFileId());
+
+        if(!is_file($javFile->getPath())) {
+            $this->logger->error('FILE NOT FOUND', [
+                'title' => $javFile->getTitle()->getCatalognumber(),
+                'path'  => $javFile->getPath()
+            ]);
+            return;
+        }
         $startTime = time();
         if (!$javFile->getInode()->isChecked()) {
             $javFile = $this->mediaProcessorService->checkHealth(

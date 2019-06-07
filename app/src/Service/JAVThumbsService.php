@@ -6,6 +6,7 @@ use App\Entity\JavFile;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Exception\ProcessFailedException;
+use Symfony\Component\Process\Exception\ProcessTimedOutException;
 use Symfony\Component\Process\Process;
 
 class JAVThumbsService
@@ -175,6 +176,20 @@ class JAVThumbsService
 
             return 0 === $process->getExitCode();
         } catch (ProcessFailedException $exception) {
+            $this->logger->error($exception->getMessage(), [
+                'cmd' => $process->getCommandLine(),
+                'file' => $javFile->getPath(),
+                'exception_code' => $exception->getCode(),
+                'process_exitcode' => $exception->getProcess()->getExitCode(),
+                'process_output' => $exception->getProcess()->getOutput(),
+                'proc' => [
+                    'isTty' => $process->isTty(),
+                    'isPty' => $process->isPty(),
+                    'working_dir' => $process->getWorkingDirectory(),
+                    'env' => $process->getEnv(),
+                ],
+            ]);
+        } catch (ProcessTimedOutException $exception) {
             $this->logger->error($exception->getMessage(), [
                 'cmd' => $process->getCommandLine(),
                 'file' => $javFile->getPath(),

@@ -7,6 +7,8 @@ use App\Message\CheckVideoMessage;
 use App\Message\GenerateThumbnailMessage;
 use App\MessageHandler\CheckVideoMessageHandler;
 use App\Service\MediaProcessorService;
+use org\bovigo\vfs\vfsStream;
+use org\bovigo\vfs\vfsStreamFile;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use App\Entity\JavFile;
@@ -42,6 +44,11 @@ class CheckVideoMessageHandlerTest extends TestCase
      */
     private $handler;
 
+    /**
+     * @var vfsStreamFile
+     */
+    private $dummyFile;
+
     protected function setUp()
     {
         $this->mediaProcessorService = $this->getMockBuilder(MediaProcessorService::class)
@@ -66,6 +73,10 @@ class CheckVideoMessageHandlerTest extends TestCase
             $this->logger,
             $this->messageBus
         );
+
+
+        $root = vfsStream::setup();
+        $this->dummyFile = vfsStream::newFile('ABC-123.mp4')->at($root);
     }
 
     /**
@@ -77,7 +88,7 @@ class CheckVideoMessageHandlerTest extends TestCase
         $message = new CheckVideoMessage(1, $callback);
 
         $inode    = (new Inode());
-        $javFile  = (new JavFile())->setId(1)->setInode($inode);
+        $javFile  = (new JavFile())->setId(1)->setInode($inode)->setpath($this->dummyFile->url());
         $javFile2 = clone $javFile;
         $javFile2->setInode(clone $javFile->getInode());
 
@@ -125,7 +136,7 @@ class CheckVideoMessageHandlerTest extends TestCase
         $message = new CheckVideoMessage(1, $callback);
 
         $inode    = (new Inode());
-        $javFile  = (new JavFile())->setId(1)->setInode($inode);
+        $javFile  = (new JavFile())->setId(1)->setInode($inode)->setPath($this->dummyFile->url());
         $javFile2 = clone $javFile;
         $javFile2->setInode(clone $javFile->getInode());
 
@@ -162,7 +173,7 @@ class CheckVideoMessageHandlerTest extends TestCase
         $message = new CheckVideoMessage(1, $callback);
 
         $inode    = (new Inode())->setConsistent(true)->setChecked(true);
-        $javFile  = (new JavFile())->setId(1)->setInode($inode);
+        $javFile  = (new JavFile())->setId(1)->setInode($inode)->setPath($this->dummyFile->url());
 
         $this->entityManager->expects($this->once())
             ->method('find')
@@ -193,7 +204,7 @@ class CheckVideoMessageHandlerTest extends TestCase
         $message = new CheckVideoMessage(1, $callback);
 
         $inode    = (new Inode())->setConsistent(false)->setChecked(true);
-        $javFile  = (new JavFile())->setId(1)->setInode($inode);
+        $javFile  = (new JavFile())->setId(1)->setInode($inode)->setPath($this->dummyFile->url());
 
         $this->entityManager->expects($this->once())
             ->method('find')

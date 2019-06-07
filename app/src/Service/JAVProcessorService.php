@@ -12,6 +12,7 @@ use App\Message\GetVideoMetadataMessage;
 use App\Message\ProcessFileMessage;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Cache\CacheItemPoolInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use SplFileInfo;
@@ -79,6 +80,11 @@ class JAVProcessorService
      */
     private $messageBus;
 
+    /**
+     * @var CacheItemPoolInterface
+     */
+    private $cache;
+
     public function __construct(
         LoggerInterface $logger,
         EventDispatcherInterface $dispatcher,
@@ -86,6 +92,7 @@ class JAVProcessorService
         MediaProcessorService $mediaProcessorService,
         MessageBusInterface $messageBus,
         JAVNameMatcherService $javNameMatcherService,
+        CacheItemPoolInterface $cache,
         $javToolboxMediaThumbDirectory,
         $javToolboxMtConfigPath
     ) {
@@ -95,6 +102,7 @@ class JAVProcessorService
         $this->mediaProcessorService = $mediaProcessorService;
         $this->messageBus = $messageBus;
         $this->javNameMatcherService = $javNameMatcherService;
+        $this->cache = $cache;
 
         $this->titles = new ArrayCollection();
 
@@ -253,11 +261,28 @@ class JAVProcessorService
 
     public function extractIDFromFilename(SplFileInfo $fileInfo): Title
     {
-        return $this->javNameMatcherService->extractIDFromFileInfo($fileInfo);
+        $cacheItem = $this->cache->getItem("ID_{$this->getFileKey($fileInfo)}");
+
+        if($cacheItem->isHit()) {
+            return $cacheItem->get();
+        } else {
+            $result = $this->javNameMatcherService->extractIDFromFileInfo($fileInfo);
+            $cacheItem->set($result);
+            $cacheItem->expiresAfter(84600);
+            $this->cache->save($cacheItem);
+
+            return $result;
+        }
+
     }
 
     public function filenameContainsID(SplFileInfo $filename): bool
     {
         return $this->extractIDFromFilename($filename) instanceof Title;
+    }
+
+    private function getFileKey(SplFileInfo $fileInfo)
+    {
+        return md5("{$fileInfo->getPath()}.{$fileInfo->getSize()}");
     }
 }

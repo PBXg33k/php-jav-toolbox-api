@@ -3,7 +3,7 @@
 namespace App\Event;
 
 use SplFileInfo;
-use Symfony\Component\EventDispatcher\Event;
+use Symfony\Contracts\EventDispatcher\Event;
 
 abstract class SplFileEvent extends Event
 {

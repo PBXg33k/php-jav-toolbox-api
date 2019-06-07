@@ -42,6 +42,13 @@ class FileHashRepository extends ServiceEntityRepository
         ]);
     }
 
+    public function findUnchecked()
+    {
+        return $this->findBy([
+            'checked' => 0
+        ]);
+    }
+
 //    /**
 //     * @return FileHash[] Returns an array of FileHash objects
 //     */
