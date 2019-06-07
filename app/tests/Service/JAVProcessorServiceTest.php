@@ -89,8 +89,9 @@ class JAVProcessorServiceTest extends TestCase
         $this->javNameMatcherService    = $this->createMock(JAVNameMatcherService::class);
         $this->cache                    = $this->createMock(CacheItemPoolInterface::class);
 
-        $this->mediaRoot                = vfsStream::setup('media');
-        $this->mediaThumbRoot           = vfsStream::setup('thumb');
+        $root = vfsStream::setup();
+        $this->mediaRoot                = vfsStream::newDirectory('media')->at($root);
+        $this->mediaThumbRoot           = vfsStream::newDirectory('thumbs')->at($root);
 
         $this->service                  = new JAVProcessorService(
             $this->logger,
@@ -266,7 +267,7 @@ class JAVProcessorServiceTest extends TestCase
     {
         $title = new Title();
 
-        $filenameVariation = "[ABC-123].mp4";
+        $filenameVariation = "ABC-123 some stuff.mp4";
 
         $title
             ->setCatalognumber('ABC-123');
@@ -302,7 +303,12 @@ class JAVProcessorServiceTest extends TestCase
 
     public function testFilenameContainsID()
     {
-        $input = new \SplFileInfo($this->mediaRoot->url());
+//        $testfile = $this->createMockFile('test.mp4', LargeFileContent::withMegabytes(2), $this->mediaRoot);
+        $testfile = vfsStream::newFile('test.mp4')
+            ->withContent(LargeFileContent::withGigabytes(1))
+            ->at($this->mediaRoot);
+
+        $input = new \SplFileInfo($testfile->url());
 
         $cachItem = $this->createMock(CacheItemInterface::class);
 
