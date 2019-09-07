@@ -17,7 +17,6 @@
         "friendsofphp/php-cs-fixer": "^2.14",
         "mhor/php-mediainfo": "^4.1",
         "pbxg33k/jav-info": "dev-master",
-        "php-coveralls/php-coveralls": "^2.1",
         "sensio/framework-extra-bundle": "^5.1",
         "symfony/amqp-pack": "^1.0",
         "symfony/cache": "^4.0",
@@ -41,6 +40,7 @@
     "require-dev": {
         "mikey179/vfsstream": "2.0.x-dev",
         "roave/security-advisories": "dev-master",
+        "php-coveralls/php-coveralls": "^2.1",
         "symfony/dotenv": "^4.0",
         "symfony/maker-bundle": "^1.4",
         "symfony/phpunit-bridge": "^4.0",
