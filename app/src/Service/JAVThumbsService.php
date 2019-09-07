@@ -205,7 +205,7 @@ class JAVThumbsService
             ]);
 
             if($pid !== null && posix_getpgid($pid)) {
-                if (!posix_kill($pid)) {
+                if (!posix_kill($pid, SIGTERM) || !posix_kill($pid, SIGKILL)) {
                     throw $exception;
                 }
             }
