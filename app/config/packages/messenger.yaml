@@ -6,8 +6,8 @@ framework:
         routing:
             # Route your messages to the transports
             # 'App\Message\YourMessage': amqp
-            'App\Message\CheckVideoMessage': amqp
-            'App\Message\GenerateThumbnailMessage': amqp
-            'App\Message\GetVideoMetadataMessage': amqp
-            'App\Message\ProcessFileMessage': amqp
+            'Pbxg33k\MessagePack\Message\CheckVideoMessage': amqp
+            'Pbxg33k\MessagePack\Message\GenerateThumbnailMessage': amqp
+            'Pbxg33k\MessagePack\Message\GetVideoMetadataMessage': amqp
+            'Pbxg33k\MessagePack\Message\ProcessFileMessage': amqp
             '*': amqp

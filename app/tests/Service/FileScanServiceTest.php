@@ -1,9 +1,6 @@
 <?php
 namespace App\Tests\Service;
 
-use App\Event\DirectoryFoundEvent;
-use App\Event\FileFoundEvent;
-use App\Event\QualifiedVideoFileFound;
 use App\Event\VideoFileFoundEvent;
 use Pbxg33k\MessagePack\Message\ScanFileMessage;
 use App\Service\FileScanService;
@@ -86,7 +83,7 @@ class FileScanServiceTest extends TestCase
         $this->eventDispatcher->expects($this->exactly(1))
             ->method('dispatch')
             ->withConsecutive(
-                [$this->equalTo(VideoFileFoundEvent::NAME), $this->isInstanceOf(VideoFileFoundEvent::class)]
+                [$this->isInstanceOf(VideoFileFoundEvent::class)]
             );
 
         $this->messageBus->expects($this->once())
@@ -124,7 +121,7 @@ class FileScanServiceTest extends TestCase
         $this->eventDispatcher->expects($this->exactly(1))
             ->method('dispatch')
             ->withConsecutive(
-                [$this->equalTo(VideoFileFoundEvent::NAME), $this->isInstanceOf(VideoFileFoundEvent::class)]
+                [$this->isInstanceOf(VideoFileFoundEvent::class)]
             );
 
         $this->javProcessorService->expects($this->once())
