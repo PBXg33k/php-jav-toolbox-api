@@ -3,6 +3,7 @@
 namespace App\MessageHandler;
 
 use App\Entity\JavFile;
+use App\Repository\JavFileRepository;
 use Pbxg33k\MessagePack\Message\CheckVideoMessage;
 use Pbxg33k\MessagePack\Message\GenerateThumbnailMessage;
 use Pbxg33k\MessagePack\Message\GetVideoMetadataMessage;
@@ -48,11 +49,12 @@ class ProcessFileMessageHandler
 
     public function __invoke(ProcessFileMessage $message)
     {
-        /** @var JavFile $javFile */
-        $javFile = $this->entityManager->find(JavFile::class, $message->getJavFileId());
+        /** @var JavFileRepository $javFileRepository */
+        $javFileRepository = $this->entityManager->getRepository(JavFile::class);
+        $javFile = $javFileRepository->findOneByPath($message->getPath());
 
-        $this->messageBus->dispatch(new GetVideoMetadataMessage($javFile->getId()));
-        $this->messageBus->dispatch(new CheckVideoMessage($javFile->getId()));
-        $this->messageBus->dispatch(new GenerateThumbnailMessage($javFile->getId()));
+        $this->messageBus->dispatch(new GetVideoMetadataMessage($javFile->getPath()));
+        $this->messageBus->dispatch(new CheckVideoMessage($javFile->getPath()));
+        $this->messageBus->dispatch(new GenerateThumbnailMessage($javFile->getPath()));
     }
 }

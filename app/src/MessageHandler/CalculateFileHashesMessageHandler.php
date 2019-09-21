@@ -3,6 +3,7 @@
 namespace App\MessageHandler;
 
 use App\Entity\JavFile;
+use App\Repository\JavFileRepository;
 use Pbxg33k\MessagePack\Message\CalculateFileHashesMessage;
 use App\Service\FileHandleService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -45,8 +46,9 @@ class CalculateFileHashesMessageHandler
 
     public function __invoke(CalculateFileHashesMessage $message)
     {
-        /** @var JavFile $javFile */
-        $javFile = $this->entityManager->find(JavFile::class, $message->getJavFileId());
+        /** @var JavFileRepository $javFileRepository */
+        $javFileRepository = $this->entityManager->getRepository(JavFile::class);
+        $javFile = $javFileRepository->findOneByPath($message->getPath());
 
         if ($message->hasXxhash()) {
             $this->logger->debug('Calculating hash', [

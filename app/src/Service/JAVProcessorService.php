@@ -120,7 +120,7 @@ class JAVProcessorService
             'path' => $file->getPath(),
         ]);
 
-        $this->messageBus->dispatch(new ProcessFileMessage($file->getId()));
+        $this->messageBus->dispatch(new ProcessFileMessage($file->getPath()));
     }
 
     public function getMetadata(JavFile $file, bool $refresh = true)
@@ -130,7 +130,7 @@ class JAVProcessorService
             'refresh' => $refresh,
         ]);
 
-        $this->messageBus->dispatch(new GetVideoMetadataMessage($file->getId()));
+        $this->messageBus->dispatch(new GetVideoMetadataMessage($file->getPath()));
     }
 
     public function checkJAVFilesConsistency(Title $title, bool $force = false)
@@ -146,7 +146,7 @@ class JAVProcessorService
     public function checkVideoConsistency(JavFile $file, bool $strict = true, bool $force = false)
     {
         if (!$this->entityManager->contains($file)) {
-            $this->dispatcher->dispatch(JavFileUpdatedEvent::NAME, new JavFileUpdatedEvent($file));
+            $this->dispatcher->dispatch(new JavFileUpdatedEvent($file));
         }
 
         $this->logger->notice('Dispatching message', [
@@ -154,7 +154,7 @@ class JAVProcessorService
             'strict' => $strict,
             'force' => $force,
         ]);
-        $this->messageBus->dispatch(new CheckVideoMessage($file->getId()));
+        $this->messageBus->dispatch(new CheckVideoMessage($file->getPath()));
     }
 
     private function fileExists(SplFileInfo $fileInfo)
@@ -219,11 +219,11 @@ class JAVProcessorService
                     ]);
 
                     $title = $javTitleInfo;
-                    $this->dispatcher->dispatch(TitleUpdatedEvent::NAME, new TitleUpdatedEvent($title));
+                    $this->dispatcher->dispatch(new TitleUpdatedEvent($title));
                 }
                 $javFile->setTitle($title);
 
-                $this->dispatcher->dispatch(JavFileUpdatedEvent::NAME, new JavFileUpdatedEvent($javFile));
+                $this->dispatcher->dispatch(new JavFileUpdatedEvent($javFile));
 
                 $this->processFile($javFile);
                 $this->logger->info('STORED TITLE: '.$title->getCatalognumber());
