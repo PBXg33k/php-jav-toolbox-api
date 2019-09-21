@@ -2,10 +2,8 @@
 
 namespace App\Service;
 
-use App\Event\DirectoryFoundEvent;
-use App\Event\FileFoundEvent;
 use App\Event\VideoFileFoundEvent;
-use App\Message\ScanFileMessage;
+use Pbxg33k\MessagePack\Message\ScanFileMessage;
 use Doctrine\Common\Collections\ArrayCollection;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -103,7 +101,7 @@ class FileScanService
                 'i'    => $i,
                 'path' => $file->getPathname()
             ]);
-            $this->dispatcher->dispatch(VideoFileFoundEvent::NAME, new VideoFileFoundEvent($file));
+            $this->dispatcher->dispatch(new VideoFileFoundEvent($file));
             try {
                 $this->processFile($file);
             } catch (\Exception $exception) {

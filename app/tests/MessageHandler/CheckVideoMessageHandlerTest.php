@@ -2,9 +2,9 @@
 namespace App\Tests\MessageHandler;
 
 use App\Entity\Inode;
-use App\Message\CalculateFileHashesMessage;
-use App\Message\CheckVideoMessage;
-use App\Message\GenerateThumbnailMessage;
+use Pbxg33k\MessagePack\Message\CalculateFileHashesMessage;
+use Pbxg33k\MessagePack\Message\CheckVideoMessage;
+use Pbxg33k\MessagePack\Message\GenerateThumbnailMessage;
 use App\MessageHandler\CheckVideoMessageHandler;
 use App\Service\MediaProcessorService;
 use org\bovigo\vfs\vfsStream;

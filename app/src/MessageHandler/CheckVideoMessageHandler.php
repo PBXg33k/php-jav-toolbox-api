@@ -3,10 +3,10 @@
 namespace App\MessageHandler;
 
 use App\Entity\JavFile;
-use App\Message\CalculateFileHashesMessage;
-use App\Message\CheckVideoMessage;
+use Pbxg33k\MessagePack\Message\CalculateFileHashesMessage;
+use Pbxg33k\MessagePack\Message\CheckVideoMessage;
+use Pbxg33k\MessagePack\Message\GenerateThumbnailMessage;
 use App\Message\FooMessage;
-use App\Message\GenerateThumbnailMessage;
 use App\Service\MediaProcessorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;

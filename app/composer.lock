@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bf97d1c9a7679ea08b4ebbffb1d6c51c",
+    "content-hash": "f190f5dd4592a84fe37bfde897515605",
     "packages": [
         {
             "name": "colinodell/symfony-lts-or-current",
@@ -2481,6 +2481,46 @@
                 }
             ],
             "time": "2019-01-07T21:52:56+00:00"
+        },
+        {
+            "name": "pbxg33k/message-pack",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/PBXg33k/message-pack.git",
+                "reference": "5e3b03bba016ae2ccc12a6065312c9b12a494daa"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/PBXg33k/message-pack/zipball/5e3b03bba016ae2ccc12a6065312c9b12a494daa",
+                "reference": "5e3b03bba016ae2ccc12a6065312c9b12a494daa",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.2"
+            },
+            "require-dev": {
+                "php-coveralls/php-coveralls": "^2.1",
+                "phpunit/phpunit": "^8.3"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Pbxg33k\\MessagePack\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "LGPL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Oguzhan Uysal",
+                    "email": "development@oguzhanuysal.eu"
+                }
+            ],
+            "description": "Collection of Messages for microservices",
+            "time": "2019-09-21T08:52:34+00:00"
         },
         {
             "name": "pbxg33k/pbxg33k-traits",
@@ -7383,6 +7423,7 @@
     "stability-flags": {
         "colinodell/symfony-lts-or-current": 20,
         "pbxg33k/jav-info": 20,
+        "pbxg33k/message-pack": 20,
         "mikey179/vfsstream": 20,
         "roave/security-advisories": 20
     },

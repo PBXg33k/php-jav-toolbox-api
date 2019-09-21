@@ -3,7 +3,7 @@
 namespace App\MessageHandler;
 
 use App\Entity\JavFile;
-use App\Message\GenerateThumbnailMessage;
+use Pbxg33k\MessagePack\Message\GenerateThumbnailMessage;
 use App\Service\JAVThumbsService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;

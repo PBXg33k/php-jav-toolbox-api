@@ -3,10 +3,10 @@
 namespace App\MessageHandler;
 
 use App\Entity\JavFile;
-use App\Message\CheckVideoMessage;
-use App\Message\GenerateThumbnailMessage;
-use App\Message\GetVideoMetadataMessage;
-use App\Message\ProcessFileMessage;
+use Pbxg33k\MessagePack\Message\CheckVideoMessage;
+use Pbxg33k\MessagePack\Message\GenerateThumbnailMessage;
+use Pbxg33k\MessagePack\Message\GetVideoMetadataMessage;
+use Pbxg33k\MessagePack\Message\ProcessFileMessage;
 use App\Service\MediaProcessorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;

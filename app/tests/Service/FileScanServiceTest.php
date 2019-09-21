@@ -5,7 +5,7 @@ use App\Event\DirectoryFoundEvent;
 use App\Event\FileFoundEvent;
 use App\Event\QualifiedVideoFileFound;
 use App\Event\VideoFileFoundEvent;
-use App\Message\ScanFileMessage;
+use Pbxg33k\MessagePack\Message\ScanFileMessage;
 use App\Service\FileScanService;
 use App\Service\JAVProcessorService;
 use org\bovigo\vfs\content\LargeFileContent;

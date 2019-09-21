@@ -3,7 +3,7 @@
 namespace App\MessageHandler;
 
 use App\Entity\JavFile;
-use App\Message\GetVideoMetadataMessage;
+use Pbxg33k\MessagePack\Message\GetVideoMetadataMessage;
 use App\Service\MediaProcessorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;

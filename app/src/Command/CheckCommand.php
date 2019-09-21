@@ -2,7 +2,7 @@
 namespace App\Command;
 
 use App\Entity\JavFile;
-use App\Message\ScanFileMessage;
+use Pbxg33k\MessagePack\Message\ScanFileMessage;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;

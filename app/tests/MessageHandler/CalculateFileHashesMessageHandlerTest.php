@@ -2,7 +2,7 @@
 namespace App\Tests\MessageHandler;
 
 use App\Entity\Inode;
-use App\Message\CalculateFileHashesMessage;
+use Pbxg33k\MessagePack\Message\CalculateFileHashesMessage;
 use App\MessageHandler\CalculateFileHashesMessageHandler;
 use App\Service\FileHandleService;
 use PHPUnit\Framework\MockObject\MockObject;

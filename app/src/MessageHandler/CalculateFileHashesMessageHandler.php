@@ -3,7 +3,7 @@
 namespace App\MessageHandler;
 
 use App\Entity\JavFile;
-use App\Message\CalculateFileHashesMessage;
+use Pbxg33k\MessagePack\Message\CalculateFileHashesMessage;
 use App\Service\FileHandleService;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;

@@ -3,7 +3,7 @@
 namespace App\MessageHandler;
 
 use App\Event\QualifiedVideoFileFound;
-use App\Message\ScanFileMessage;
+use Pbxg33k\MessagePack\Message\ScanFileMessage;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 

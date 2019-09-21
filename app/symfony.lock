@@ -158,6 +158,9 @@
     "pbxg33k/jav-info": {
         "version": "dev-master"
     },
+    "pbxg33k/message-pack": {
+        "version": "dev-master"
+    },
     "pbxg33k/pbxg33k-traits": {
         "version": "1.1.1"
     },
