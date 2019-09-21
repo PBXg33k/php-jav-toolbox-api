@@ -3,6 +3,7 @@
 namespace App\MessageHandler;
 
 use App\Entity\JavFile;
+use App\Repository\JavFileRepository;
 use Pbxg33k\MessagePack\Message\CalculateFileHashesMessage;
 use Pbxg33k\MessagePack\Message\CheckVideoMessage;
 use Pbxg33k\MessagePack\Message\GenerateThumbnailMessage;
@@ -49,8 +50,9 @@ class CheckVideoMessageHandler implements MessageHandlerInterface
 
     public function __invoke(CheckVideoMessage $message)
     {
-        /** @var JavFile $javFile */
-        $javFile = $this->entityManager->find(JavFile::class, $message->getJavFileId());
+        /** @var JavFileRepository $javFileRepository */
+        $javFileRepository = $this->entityManager->getRepository(JavFile::class);
+        $javFile = $javFileRepository->findOneByPath($message->getPath());
 
         if(!is_file($javFile->getPath())) {
             $this->logger->error('FILE NOT FOUND', [
@@ -103,7 +105,7 @@ class CheckVideoMessageHandler implements MessageHandlerInterface
 
         if ($javFile->getInode()->isChecked() && $javFile->getInode()->isConsistent()) {
             $this->messageBus->dispatch(new GenerateThumbnailMessage($javFile->getId()));
-            $this->messageBus->dispatch(new CalculateFileHashesMessage($javFile->getId(), CalculateFileHashesMessage::HASH_XXHASH | CalculateFileHashesMessage::HASH_MD5));
+            $this->messageBus->dispatch(new CalculateFileHashesMessage($javFile->getPath(), CalculateFileHashesMessage::HASH_XXHASH | CalculateFileHashesMessage::HASH_MD5));
         }
     }
 }

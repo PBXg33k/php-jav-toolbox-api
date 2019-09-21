@@ -113,7 +113,7 @@ class JAVProcessorServiceTest extends TestCase
      */
     public function willDispatchMessageForProcessingFile()
     {
-        $javFile = (new JavFile())->setId(39);
+        $javFile = (new JavFile())->setPath('test');
 
         $this->logger->expects($this->once())
             ->method('info');
@@ -126,10 +126,10 @@ class JAVProcessorServiceTest extends TestCase
             ->with(
                 $this->callback(function($subject) {
                     return $this->isInstanceOf(ProcessFileMessage::class) &&
-                        $subject->getJavFileId() === 39;
+                        $subject->getPath() === 'test';
                 })
             )
-            ->willReturn(new Envelope(new ProcessFileMessage(39)));
+            ->willReturn(new Envelope(new ProcessFileMessage('test')));
 
         $this->service->processFile($javFile);
     }
@@ -139,7 +139,7 @@ class JAVProcessorServiceTest extends TestCase
      */
     public function willDispatchMessageForMetadata()
     {
-        $javFile = (new JavFile())->setId(39);
+        $javFile = (new JavFile())->setPath('test');
 
         $this->logger->expects($this->once())
             ->method('info');
@@ -152,10 +152,10 @@ class JAVProcessorServiceTest extends TestCase
             ->with(
                 $this->callback(function($subject) {
                     return $this->isInstanceOf(GetVideoMetadataMessage::class) &&
-                        $subject->getJavFileId() === 39;
+                        $subject->getPath() === 'test';
                 })
             )
-            ->willReturn(new Envelope(new GetVideoMetadataMessage(39)));
+            ->willReturn(new Envelope(new GetVideoMetadataMessage('test')));
 
 
         $this->service->processFile($javFile);
@@ -166,7 +166,7 @@ class JAVProcessorServiceTest extends TestCase
      */
     public function willDispatchMessageToCheckVideoConsistency()
     {
-        $javFile = (new JavFile())->setId(39);
+        $javFile = (new JavFile())->setPath('test');
 
         $this->entityManager->expects($this->once())
             ->method('contains')
@@ -181,10 +181,10 @@ class JAVProcessorServiceTest extends TestCase
             ->with(
                 $this->callback(function($subject) {
                     return $this->isInstanceOf(CheckVideoMessage::class) &&
-                        $subject->getJavFileId() === 39;
+                        $subject->getPath() === 'test';
                 })
             )
-            ->willReturn(new Envelope(new CheckVideoMessage(39)));
+            ->willReturn(new Envelope(new CheckVideoMessage('test')));
 
         $this->service->checkVideoConsistency($javFile);
     }
@@ -194,7 +194,7 @@ class JAVProcessorServiceTest extends TestCase
      */
     public function willPersistEntityBeforeDispatchingMessageToCheckVideoConsistency()
     {
-        $javFile = (new JavFile())->setId(39);
+        $javFile = (new JavFile())->setPath('test');
 
         $this->entityManager->expects($this->once())
             ->method('contains')
@@ -204,7 +204,6 @@ class JAVProcessorServiceTest extends TestCase
         $this->dispatcher->expects($this->once())
             ->method('dispatch')
             ->with(
-                $this->equalTo(JavFileUpdatedEvent::NAME),
                 $this->isInstanceOf(JavFileUpdatedEvent::class)
             );
 
@@ -216,10 +215,10 @@ class JAVProcessorServiceTest extends TestCase
             ->with(
                 $this->callback(function($subject) {
                     return $this->isInstanceOf(CheckVideoMessage::class) &&
-                        $subject->getJavFileId() === 39;
+                        $subject->getPath() === 'test';
                 })
             )
-            ->willReturn(new Envelope(new CheckVideoMessage(39)));
+            ->willReturn(new Envelope(new CheckVideoMessage('test')));
 
         $this->service->checkVideoConsistency($javFile);
     } 
@@ -338,17 +337,17 @@ class JAVProcessorServiceTest extends TestCase
             ->with(
                 $this->callback(function($subject) {
                     return $this->isInstanceOf(GetVideoMetadataMessage::class) &&
-                        $subject->getJavFileId() === 1;
+                        $subject->getPath() === 'test';
                 })
             )
-            ->willReturn(new Envelope(new GetVideoMetadataMessage(1)));
+            ->willReturn(new Envelope(new GetVideoMetadataMessage('test')));
 
-        $this->service->getMetadata((new JavFile())->setId(1));
+        $this->service->getMetadata((new JavFile())->setPath('test'));
     }
 
     public function testCheckVideoConsistencyPersisted()
     {
-        $javFile = (new JavFile())->setId(1);
+        $javFile = (new JavFile())->setPath('test');
 
         $this->setCheckVideoAssertions($javFile, false);
 
@@ -357,7 +356,7 @@ class JAVProcessorServiceTest extends TestCase
 
     public function testCheckVideoConsistencyNotPersisted()
     {
-        $javFile = (new JavFile())->setId(1);
+        $javFile = (new JavFile())->setPath('test');
 
         $this->setCheckVideoAssertions($javFile, true);
 
@@ -367,7 +366,7 @@ class JAVProcessorServiceTest extends TestCase
     public function testCheckJAVFilesConsistency()
     {
         $title = (new Title())
-            ->addFile((new JavFile())->setId(1)->setInode((new Inode())->setChecked(false)));
+            ->addFile((new JavFile())->setPath('test')->setInode((new Inode())->setChecked(false)));
 
         $this->setCheckVideoAssertions($title->getFiles()->first());
 
@@ -377,8 +376,8 @@ class JAVProcessorServiceTest extends TestCase
     public function testCheckMultiFileJAVFilesConsistency()
     {
         $title = (new Title())
-            ->addFile((new JavFile())->setId(1)->setInode((new Inode())->setChecked(false)))
-            ->addFile((new JavFile())->setId(2)->setInode((new Inode())->setChecked(false)));
+            ->addFile((new JavFile())->setPath('test')->setInode((new Inode())->setChecked(false)))
+            ->addFile((new JavFile())->setPath('test2')->setInode((new Inode())->setChecked(false)));
 
         $title->getFiles()->forAll(function($key, $item) {
             return $this->setCheckVideoAssertions($item, true);
@@ -398,7 +397,6 @@ class JAVProcessorServiceTest extends TestCase
             $this->dispatcher->expects($this->once())
                 ->method('dispatch')
                 ->with(
-                    $this->equalTo(JavFileUpdatedEvent::NAME),
                     $this->isInstanceOf(JavFileUpdatedEvent::class)
                 );
         }
@@ -411,10 +409,10 @@ class JAVProcessorServiceTest extends TestCase
             ->with(
                 $this->callback(function($subject) use ($javFile) {
                     return $this->isInstanceOf(CheckVideoMessage::class) &&
-                        $subject->getJavFileId() === $javFile->getId();
+                        $subject->getPath() === $javFile->getPath();
                 })
             )
-            ->willReturn(new Envelope(new CheckVideoMessage($javFile->getId())));
+            ->willReturn(new Envelope(new CheckVideoMessage($javFile->getPath())));
 
         ++$this->videoConsistencyIteration;
 

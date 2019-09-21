@@ -2,6 +2,7 @@
 namespace App\Tests\MessageHandler;
 
 use App\Entity\Inode;
+use App\Repository\JavFileRepository;
 use Pbxg33k\MessagePack\Message\CalculateFileHashesMessage;
 use App\MessageHandler\CalculateFileHashesMessageHandler;
 use App\Service\FileHandleService;
@@ -70,7 +71,7 @@ class CalculateFileHashesMessageHandlerTest extends TestCase
      */
     public function willDispatchAllMessages()
     {
-        $message = new CalculateFileHashesMessage(1, CalculateFileHashesMessage::HASH_MD5 | CalculateFileHashesMessage::HASH_SHA1 | CalculateFileHashesMessage::HASH_SHA512 | CalculateFileHashesMessage::HASH_XXHASH);
+        $message = new CalculateFileHashesMessage('test', CalculateFileHashesMessage::HASH_MD5 | CalculateFileHashesMessage::HASH_SHA1 | CalculateFileHashesMessage::HASH_SHA512 | CalculateFileHashesMessage::HASH_XXHASH);
 
         $hashResults = [
             'md5'    => 'abc',
@@ -81,9 +82,17 @@ class CalculateFileHashesMessageHandlerTest extends TestCase
         $inode   = (new Inode());
         $javFile = (new JavFile())->setInode($inode);
 
-        $this->entityManager->expects($this->once())
-            ->method('find')
+        $repoMock = $this->createMock(JavFileRepository::class);
+
+        $repoMock->expects($this->once())
+            ->method('findOneByPath')
+            ->with('test')
             ->willReturn($javFile);
+
+        $this->entityManager->expects($this->once())
+            ->method('getRepository')
+            ->with(JavFile::class)
+            ->willReturn($repoMock);
 
         $this->fileHandleService->expects($this->once())
             ->method('calculateMd5Hash')

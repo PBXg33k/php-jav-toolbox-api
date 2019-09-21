@@ -2,6 +2,7 @@
 namespace App\Tests\MessageHandler;
 
 use App\Entity\Inode;
+use App\Repository\JavFileRepository;
 use Pbxg33k\MessagePack\Message\CalculateFileHashesMessage;
 use Pbxg33k\MessagePack\Message\CheckVideoMessage;
 use Pbxg33k\MessagePack\Message\GenerateThumbnailMessage;
@@ -28,6 +29,11 @@ class CheckVideoMessageHandlerTest extends TestCase
      * @var EntityManagerInterface|MockObject
      */
     private $entityManager;
+
+    /**
+     * @var JavFileRepository
+     */
+    private $javFileRepository;
 
     /**
      * @var LoggerInterface|MockObject
@@ -67,6 +73,13 @@ class CheckVideoMessageHandlerTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $this->javFileRepository = $this->createMock(JavFileRepository::class);
+
+        $this->entityManager->expects($this->once())
+            ->method('getRepository')
+            ->with(JavFile::class)
+            ->willReturn($this->javFileRepository);
+
         $this->handler = new CheckVideoMessageHandler(
             $this->mediaProcessorService,
             $this->entityManager,
@@ -85,16 +98,16 @@ class CheckVideoMessageHandlerTest extends TestCase
     public function willCheckNewVideoFile()
     {
         $callback = function($type, $buffer) {};
-        $message = new CheckVideoMessage(1, $callback);
+        $message = new CheckVideoMessage('test', $callback);
 
         $inode    = (new Inode());
         $javFile  = (new JavFile())->setId(1)->setInode($inode)->setpath($this->dummyFile->url());
         $javFile2 = clone $javFile;
         $javFile2->setInode(clone $javFile->getInode());
 
-
-        $this->entityManager->expects($this->once())
-            ->method('find')
+        $this->javFileRepository->expects($this->once())
+            ->method('findOneByPath')
+            ->with('test')
             ->willReturn($javFile);
 
         $this->mediaProcessorService->expects($this->once())
@@ -133,16 +146,16 @@ class CheckVideoMessageHandlerTest extends TestCase
     public function willNotDispatchMessagesIfVideoNotConsistent()
     {
         $callback = function($type, $buffer) {};
-        $message = new CheckVideoMessage(1, $callback);
+        $message = new CheckVideoMessage('test', $callback);
 
         $inode    = (new Inode());
         $javFile  = (new JavFile())->setId(1)->setInode($inode)->setPath($this->dummyFile->url());
         $javFile2 = clone $javFile;
         $javFile2->setInode(clone $javFile->getInode());
 
-
-        $this->entityManager->expects($this->once())
-            ->method('find')
+        $this->javFileRepository->expects($this->once())
+            ->method('findOneByPath')
+            ->with('test')
             ->willReturn($javFile);
 
         $this->mediaProcessorService->expects($this->once())
@@ -170,13 +183,14 @@ class CheckVideoMessageHandlerTest extends TestCase
     {
 
         $callback = function($type, $buffer) {};
-        $message = new CheckVideoMessage(1, $callback);
+        $message = new CheckVideoMessage('test', $callback);
 
         $inode    = (new Inode())->setConsistent(true)->setChecked(true);
         $javFile  = (new JavFile())->setId(1)->setInode($inode)->setPath($this->dummyFile->url());
 
-        $this->entityManager->expects($this->once())
-            ->method('find')
+        $this->javFileRepository->expects($this->once())
+            ->method('findOneByPath')
+            ->with('test')
             ->willReturn($javFile);
 
         $this->mediaProcessorService->expects($this->never())
@@ -201,13 +215,14 @@ class CheckVideoMessageHandlerTest extends TestCase
     {
 
         $callback = function($type, $buffer) {};
-        $message = new CheckVideoMessage(1, $callback);
+        $message = new CheckVideoMessage('test', $callback);
 
         $inode    = (new Inode())->setConsistent(false)->setChecked(true);
-        $javFile  = (new JavFile())->setId(1)->setInode($inode)->setPath($this->dummyFile->url());
+        $javFile  = (new JavFile())->setPath('test')->setInode($inode)->setPath($this->dummyFile->url());
 
-        $this->entityManager->expects($this->once())
-            ->method('find')
+        $this->javFileRepository->expects($this->once())
+            ->method('findOneByPath')
+            ->with('test')
             ->willReturn($javFile);
 
         $this->mediaProcessorService->expects($this->never())

@@ -4,6 +4,7 @@ namespace App\Tests\MessageHandler;
 
 use App\Entity\Inode;
 use App\MessageHandler\ProcessFileMessageHandler;
+use App\Repository\JavFileRepository;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use App\Entity\JavFile;
@@ -75,13 +76,21 @@ class ProcessFileMessageHandlerTest extends TestCase
      */
     public function willDispatchAllMessages()
     {
-        $message = new ProcessFileMessage(1);
+        $message = new ProcessFileMessage('test');
         $inode   = (new Inode())->setMeta(false);
-        $javFile = (new JavFile())->setId(1)->setInode($inode);
+        $javFile = (new JavFile())->setPath('test')->setInode($inode);
+
+        $repoMock = $this->createMock(JavFileRepository::class);
+
+        $repoMock->expects($this->once())
+            ->method('findOneByPath')
+            ->with('test')
+            ->willReturn($javFile);
 
         $this->entityManager->expects($this->once())
-            ->method('find')
-            ->willReturn($javFile);
+            ->method('getRepository')
+            ->with(JavFile::class)
+            ->willReturn($repoMock);
 
         $this->messageBus->expects(self::exactly(3))
             ->method('dispatch')
