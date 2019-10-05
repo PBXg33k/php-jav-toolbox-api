@@ -2,9 +2,11 @@
 
 namespace App\MessageHandler;
 
-use App\Event\QualifiedVideoFileFound;
+use App\Event\JavFileUpdatedEvent;
+use App\Event\TitleUpdatedEvent;
+use App\Service\JAVProcessorService;
+use Doctrine\ORM\EntityManagerInterface;
 use Pbxg33k\MessagePack\Message\ScanFileMessage;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class ScanFileMessageHandler
@@ -15,20 +17,37 @@ class ScanFileMessageHandler
     private $eventDispatcher;
 
     /**
-     * @var LoggerInterface
+     * @var JAVProcessorService
      */
-    private $logger;
+    private $JAVProcessorService;
+
+    /**
+     * @var EntityManagerInterface
+     */
+    private $entityManager;
 
     public function __construct(
+        JAVProcessorService $JAVProcessorService,
         EventDispatcherInterface $eventDispatcher,
-        LoggerInterface $logger
+        EntityManagerInterface $entityManager
     ) {
+        $this->JAVProcessorService = $JAVProcessorService;
         $this->eventDispatcher = $eventDispatcher;
-        $this->logger = $logger;
+        $this->entityManager = $entityManager;
     }
 
     public function __invoke(ScanFileMessage $message)
     {
-        $this->eventDispatcher->dispatch(new QualifiedVideoFileFound($message->constructFileInfo()));
+        // Set event listeners
+        $this->eventDispatcher->addListener(TitleUpdatedEvent::NAME, function (TitleUpdatedEvent $event) {
+            $this->entityManager->merge($event->getTitle());
+        });
+
+        $this->eventDispatcher->addListener(JavFileUpdatedEvent::NAME, function (JavFileUpdatedEvent $event) {
+            $this->entityManager->merge($event->getJavFile());
+            $this->entityManager->flush();
+        });
+
+        $this->JAVProcessorService->preProcessFile(new \SplFileInfo($message->getFile()));
     }
 }
