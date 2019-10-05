@@ -8,7 +8,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use Mhor\MediaInfo\MediaInfo;
 use Mhor\MediaInfo\Type\Video;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\Filesystem\Exception\FileNotFoundException;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 
@@ -30,11 +29,6 @@ class MediaProcessorService
     private $videoInfo;
 
     /**
-     * @var JAVThumbsService
-     */
-    private $thumbService;
-
-    /**
      * @var EntityManagerInterface
      */
     private $entityManager;
@@ -46,11 +40,9 @@ class MediaProcessorService
 
     public function __construct(
         LoggerInterface $logger,
-        JAVThumbsService $thumbService,
         EntityManagerInterface $entityManager
     ) {
         $this->logger        = $logger;
-        $this->thumbService  = $thumbService;
         $this->entityManager = $entityManager;
         $this->fileSystem    = new Filesystem();
 
@@ -217,11 +209,6 @@ class MediaProcessorService
         }
 
         return $javFile;
-    }
-
-    public function generateThumbnails(JavFile $javFile): bool
-    {
-        return $this->thumbService->generateThumbs($javFile);
     }
 
     public function delete(JavFile $javFile, bool $deleteAllLinked = false, bool $dryRun = false)

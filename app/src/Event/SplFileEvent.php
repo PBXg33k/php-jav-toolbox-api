@@ -12,9 +12,13 @@ abstract class SplFileEvent extends Event
      */
     protected $file;
 
-    public function __construct(SplFileInfo $file)
+    public function __construct(string $path)
     {
-        $this->file = $file;
+        if(!is_file($path)) {
+            throw new \Exception('not a file: '.$path);
+        }
+
+        $this->file = new SplFileInfo($path);
     }
 
     /**
