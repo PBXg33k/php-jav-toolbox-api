@@ -31,7 +31,7 @@ services:
         - MEDIA_DIR=/media
         - THUMB_DIR=/media/thumbs
         - ENQUEUE_DSN=amqp://guest:guest@rabbitmq:5672
-        - MESSENGER_TRANSPORT_DSN=amqp://guest:guest@rabbitmq:5672/%2f/messages
+        - RABBITMQ_SERVER=amqp://guest:guest@rabbitmq:5673/%2f/
         - REDIS_URI=redis://redis
 
     mariadb:
