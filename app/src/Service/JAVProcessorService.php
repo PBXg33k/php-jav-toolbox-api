@@ -123,10 +123,6 @@ class JAVProcessorService
 
         // Check if file is persisted
         if(!$dbFile = $this->javFileRepository->findOneByPath($file->getPath())) {
-            $this->logger->debug('javFile not persisted. Persisting before firing message', [
-                'path' => $file->getPath()
-            ]);
-
             $this->entityManager->persist($file);
             $this->entityManager->flush();
         }
@@ -272,19 +268,7 @@ class JAVProcessorService
 
     public function extractIDFromFilename(SplFileInfo $fileInfo): Title
     {
-        $this->logger->debug('Checking cache', [
-            'key' => "ID_{$this->getFileKey($fileInfo)}",
-            'path' => $fileInfo->getPath(),
-            'realPath' => $fileInfo->getRealPath(),
-            'pathName' => $fileInfo->getPathname()
-        ]);
         $cacheItem = $this->cache->getItem("ID_{$this->getFileKey($fileInfo)}");
-
-        $this->logger->debug('Cache result', [
-            'key' => "ID_{$this->getFileKey($fileInfo)}",
-            'hit' => $cacheItem->isHit() ? 'true' : 'false',
-            'value' => $cacheItem->isHit() ? $cacheItem->get() : 'Cache item not hit'
-        ]);
 
         if($cacheItem->isHit()) {
             return $cacheItem->get();

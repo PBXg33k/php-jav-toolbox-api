@@ -92,13 +92,10 @@ class ProcessFileMessageHandlerTest extends TestCase
             ->with(JavFile::class)
             ->willReturn($repoMock);
 
-        $this->messageBus->expects(self::exactly(3))
+        $this->messageBus->expects(self::exactly(1))
             ->method('dispatch')
-            ->withConsecutive(
-                self::isInstanceOf(GetVideoMetadataMessage::class),
-                self::isInstanceOf(CheckVideoMessage::class),
-                self::isInstanceOf(GenerateThumbnailMessage::class)
-            )->willReturn(new Envelope($message));
+            ->with(self::isInstanceOf(GetVideoMetadataMessage::class))
+            ->willReturn(new Envelope($message));
 
         $handler = $this->handler;
         $handler($message);

@@ -5,6 +5,7 @@ use App\Entity\Inode;
 use App\Entity\JavFile;
 use App\Entity\Title;
 use App\Event\JavFileUpdatedEvent;
+use App\Repository\JavFileRepository;
 use Pbxg33k\MessagePack\Message\CheckVideoMessage;
 use Pbxg33k\MessagePack\Message\GetVideoMetadataMessage;
 use Pbxg33k\MessagePack\Message\ProcessFileMessage;
@@ -28,17 +29,17 @@ use Symfony\Component\Messenger\MessageBusInterface;
 class JAVProcessorServiceTest extends TestCase
 {
     /**
-     * @var MockObject
+     * @var MockObject|LoggerInterface
      */
     protected $logger;
 
     /**
-     * @var MockObject
+     * @var MockObject|EventDispatcherInterface
      */
     protected $dispatcher;
 
     /**
-     * @var MockObject
+     * @var MockObject|EntityManagerInterface
      */
     protected $entityManager;
 
@@ -53,12 +54,12 @@ class JAVProcessorServiceTest extends TestCase
     private $mediaRoot;
 
     /**
-     * @var MockObject
+     * @var MockObject|MediaProcessorService
      */
     private $mediaProcessorService;
 
     /**
-     * @var MockObject
+     * @var MockObject|MessageBusInterface
      */
     private $messageBus;
 
@@ -77,6 +78,11 @@ class JAVProcessorServiceTest extends TestCase
      */
     private $mediaThumbRoot;
 
+    /**
+     * @var MockObject|JavFileRepository
+     */
+    private $javFileRepository;
+
     private $videoConsistencyIteration = 0;
 
     public function setUp()
@@ -88,10 +94,16 @@ class JAVProcessorServiceTest extends TestCase
         $this->messageBus               = $this->createMock(MessageBusInterface::class);
         $this->javNameMatcherService    = $this->createMock(JAVNameMatcherService::class);
         $this->cache                    = $this->createMock(CacheItemPoolInterface::class);
+        $this->javFileRepository        = $this->createMock(JavFileRepository::class);
 
         $root = vfsStream::setup();
         $this->mediaRoot                = vfsStream::newDirectory('media')->at($root);
         $this->mediaThumbRoot           = vfsStream::newDirectory('thumbs')->at($root);
+
+        $this->entityManager->expects($this->once())
+            ->method('getRepository')
+            ->with(JavFile::class)
+            ->willReturn($this->javFileRepository);
 
         $this->service                  = new JAVProcessorService(
             $this->logger,
@@ -101,7 +113,6 @@ class JAVProcessorServiceTest extends TestCase
             $this->messageBus,
             $this->javNameMatcherService,
             $this->cache,
-            $this->mediaRoot->url(),
             $this->mediaThumbRoot->url()
         );
 
@@ -120,6 +131,11 @@ class JAVProcessorServiceTest extends TestCase
 
         $this->logger->expects($this->once())
             ->method('debug');
+
+        $this->javFileRepository->expects($this->once())
+            ->method('findOneByPath')
+            ->with($javFile->getPath())
+            ->willReturn(false);
 
         $this->messageBus->expects($this->once())
             ->method('dispatch')
@@ -146,6 +162,11 @@ class JAVProcessorServiceTest extends TestCase
 
         $this->logger->expects($this->once())
             ->method('debug');
+
+        $this->javFileRepository->expects($this->once())
+            ->method('findOneByPath')
+            ->with($javFile->getPath())
+            ->willReturn(false);
 
         $this->messageBus->expects($this->once())
             ->method('dispatch')
