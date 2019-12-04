@@ -7,6 +7,7 @@ framework:
             generate_thumbnail: '%env(RABBITMQ_SERVER)%generate_thumbnail'
             get_video_metadata: '%env(RABBITMQ_SERVER)%get_video_metadata'
             scan_file: '%env(RABBITMQ_SERVER)%scan_file'
+            process_file: '%env(RABBITMQ_SERVER)%process_file'
             failed: 'doctrine://default?queue_name=failed_messages'
         routing:
             # Route your messages to the transports
@@ -14,5 +15,5 @@ framework:
             'Pbxg33k\MessagePack\Message\CheckVideoMessage': check_video
             'Pbxg33k\MessagePack\Message\GenerateThumbnailMessage': generate_thumbnail
             'Pbxg33k\MessagePack\Message\GetVideoMetadataMessage': get_video_metadata
-            'Pbxg33k\MessagePack\Message\ProcessFileMessage': scan_file
+            'Pbxg33k\MessagePack\Message\ProcessFileMessage': process_file
             'Pbxg33k\MessagePack\Message\ScanFileMessage': scan_file

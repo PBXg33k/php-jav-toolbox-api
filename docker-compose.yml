@@ -46,12 +46,9 @@ services:
         - "/var/www/app/bin/console"
         - "messenger:consume"
         - "scan_file"
-        - "--memory-limit=128M"
-        - "-vv"
-    get_video_metadata:
+        - "-vvv"
+    check_video:
       build: .
-      deploy:
-        mode: global
       links:
         - mariadb
         - rabbitmq
@@ -63,15 +60,83 @@ services:
         - "./.docker/config/php/php.ini:/usr/local/etc/php/conf.d/030-custom.ini:ro"
         - "./app:/var/www/app"
         - "./media:/media"
-      env_file:
-        - .env
+      environment:
+        - APP_ENV=dev
+        - APP_DEBUG=1
+        - APP_SECRET=83512d52ee8797e6e9de2322dc781885
+        - DATABASE_URL=//appuser:userPass@mariadb:3306/app
+        - MT_CONF_FILE=/var/www/app/config/mt.json
+        - MEDIA_DIR=/media
+        - THUMB_DIR=/media/thumbs
+        - ENQUEUE_DSN=amqp://guest:guest@rabbitmq:5672
+        - RABBITMQ_SERVER=amqp://guest:guest@rabbitmq:5672/%2f/
+        - REDIS_URI=redis://redis
+      restart: always
+      command:
+        - "/var/www/app/bin/console"
+        - "messenger:consume"
+        - "check_video"
+        - "-vvv"
+    process_file:
+      build: .
+      links:
+        - mariadb
+        - rabbitmq
+      depends_on:
+        - app
+        - mariadb
+        - rabbitmq
+      volumes:
+        - "./.docker/config/php/php.ini:/usr/local/etc/php/conf.d/030-custom.ini:ro"
+        - "./app:/var/www/app"
+        - "./media:/media"
+      environment:
+        - APP_ENV=dev
+        - APP_DEBUG=1
+        - APP_SECRET=83512d52ee8797e6e9de2322dc781885
+        - DATABASE_URL=//appuser:userPass@mariadb:3306/app
+        - MT_CONF_FILE=/var/www/app/config/mt.json
+        - MEDIA_DIR=/media
+        - THUMB_DIR=/media/thumbs
+        - ENQUEUE_DSN=amqp://guest:guest@rabbitmq:5672
+        - RABBITMQ_SERVER=amqp://guest:guest@rabbitmq:5672/%2f/
+        - REDIS_URI=redis://redis
+      restart: always
+      command:
+        - "/var/www/app/bin/console"
+        - "messenger:consume"
+        - "process_file"
+        - "-vvv"
+    get_video_metadata:
+      build: .
+      links:
+        - mariadb
+        - rabbitmq
+      depends_on:
+        - app
+        - mariadb
+        - rabbitmq
+      volumes:
+        - "./.docker/config/php/php.ini:/usr/local/etc/php/conf.d/030-custom.ini:ro"
+        - "./app:/var/www/app"
+        - "./media:/media"
+      environment:
+        - APP_ENV=dev
+        - APP_DEBUG=1
+        - APP_SECRET=83512d52ee8797e6e9de2322dc781885
+        - DATABASE_URL=//appuser:userPass@mariadb:3306/app
+        - MT_CONF_FILE=/var/www/app/config/mt.json
+        - MEDIA_DIR=/media
+        - THUMB_DIR=/media/thumbs
+        - ENQUEUE_DSN=amqp://guest:guest@rabbitmq:5672
+        - RABBITMQ_SERVER=amqp://guest:guest@rabbitmq:5672/%2f/
+        - REDIS_URI=redis://redis
       restart: always
       command:
         - "/var/www/app/bin/console"
         - "messenger:consume"
         - "get_video_metadata"
-        - "--memory-limit=128M"
-        - "-vv"
+        - "-vvv"
 
     mariadb:
       image: mariadb

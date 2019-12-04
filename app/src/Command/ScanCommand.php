@@ -97,6 +97,8 @@ class ScanCommand extends Command
 
     private function setEventListeners(EventDispatcherInterface $eventDispatcher): void
     {
+        $this->logger->debug('setting up event listeners');
+
         // Set event on directory.found
         $eventDispatcher->addListener(DirectoryFoundEvent::NAME, function (DirectoryFoundEvent $event) {
             $this->updateProgressOutput("Scanning directory: {$event->getFile()->getPathname()}");
