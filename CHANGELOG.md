@@ -10,13 +10,29 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Redis backend adapter
 - `jav:check` command
   - Lookups inodes in database which are unprocessed and creates jobs without the need to run `jav:scan`
+- `jav:metadata` command
+  - Gets metadata for a single file by path or id
 - Kill thumbnail process on timeout
   - Added explicit timeout check and attempt to send a SIGKILL signal to forked process
+- Failed message handler. Failed messages are stored in the database
+  - Only for messages dispatched by host. Working on logic for storing failed messages by handlers
   
 ### Changed
 - Refactored commands
   - Command use `traits` for common logic instead of extending each other
+- Splitted consumers
+  - Consumers are now separate projects and are self contained docker images
+- Moved heavy docker build lines to a base image which is shared with consumer images
 - Fixed several issues where a missing file could cause a crash
+- Split message queues based on message type
+- Changed handlers to use file paths instead of ID in preparation of separating consumers
+- Changed `ScanFileMessageHandler` to dispatch events and pre-process videofiles
+- Resolved deprecation messages for symfony 4 compatibility
+
+### Removed
+- Generate thumbnail message handler
+- MT config file and all references
+- JAVThumbService
 
 ## [0.1.4] - 2019-03-09
 ### Added
