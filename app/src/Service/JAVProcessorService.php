@@ -122,7 +122,7 @@ class JAVProcessorService
         ]);
 
         // Check if file is persisted
-        if(!$dbFile = $this->javFileRepository->findOneByPath($file->getPath())) {
+        if(!$this->javFileRepository->findOneByPath($file->getPath())) {
             $this->entityManager->persist($file);
             $this->entityManager->flush();
         }

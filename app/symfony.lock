@@ -164,6 +164,9 @@
     "pbxg33k/php-info-base": {
         "version": "v1.0.4"
     },
+    "php": {
+        "version": "7.3"
+    },
     "php-amqplib/php-amqplib": {
         "version": "v2.8.0"
     },
