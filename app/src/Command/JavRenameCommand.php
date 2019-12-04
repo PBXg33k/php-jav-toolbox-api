@@ -24,12 +24,10 @@ class JavRenameCommand extends ContainerAwareCommand
      */
     protected $logger;
 
-    public function __construct(?string $name = null, FileScanService $fileScanService, LoggerInterface $logger)
+    public function __construct(FileScanService $fileScanService, LoggerInterface $logger)
     {
         $this->fileScanService = $fileScanService;
         $this->logger = $logger;
-
-        parent::__construct($name);
     }
 
     protected function configure()

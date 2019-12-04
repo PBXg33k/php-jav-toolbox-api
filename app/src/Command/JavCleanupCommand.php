@@ -135,8 +135,7 @@ class JavCleanupCommand extends Command
                 $this->cache->save($brokenTitlesCache);
             }
 
-            $brokenFileCount = 0;
-            $brokenFileCount = array_sum(array_map(function(Title $title) use ($brokenFileCount) {
+            $brokenFileCount = array_sum(array_map(function(Title $title) {
                 return count($title->getFiles());
             }, $brokenTitles));
 
@@ -147,9 +146,9 @@ class JavCleanupCommand extends Command
                 /** @var Title $title */
                 foreach ($brokenTitles as $title) {
                     $this->updateProgressBarWithMessage($this->stepProgressBar, sprintf('%d/%d Processing %s', $i, $brokenFileCount, $title->getCatalognumber()));
-                    foreach ($title->getFiles() as $file) {
+                    $title->getFiles()->forAll(function(){
                         $this->stepProgressBar->advance();
-                    }
+                    });
                     ++$i;
                 }
 
@@ -175,57 +174,59 @@ class JavCleanupCommand extends Command
         $this->stepProgressBar->start();
         foreach ($titles as $brokenTitle) {
             foreach ($brokenTitle->getFiles() as $javFile) {
-                $this->updateProgressBarWithMessage($this->stepProgressBar, "Processing {$javFile->getFilename()}");
-                if($javFile->getInode()->isConsistent()) {
-                    continue;
-                }
+                $this->handleFile($javFile, $brokenTitle, $io);
+            }
+        }
+    }
 
-                if(!$this->fileSystem->exists($javFile->getPath())) {
-                    $this->logger->debug('File already deleted', [
+    private function handleFile(JavFile $javFile, Title $brokenTitle, SymfonyStyle $io) {
+
+        $this->updateProgressBarWithMessage($this->stepProgressBar, "Processing {$javFile->getFilename()}");
+        if($javFile->getInode()->isConsistent()) {
+            return;
+        }
+
+        if(!$this->fileSystem->exists($javFile->getPath())) {
+            $this->logger->debug('File already deleted', [
+                'path' => $javFile->getPath()
+            ]);
+            $this->mediaProcessorService->delete($javFile);
+            return;
+        }
+
+        $this->logger->debug('Checking title consistency', [
+            'Title' => $brokenTitle->getCatalognumber(),
+            'File'  => $javFile->getFilename()
+        ]);
+        $javFile = $this->checkFileConsistency($javFile);
+        $this->logger->debug('CHECKING RESULT', [
+            'path' => $javFile->getPath(),
+            'consistent' => $javFile->getInode()->isConsistent()
+        ]);
+
+        if($javFile->getInode()->isConsistent()) {
+            $this->entityManager->merge($javFile->getInode());
+            $this->entityManager->flush();
+            $this->logger->debug('FFMPEG CHECK PASSED');
+        } else {
+            if(!$this->dryRun) {
+                $delete = $this->confirmed ?
+                    $io->confirm(
+                        sprintf('%s did not pass ffmpeg test. Delete file?',$brokenTitle->getFiles()->first()->getFilename()),
+                        true
+                    ) : true;
+
+                if ($delete) {
+                    $this->logger->debug('DELETING FILE', [
+                        'inode' => $javFile->getInode()->getId(),
                         'path' => $javFile->getPath()
                     ]);
-                    $this->mediaProcessorService->delete($javFile);
-                    continue;
+                    $this->mediaProcessorService->delete($javFile, true, $this->dryRun);
                 }
-
-                $this->logger->debug('Checking title consistency', [
-                    'Title' => $brokenTitle->getCatalognumber(),
-                    'File'  => $javFile->getFilename()
+            } else {
+                $this->logger->notice('DRYRUN: FILE DELETE TRIGGER', [
+                    'path' => $javFile->getPath()
                 ]);
-                $javFile = $this->checkFileConsistency($javFile);
-                $this->logger->debug('CHECKING RESULT', [
-                    'path' => $javFile->getPath(),
-                    'consistent' => $javFile->getInode()->isConsistent()
-                ]);
-
-                if($javFile->getInode()->isConsistent()) {
-                    $this->entityManager->merge($javFile->getInode());
-                    $this->entityManager->flush();
-                    $this->logger->debug('FFMPEG CHECK PASSED');
-                } else {
-                    if(!$this->dryRun) {
-                        if(!$this->confirmed) {
-                            $delete = $io->confirm(sprintf(
-                                '%s did not pass ffmpeg test. Delete file?',
-                                $brokenTitle->getFiles()->first()->getFilename()
-                            ), true);
-                        } else {
-                            $delete = true;
-                        }
-
-                        if ($delete) {
-                            $this->logger->debug('DELETING FILE', [
-                                'inode' => $javFile->getInode()->getId(),
-                                'path' => $javFile->getPath()
-                            ]);
-                            $this->mediaProcessorService->delete($javFile, true, $this->dryRun);
-                        }
-                    } else {
-                        $this->logger->notice('DRYRUN: FILE DELETE TRIGGER', [
-                            'path' => $javFile->getPath()
-                        ]);
-                    }
-                }
             }
         }
     }
