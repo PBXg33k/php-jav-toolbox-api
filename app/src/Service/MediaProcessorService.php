@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\JavFile;
+use App\Exception\MediaException;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Mhor\MediaInfo\MediaInfo;
@@ -173,7 +174,7 @@ class MediaProcessorService
             $inode->setMeta(json_encode($meta));
         } else {
             // @todo replace exception type
-            throw new \Exception('Unable to load video metadata');
+            throw new MediaException('Unable to load video metadata');
         }
 
         /** @var Video $vinfo */
