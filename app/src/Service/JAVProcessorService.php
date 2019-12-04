@@ -62,11 +62,6 @@ class JAVProcessorService
     private $thumbnailDirectory;
 
     /**
-     * @var string
-     */
-    private $mtConfigPath;
-
-    /**
      * @var MediaProcessorService
      */
     private $mediaProcessorService;
@@ -99,8 +94,7 @@ class JAVProcessorService
         MessageBusInterface $messageBus,
         JAVNameMatcherService $javNameMatcherService,
         CacheItemPoolInterface $cache,
-        $javToolboxMediaThumbDirectory,
-        $javToolboxMtConfigPath
+        $javToolboxMediaThumbDirectory
     ) {
         $this->logger = $logger;
         $this->dispatcher = $dispatcher;
@@ -113,7 +107,6 @@ class JAVProcessorService
         $this->titles = new ArrayCollection();
 
         $this->thumbnailDirectory = $javToolboxMediaThumbDirectory;
-        $this->mtConfigPath = $javToolboxMtConfigPath;
 
         $this->javFileRepository = $this->entityManager->getRepository(JavFile::class);
     }
@@ -279,7 +272,19 @@ class JAVProcessorService
 
     public function extractIDFromFilename(SplFileInfo $fileInfo): Title
     {
+        $this->logger->debug('Checking cache', [
+            'key' => "ID_{$this->getFileKey($fileInfo)}",
+            'path' => $fileInfo->getPath(),
+            'realPath' => $fileInfo->getRealPath(),
+            'pathName' => $fileInfo->getPathname()
+        ]);
         $cacheItem = $this->cache->getItem("ID_{$this->getFileKey($fileInfo)}");
+
+        $this->logger->debug('Cache result', [
+            'key' => "ID_{$this->getFileKey($fileInfo)}",
+            'hit' => $cacheItem->isHit() ? 'true' : 'false',
+            'value' => $cacheItem->isHit() ? $cacheItem->get() : 'Cache item not hit'
+        ]);
 
         if($cacheItem->isHit()) {
             return $cacheItem->get();

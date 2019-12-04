@@ -2,7 +2,6 @@
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
     jav_media_file_location: '%env(resolve:MEDIA_DIR)%'
-    mt_config_path: '%env(resolve:MT_CONF_FILE)%'
     jav_media_thumb_directory: '%env(resolve:THUMB_DIR)%'
     redis_uri: '%env(resolve:REDIS_URI)%'
 
@@ -16,7 +15,6 @@ services:
                             # The best practice is to be explicit about your dependencies anyway.
         bind:
 #            $javToolboxMediaFileLocation: '%jav_media_file_location%'
-            $javToolboxMtConfigPath: '%mt_config_path%'
             $javToolboxMediaThumbDirectory: '%jav_media_thumb_directory%'
             $javMediaFileLocation: '%jav_media_file_location%'
 
