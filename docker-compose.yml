@@ -17,6 +17,7 @@ services:
         - rabbitmq
       depends_on:
         - mariadb
+        - redis
         - rabbitmq
       volumes:
         - "./.docker/config/php/php.ini:/usr/local/etc/php/conf.d/030-custom.ini:ro"
@@ -33,6 +34,7 @@ services:
         - rabbitmq
       depends_on:
         - app
+        - redis
         - mariadb
         - rabbitmq
       volumes:
@@ -54,6 +56,7 @@ services:
         - rabbitmq
       depends_on:
         - app
+        - redis
         - mariadb
         - rabbitmq
       volumes:
@@ -75,6 +78,7 @@ services:
         - rabbitmq
       depends_on:
         - app
+        - redis
         - mariadb
         - rabbitmq
       volumes:
@@ -96,6 +100,7 @@ services:
         - rabbitmq
       depends_on:
         - app
+        - redis
         - mariadb
         - rabbitmq
       volumes:
@@ -110,6 +115,23 @@ services:
         - "messenger:consume"
         - "get_video_metadata"
         - "-vvv"
+    consumer_thumbnail:
+      image: pbxg33k/consumer-php-thumbnails
+      links:
+        - mariadb
+        - rabbitmq
+      depends_on:
+        - app
+        - redis
+        - mariadb
+        - rabbitmq
+      volumes:
+        - "./media:/media"
+      env_file:
+        - .env
+      restart: always
+      environment:
+        MESSENGER_TRANSPORT_DSN: amqp://guest:guest@rabbitmq:5672/%2f/generate_thumbnail
 
     mariadb:
       image: mariadb
