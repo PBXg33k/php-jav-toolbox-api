@@ -7,6 +7,7 @@ use App\Entity\Title;
 use App\Entity\JavFile;
 use App\Event\JavFileUpdatedEvent;
 use App\Event\TitleUpdatedEvent;
+use App\Repository\JavFileRepository;
 use Pbxg33k\MessagePack\Message\CheckVideoMessage;
 use Pbxg33k\MessagePack\Message\GetVideoMetadataMessage;
 use Pbxg33k\MessagePack\Message\ProcessFileMessage;
@@ -85,6 +86,11 @@ class JAVProcessorService
      */
     private $cache;
 
+    /**
+     * @var JavFileRepository
+     */
+    private $javFileRepository;
+
     public function __construct(
         LoggerInterface $logger,
         EventDispatcherInterface $dispatcher,
@@ -108,6 +114,8 @@ class JAVProcessorService
 
         $this->thumbnailDirectory = $javToolboxMediaThumbDirectory;
         $this->mtConfigPath = $javToolboxMtConfigPath;
+
+        $this->javFileRepository = $this->entityManager->getRepository(JavFile::class);
     }
 
     public function processFile(JavFile $file)
@@ -119,6 +127,16 @@ class JAVProcessorService
             'id' => $file->getId(),
             'path' => $file->getPath(),
         ]);
+
+        // Check if file is persisted
+        if(!$dbFile = $this->javFileRepository->findOneByPath($file->getPath())) {
+            $this->logger->debug('javFile not persisted. Persisting before firing message', [
+                'path' => $file->getPath()
+            ]);
+
+            $this->entityManager->persist($file);
+            $this->entityManager->flush();
+        }
 
         $this->messageBus->dispatch(new ProcessFileMessage($file->getPath()));
     }
@@ -160,7 +178,7 @@ class JAVProcessorService
     private function fileExists(SplFileInfo $fileInfo)
     {
         if ($this->entityManager->getRepository(Inode::class)->exists($fileInfo->getInode())) {
-            return (bool) $this->entityManager->getRepository(JavFile::class)->findOneByFileInfo($fileInfo);
+            return (bool) $this->javFileRepository->findOneByFileInfo($fileInfo);
         }
 
         return false;
@@ -178,7 +196,7 @@ class JAVProcessorService
                 'path' => $file->getPathname(),
             ]);
 
-            $this->processFile($this->entityManager->getRepository(JavFile::class)->findOneByFileInfo($file));
+            $this->processFile($this->javFileRepository->findOneByFileInfo($file));
         } else {
             $javTitleInfo = $this->extractIDFromFilename($file);
 

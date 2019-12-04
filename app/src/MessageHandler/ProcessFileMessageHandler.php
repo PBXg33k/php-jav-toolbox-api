@@ -49,12 +49,14 @@ class ProcessFileMessageHandler
 
     public function __invoke(ProcessFileMessage $message)
     {
+        $this->logger->debug('ProcessFileMessageHandler triggered', [
+            'path' => $message->getPath()
+        ]);
+
         /** @var JavFileRepository $javFileRepository */
         $javFileRepository = $this->entityManager->getRepository(JavFile::class);
         $javFile = $javFileRepository->findOneByPath($message->getPath());
 
         $this->messageBus->dispatch(new GetVideoMetadataMessage($javFile->getPath()));
-        $this->messageBus->dispatch(new CheckVideoMessage($javFile->getPath()));
-        $this->messageBus->dispatch(new GenerateThumbnailMessage($javFile->getPath()));
     }
 }
