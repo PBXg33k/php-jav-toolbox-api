@@ -2,7 +2,7 @@
 <coverage generated="1575496449">
   <project timestamp="1575496449">
     <package name="App\Command">
-      <file name="/var/www/app/src/Command/CheckCommand.php">
+      <file name="app/src/Command/CheckCommand.php">
         <class name="App\Command\CheckCommand" namespace="App\Command">
           <metrics complexity="7" methods="3" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="33" coveredstatements="0" elements="36" coveredelements="0"/>
         </class>
@@ -44,7 +44,7 @@
         <line num="90" type="stmt" count="0"/>
         <metrics loc="90" ncloc="74" classes="1" methods="3" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="33" coveredstatements="0" elements="36" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/Command/JavCleanupCommand.php">
+      <file name="app/src/Command/JavCleanupCommand.php">
         <class name="App\Command\JavCleanupCommand" namespace="App\Command">
           <metrics complexity="34" methods="7" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="148" coveredstatements="0" elements="155" coveredelements="0"/>
         </class>
@@ -227,7 +227,7 @@
         <line num="295" type="stmt" count="0"/>
         <metrics loc="296" ncloc="253" classes="1" methods="7" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="170" coveredstatements="0" elements="177" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/Command/JavCreateHashCommand.php">
+      <file name="app/src/Command/JavCreateHashCommand.php">
         <class name="App\Command\JavCreateHashCommand" namespace="App\Command">
           <metrics complexity="11" methods="4" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="53" coveredstatements="0" elements="57" coveredelements="0"/>
         </class>
@@ -290,7 +290,7 @@
         <line num="107" type="stmt" count="0"/>
         <metrics loc="108" ncloc="93" classes="1" methods="4" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="53" coveredstatements="0" elements="57" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/Command/JavMetadataCommand.php">
+      <file name="app/src/Command/JavMetadataCommand.php">
         <class name="App\Command\JavMetadataCommand" namespace="App\Command">
           <metrics complexity="8" methods="3" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="34" coveredstatements="0" elements="37" coveredelements="0"/>
         </class>
@@ -333,7 +333,7 @@
         <line num="76" type="stmt" count="0"/>
         <metrics loc="77" ncloc="71" classes="1" methods="3" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="34" coveredstatements="0" elements="37" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/Command/JavProcessFileCommand.php">
+      <file name="app/src/Command/JavProcessFileCommand.php">
         <class name="App\Command\JavProcessFileCommand" namespace="App\Command">
           <metrics complexity="11" methods="4" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="53" coveredstatements="0" elements="57" coveredelements="0"/>
         </class>
@@ -396,7 +396,7 @@
         <line num="115" type="stmt" count="0"/>
         <metrics loc="116" ncloc="97" classes="1" methods="4" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="53" coveredstatements="0" elements="57" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/Command/JavRenameCommand.php">
+      <file name="app/src/Command/JavRenameCommand.php">
         <class name="App\Command\JavRenameCommand" namespace="App\Command">
           <metrics complexity="7" methods="3" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="24" coveredstatements="0" elements="27" coveredelements="0"/>
         </class>
@@ -429,7 +429,7 @@
         <line num="60" type="stmt" count="0"/>
         <metrics loc="61" ncloc="55" classes="1" methods="3" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="24" coveredstatements="0" elements="27" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/Command/ProgressBarCommandTrait.php">
+      <file name="app/src/Command/ProgressBarCommandTrait.php">
         <class name="ProgressBarCommandTrait" namespace="App\Command">
           <metrics complexity="2" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="11" coveredstatements="0" elements="13" coveredelements="0"/>
         </class>
@@ -448,7 +448,7 @@
         <line num="22" type="stmt" count="0"/>
         <metrics loc="22" ncloc="22" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="11" coveredstatements="0" elements="13" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/Command/ScanCommand.php">
+      <file name="app/src/Command/ScanCommand.php">
         <class name="App\Command\ScanCommand" namespace="App\Command">
           <metrics complexity="12" methods="8" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="48" coveredstatements="0" elements="56" coveredelements="0"/>
         </class>
@@ -511,7 +511,7 @@
         <line num="119" type="stmt" count="0"/>
         <metrics loc="120" ncloc="103" classes="1" methods="8" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="49" coveredstatements="0" elements="57" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/Command/SectionedCommandTrait.php">
+      <file name="app/src/Command/SectionedCommandTrait.php">
         <class name="SectionedCommandTrait" namespace="App\Command">
           <metrics complexity="7" methods="4" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="21" coveredstatements="0" elements="25" coveredelements="0"/>
         </class>
@@ -542,7 +542,7 @@
         <line num="59" type="stmt" count="0"/>
         <metrics loc="60" ncloc="47" classes="1" methods="4" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="21" coveredstatements="0" elements="25" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/Command/TestCommand.php">
+      <file name="app/src/Command/TestCommand.php">
         <class name="App\Command\TestCommand" namespace="App\Command">
           <metrics complexity="9" methods="4" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="25" coveredstatements="0" elements="29" coveredelements="0"/>
         </class>
@@ -603,7 +603,7 @@
       </file>
     </package>
     <package name="App\Controller">
-      <file name="/var/www/app/src/Controller/MediaController.php">
+      <file name="app/src/Controller/MediaController.php">
         <class name="App\Controller\MediaController" namespace="App\Controller">
           <metrics complexity="4" methods="3" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="17" coveredstatements="0" elements="20" coveredelements="0"/>
         </class>
@@ -629,7 +629,7 @@
         <line num="47" type="stmt" count="0"/>
         <metrics loc="48" ncloc="39" classes="1" methods="3" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="17" coveredstatements="0" elements="20" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/Controller/ScanController.php">
+      <file name="app/src/Controller/ScanController.php">
         <class name="App\Controller\ScanController" namespace="App\Controller">
           <metrics complexity="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="0" elements="7" coveredelements="0"/>
         </class>
@@ -642,7 +642,7 @@
         <line num="19" type="stmt" count="0"/>
         <metrics loc="20" ncloc="17" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="0" elements="7" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/Controller/ThumbnailController.php">
+      <file name="app/src/Controller/ThumbnailController.php">
         <class name="App\Controller\ThumbnailController" namespace="App\Controller">
           <metrics complexity="7" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="34" coveredstatements="0" elements="36" coveredelements="0"/>
         </class>
@@ -684,7 +684,7 @@
         <line num="85" type="stmt" count="0"/>
         <metrics loc="86" ncloc="66" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="34" coveredstatements="0" elements="36" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/Controller/TitleController.php">
+      <file name="app/src/Controller/TitleController.php">
         <class name="App\Controller\TitleController" namespace="App\Controller">
           <metrics complexity="10" methods="5" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="41" coveredstatements="0" elements="46" coveredelements="0"/>
         </class>
@@ -738,7 +738,7 @@
       </file>
     </package>
     <package name="App\Entity">
-      <file name="/var/www/app/src/Entity/Company.php">
+      <file name="app/src/Entity/Company.php">
         <class name="App\Entity\Company" namespace="App\Entity">
           <metrics complexity="4" methods="3" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="10" coveredstatements="0" elements="13" coveredelements="0"/>
         </class>
@@ -757,7 +757,7 @@
         <line num="39" type="stmt" count="0"/>
         <metrics loc="40" ncloc="29" classes="1" methods="3" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="10" coveredstatements="0" elements="13" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/Entity/CompanyRole.php">
+      <file name="app/src/Entity/CompanyRole.php">
         <class name="App\Entity\CompanyRole" namespace="App\Entity">
           <metrics complexity="4" methods="3" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="10" coveredstatements="0" elements="13" coveredelements="0"/>
         </class>
@@ -776,7 +776,7 @@
         <line num="39" type="stmt" count="0"/>
         <metrics loc="40" ncloc="29" classes="1" methods="3" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="10" coveredstatements="0" elements="13" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/Entity/Image.php">
+      <file name="app/src/Entity/Image.php">
         <class name="App\Entity\Image" namespace="App\Entity">
           <metrics complexity="13" methods="9" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="35" coveredstatements="0" elements="44" coveredelements="0"/>
         </class>
@@ -826,7 +826,7 @@
         <line num="94" type="stmt" count="0"/>
         <metrics loc="95" ncloc="75" classes="1" methods="9" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="35" coveredstatements="0" elements="44" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/Entity/Inode.php">
+      <file name="app/src/Entity/Inode.php">
         <class name="App\Entity\Inode" namespace="App\Entity">
           <metrics complexity="53" methods="36" coveredmethods="9" conditionals="0" coveredconditionals="0" statements="60" coveredstatements="16" elements="96" coveredelements="25"/>
         </class>
@@ -928,7 +928,7 @@
         <line num="423" type="stmt" count="0"/>
         <metrics loc="425" ncloc="267" classes="1" methods="36" coveredmethods="9" conditionals="0" coveredconditionals="0" statements="60" coveredstatements="16" elements="96" coveredelements="25"/>
       </file>
-      <file name="/var/www/app/src/Entity/JavFile.php">
+      <file name="app/src/Entity/JavFile.php">
         <class name="App\Entity\JavFile" namespace="App\Entity">
           <metrics complexity="19" methods="12" coveredmethods="11" conditionals="0" coveredconditionals="0" statements="20" coveredstatements="19" elements="32" coveredelements="30"/>
         </class>
@@ -966,7 +966,7 @@
         <line num="123" type="stmt" count="9"/>
         <metrics loc="125" ncloc="95" classes="1" methods="12" coveredmethods="11" conditionals="0" coveredconditionals="0" statements="20" coveredstatements="19" elements="32" coveredelements="30"/>
       </file>
-      <file name="/var/www/app/src/Entity/Model.php">
+      <file name="app/src/Entity/Model.php">
         <class name="App\Entity\Model" namespace="App\Entity">
           <metrics complexity="20" methods="13" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="61" coveredstatements="0" elements="74" coveredelements="0"/>
         </class>
@@ -1046,7 +1046,7 @@
         <line num="147" type="stmt" count="0"/>
         <metrics loc="148" ncloc="114" classes="1" methods="13" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="61" coveredstatements="0" elements="74" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/Entity/ModelAlias.php">
+      <file name="app/src/Entity/ModelAlias.php">
         <class name="App\Entity\ModelAlias" namespace="App\Entity">
           <metrics complexity="11" methods="7" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="24" coveredstatements="0" elements="31" coveredelements="0"/>
         </class>
@@ -1083,7 +1083,7 @@
         <line num="73" type="stmt" count="0"/>
         <metrics loc="74" ncloc="57" classes="1" methods="7" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="24" coveredstatements="0" elements="31" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/Entity/Tag.php">
+      <file name="app/src/Entity/Tag.php">
         <class name="App\Entity\Tag" namespace="App\Entity">
           <metrics complexity="4" methods="3" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="10" coveredstatements="0" elements="13" coveredelements="0"/>
         </class>
@@ -1102,7 +1102,7 @@
         <line num="39" type="stmt" count="0"/>
         <metrics loc="40" ncloc="29" classes="1" methods="3" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="10" coveredstatements="0" elements="13" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/Entity/Title.php">
+      <file name="app/src/Entity/Title.php">
         <class name="App\Entity\Title" namespace="App\Entity">
           <metrics complexity="26" methods="16" coveredmethods="5" conditionals="0" coveredconditionals="0" statements="33" coveredstatements="11" elements="49" coveredelements="16"/>
         </class>
@@ -1162,13 +1162,13 @@
       </file>
     </package>
     <package name="App\Event">
-      <file name="/var/www/app/src/Event/DirectoryFoundEvent.php">
+      <file name="app/src/Event/DirectoryFoundEvent.php">
         <class name="App\Event\DirectoryFoundEvent" namespace="App\Event">
           <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
         </class>
         <metrics loc="8" ncloc="8" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/Event/DuplicateTitleFoundEvent.php">
+      <file name="app/src/Event/DuplicateTitleFoundEvent.php">
         <class name="App\Event\DuplicateTitleFoundEvent" namespace="App\Event">
           <metrics complexity="3" methods="3" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="10" coveredstatements="0" elements="13" coveredelements="0"/>
         </class>
@@ -1187,7 +1187,7 @@
         <line num="48" type="stmt" count="0"/>
         <metrics loc="49" ncloc="31" classes="1" methods="3" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="10" coveredstatements="0" elements="13" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/Event/EntityUpdatedEvent.php">
+      <file name="app/src/Event/EntityUpdatedEvent.php">
         <class name="App\Event\EntityUpdatedEvent" namespace="App\Event">
           <metrics complexity="2" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="0" elements="8" coveredelements="0"/>
         </class>
@@ -1201,13 +1201,13 @@
         <line num="27" type="stmt" count="0"/>
         <metrics loc="28" ncloc="22" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="0" elements="8" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/Event/FileFoundEvent.php">
+      <file name="app/src/Event/FileFoundEvent.php">
         <class name="App\Event\FileFoundEvent" namespace="App\Event">
           <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
         </class>
         <metrics loc="8" ncloc="8" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/Event/JAVTitlePreProcessedEvent.php">
+      <file name="app/src/Event/JAVTitlePreProcessedEvent.php">
         <class name="App\Event\JAVTitlePreProcessedEvent" namespace="App\Event">
           <metrics complexity="3" methods="3" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="10" coveredstatements="0" elements="13" coveredelements="0"/>
         </class>
@@ -1226,7 +1226,7 @@
         <line num="43" type="stmt" count="0"/>
         <metrics loc="44" ncloc="32" classes="1" methods="3" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="10" coveredstatements="0" elements="13" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/Event/JavFileUpdatedEvent.php">
+      <file name="app/src/Event/JavFileUpdatedEvent.php">
         <class name="App\Event\JavFileUpdatedEvent" namespace="App\Event">
           <metrics complexity="2" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="2" elements="5" coveredelements="3"/>
         </class>
@@ -1237,13 +1237,13 @@
         <line num="27" type="stmt" count="0"/>
         <metrics loc="29" ncloc="23" classes="1" methods="2" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="2" elements="5" coveredelements="3"/>
       </file>
-      <file name="/var/www/app/src/Event/QualifiedVideoFileFound.php">
+      <file name="app/src/Event/QualifiedVideoFileFound.php">
         <class name="App\Event\QualifiedVideoFileFound" namespace="App\Event">
           <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
         </class>
         <metrics loc="14" ncloc="8" classes="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/Event/SplFileEvent.php">
+      <file name="app/src/Event/SplFileEvent.php">
         <class name="App\Event\SplFileEvent" namespace="App\Event">
           <metrics complexity="3" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="3" elements="7" coveredelements="3"/>
         </class>
@@ -1256,7 +1256,7 @@
         <line num="29" type="stmt" count="0"/>
         <metrics loc="31" ncloc="25" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="3" elements="7" coveredelements="3"/>
       </file>
-      <file name="/var/www/app/src/Event/TitleUpdatedEvent.php">
+      <file name="app/src/Event/TitleUpdatedEvent.php">
         <class name="App\Event\TitleUpdatedEvent" namespace="App\Event">
           <metrics complexity="2" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="0" elements="8" coveredelements="0"/>
         </class>
@@ -1270,7 +1270,7 @@
         <line num="28" type="stmt" count="0"/>
         <metrics loc="29" ncloc="23" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="0" elements="8" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/Event/VideoFileFoundEvent.php">
+      <file name="app/src/Event/VideoFileFoundEvent.php">
         <class name="App\Event\VideoFileFoundEvent" namespace="App\Event">
           <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
         </class>
@@ -1278,7 +1278,7 @@
       </file>
     </package>
     <package name="App\Exception">
-      <file name="/var/www/app/src/Exception/JavIDExtractionException.php">
+      <file name="app/src/Exception/JavIDExtractionException.php">
         <class name="App\Exception\JavIDExtractionException" namespace="App\Exception">
           <metrics complexity="4" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="8" coveredstatements="8" elements="11" coveredelements="11"/>
         </class>
@@ -1295,7 +1295,7 @@
         <line num="45" type="stmt" count="1"/>
         <metrics loc="47" ncloc="35" classes="1" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="8" coveredstatements="8" elements="11" coveredelements="11"/>
       </file>
-      <file name="/var/www/app/src/Exception/PreProcessFileException.php">
+      <file name="app/src/Exception/PreProcessFileException.php">
         <class name="App\Exception\PreProcessFileException" namespace="App\Exception">
           <metrics complexity="2" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="0" elements="9" coveredelements="0"/>
         </class>
@@ -1312,7 +1312,7 @@
       </file>
     </package>
     <package name="App\Form">
-      <file name="/var/www/app/src/Form/TitleType.php">
+      <file name="app/src/Form/TitleType.php">
         <class name="App\Form\TitleType" namespace="App\Form">
           <metrics complexity="2" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="13" coveredstatements="0" elements="15" coveredelements="0"/>
         </class>
@@ -1335,7 +1335,7 @@
       </file>
     </package>
     <package name="App">
-      <file name="/var/www/app/src/Kernel.php">
+      <file name="app/src/Kernel.php">
         <class name="App\Kernel" namespace="App">
           <metrics complexity="8" methods="5" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="30" coveredstatements="0" elements="35" coveredelements="0"/>
         </class>
@@ -1378,7 +1378,7 @@
       </file>
     </package>
     <package name="App\Message">
-      <file name="/var/www/app/src/Message/FooMessage.php">
+      <file name="app/src/Message/FooMessage.php">
         <class name="App\Message\FooMessage" namespace="App\Message">
           <metrics complexity="0" methods="0" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="0" coveredstatements="0" elements="0" coveredelements="0"/>
         </class>
@@ -1386,7 +1386,7 @@
       </file>
     </package>
     <package name="App\MessageHandler">
-      <file name="/var/www/app/src/MessageHandler/CalculateFileHashesMessageHandler.php">
+      <file name="app/src/MessageHandler/CalculateFileHashesMessageHandler.php">
         <class name="App\MessageHandler\CalculateFileHashesMessageHandler" namespace="App\MessageHandler">
           <metrics complexity="6" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="30" coveredstatements="30" elements="32" coveredelements="32"/>
         </class>
@@ -1424,7 +1424,7 @@
         <line num="87" type="stmt" count="1"/>
         <metrics loc="88" ncloc="75" classes="1" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="30" coveredstatements="30" elements="32" coveredelements="32"/>
       </file>
-      <file name="/var/www/app/src/MessageHandler/CheckVideoMessageHandler.php">
+      <file name="app/src/MessageHandler/CheckVideoMessageHandler.php">
         <class name="App\MessageHandler\CheckVideoMessageHandler" namespace="App\MessageHandler">
           <metrics complexity="15" methods="3" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="35" coveredstatements="14" elements="38" coveredelements="15"/>
         </class>
@@ -1475,7 +1475,7 @@
         <line num="110" type="stmt" count="4"/>
         <metrics loc="111" ncloc="94" classes="1" methods="3" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="42" coveredstatements="21" elements="45" coveredelements="22"/>
       </file>
-      <file name="/var/www/app/src/MessageHandler/FooMessageHandler.php">
+      <file name="app/src/MessageHandler/FooMessageHandler.php">
         <class name="App\MessageHandler\FooMessageHandler" namespace="App\MessageHandler">
           <metrics complexity="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="0" elements="4" coveredelements="0"/>
         </class>
@@ -1485,7 +1485,7 @@
         <line num="12" type="stmt" count="0"/>
         <metrics loc="13" ncloc="13" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="0" elements="4" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/MessageHandler/GetVideoMetadataMessageHandler.php">
+      <file name="app/src/MessageHandler/GetVideoMetadataMessageHandler.php">
         <class name="App\MessageHandler\GetVideoMetadataMessageHandler" namespace="App\MessageHandler">
           <metrics complexity="4" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="25" coveredstatements="0" elements="27" coveredelements="0"/>
         </class>
@@ -1518,7 +1518,7 @@
         <line num="67" type="stmt" count="0"/>
         <metrics loc="68" ncloc="52" classes="1" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="25" coveredstatements="0" elements="27" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/MessageHandler/ProcessFileMessageHandler.php">
+      <file name="app/src/MessageHandler/ProcessFileMessageHandler.php">
         <class name="App\MessageHandler\ProcessFileMessageHandler" namespace="App\MessageHandler">
           <metrics complexity="2" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="11" coveredstatements="11" elements="13" coveredelements="13"/>
         </class>
@@ -1537,7 +1537,7 @@
         <line num="61" type="stmt" count="1"/>
         <metrics loc="62" ncloc="49" classes="1" methods="2" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="11" coveredstatements="11" elements="13" coveredelements="13"/>
       </file>
-      <file name="/var/www/app/src/MessageHandler/ScanFileMessageHandler.php">
+      <file name="app/src/MessageHandler/ScanFileMessageHandler.php">
         <class name="App\MessageHandler\ScanFileMessageHandler" namespace="App\MessageHandler">
           <metrics complexity="4" methods="4" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="14" coveredstatements="0" elements="18" coveredelements="0"/>
         </class>
@@ -1565,7 +1565,7 @@
       </file>
     </package>
     <package name="App\Model">
-      <file name="/var/www/app/src/Model/JAVFile.php">
+      <file name="app/src/Model/JAVFile.php">
         <class name="App\Model\JAVFile" namespace="App\Model">
           <metrics complexity="20" methods="20" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="70" coveredstatements="0" elements="90" coveredelements="0"/>
         </class>
@@ -1661,7 +1661,7 @@
         <line num="257" type="stmt" count="0"/>
         <metrics loc="258" ncloc="148" classes="1" methods="20" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="70" coveredstatements="0" elements="90" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/Model/JAVIDExtractionResult.php">
+      <file name="app/src/Model/JAVIDExtractionResult.php">
         <class name="App\Model\JAVIDExtractionResult" namespace="App\Model">
           <metrics complexity="16" methods="16" coveredmethods="12" conditionals="0" coveredconditionals="0" statements="24" coveredstatements="20" elements="40" coveredelements="32"/>
         </class>
@@ -1707,7 +1707,7 @@
         <line num="204" type="stmt" count="1"/>
         <metrics loc="206" ncloc="118" classes="1" methods="16" coveredmethods="12" conditionals="0" coveredconditionals="0" statements="24" coveredstatements="20" elements="40" coveredelements="32"/>
       </file>
-      <file name="/var/www/app/src/Model/JAVTitle.php">
+      <file name="app/src/Model/JAVTitle.php">
         <class name="App\Model\JAVTitle" namespace="App\Model">
           <metrics complexity="21" methods="17" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="68" coveredstatements="0" elements="85" coveredelements="0"/>
         </class>
@@ -1800,7 +1800,7 @@
       </file>
     </package>
     <package name="App\Repository">
-      <file name="/var/www/app/src/Repository/CompanyRepository.php">
+      <file name="app/src/Repository/CompanyRepository.php">
         <class name="App\Repository\CompanyRepository" namespace="App\Repository">
           <metrics complexity="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="0" elements="4" coveredelements="0"/>
         </class>
@@ -1810,7 +1810,7 @@
         <line num="20" type="stmt" count="0"/>
         <metrics loc="50" ncloc="14" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="0" elements="4" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/Repository/CompanyRoleRepository.php">
+      <file name="app/src/Repository/CompanyRoleRepository.php">
         <class name="App\Repository\CompanyRoleRepository" namespace="App\Repository">
           <metrics complexity="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="0" elements="4" coveredelements="0"/>
         </class>
@@ -1820,7 +1820,7 @@
         <line num="20" type="stmt" count="0"/>
         <metrics loc="50" ncloc="14" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="0" elements="4" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/Repository/FileHashRepository.php">
+      <file name="app/src/Repository/FileHashRepository.php">
         <class name="App\Repository\FileHashRepository" namespace="App\Repository">
           <metrics complexity="4" methods="4" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="25" coveredstatements="0" elements="29" coveredelements="0"/>
         </class>
@@ -1855,7 +1855,7 @@
         <line num="50" type="stmt" count="0"/>
         <metrics loc="80" ncloc="44" classes="1" methods="4" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="25" coveredstatements="0" elements="29" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/Repository/ImageRepository.php">
+      <file name="app/src/Repository/ImageRepository.php">
         <class name="App\Repository\ImageRepository" namespace="App\Repository">
           <metrics complexity="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="0" elements="4" coveredelements="0"/>
         </class>
@@ -1865,7 +1865,7 @@
         <line num="20" type="stmt" count="0"/>
         <metrics loc="50" ncloc="14" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="0" elements="4" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/Repository/JavFileRepository.php">
+      <file name="app/src/Repository/JavFileRepository.php">
         <class name="App\Repository\JavFileRepository" namespace="App\Repository">
           <metrics complexity="7" methods="5" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="17" coveredstatements="0" elements="22" coveredelements="0"/>
         </class>
@@ -1893,7 +1893,7 @@
         <line num="55" type="stmt" count="0"/>
         <metrics loc="87" ncloc="51" classes="1" methods="5" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="17" coveredstatements="0" elements="22" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/Repository/ModelAliasRepository.php">
+      <file name="app/src/Repository/ModelAliasRepository.php">
         <class name="App\Repository\ModelAliasRepository" namespace="App\Repository">
           <metrics complexity="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="0" elements="4" coveredelements="0"/>
         </class>
@@ -1903,7 +1903,7 @@
         <line num="20" type="stmt" count="0"/>
         <metrics loc="50" ncloc="14" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="0" elements="4" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/Repository/ModelRepository.php">
+      <file name="app/src/Repository/ModelRepository.php">
         <class name="App\Repository\ModelRepository" namespace="App\Repository">
           <metrics complexity="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="0" elements="4" coveredelements="0"/>
         </class>
@@ -1913,7 +1913,7 @@
         <line num="20" type="stmt" count="0"/>
         <metrics loc="50" ncloc="14" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="0" elements="4" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/Repository/TagRepository.php">
+      <file name="app/src/Repository/TagRepository.php">
         <class name="App\Repository\TagRepository" namespace="App\Repository">
           <metrics complexity="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="0" elements="4" coveredelements="0"/>
         </class>
@@ -1923,7 +1923,7 @@
         <line num="20" type="stmt" count="0"/>
         <metrics loc="50" ncloc="14" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="3" coveredstatements="0" elements="4" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/Repository/TitleRepository.php">
+      <file name="app/src/Repository/TitleRepository.php">
         <class name="App\Repository\TitleRepository" namespace="App\Repository">
           <metrics complexity="2" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="12" coveredstatements="0" elements="14" coveredelements="0"/>
         </class>
@@ -1945,7 +1945,7 @@
       </file>
     </package>
     <package name="App\Serializer">
-      <file name="/var/www/app/src/Serializer/AppGetSetMethodNormalizer.php">
+      <file name="app/src/Serializer/AppGetSetMethodNormalizer.php">
         <class name="App\Serializer\AppGetSetMethodNormalizer" namespace="App\Serializer">
           <metrics complexity="2" methods="2" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="4" coveredstatements="0" elements="6" coveredelements="0"/>
         </class>
@@ -1960,7 +1960,7 @@
       </file>
     </package>
     <package name="App\Service">
-      <file name="/var/www/app/src/Service/FileHandleService.php">
+      <file name="app/src/Service/FileHandleService.php">
         <class name="App\Service\FileHandleService" namespace="App\Service">
           <metrics complexity="12" methods="7" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="33" coveredstatements="0" elements="40" coveredelements="0"/>
         </class>
@@ -2017,7 +2017,7 @@
         <line num="110" type="stmt" count="0"/>
         <metrics loc="112" ncloc="104" classes="1" methods="7" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="44" coveredstatements="0" elements="51" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/Service/FileScanService.php">
+      <file name="app/src/Service/FileScanService.php">
         <class name="App\Service\FileScanService" namespace="App\Service">
           <metrics complexity="8" methods="5" coveredmethods="5" conditionals="0" coveredconditionals="0" statements="35" coveredstatements="35" elements="40" coveredelements="40"/>
         </class>
@@ -2063,7 +2063,7 @@
         <line num="131" type="stmt" count="1"/>
         <metrics loc="133" ncloc="109" classes="1" methods="5" coveredmethods="5" conditionals="0" coveredconditionals="0" statements="35" coveredstatements="35" elements="40" coveredelements="40"/>
       </file>
-      <file name="/var/www/app/src/Service/JAVNameMatcherService.php">
+      <file name="app/src/Service/JAVNameMatcherService.php">
         <class name="App\Service\JAVNameMatcherService" namespace="App\Service">
           <metrics complexity="12" methods="5" coveredmethods="5" conditionals="0" coveredconditionals="0" statements="41" coveredstatements="41" elements="46" coveredelements="46"/>
         </class>
@@ -2115,7 +2115,7 @@
         <line num="136" type="stmt" count="1"/>
         <metrics loc="138" ncloc="123" classes="1" methods="5" coveredmethods="5" conditionals="0" coveredconditionals="0" statements="41" coveredstatements="41" elements="46" coveredelements="46"/>
       </file>
-      <file name="/var/www/app/src/Service/JAVProcessorService.php">
+      <file name="app/src/Service/JAVProcessorService.php">
         <class name="App\Service\JAVProcessorService" namespace="App\Service">
           <metrics complexity="26" methods="11" coveredmethods="7" conditionals="0" coveredconditionals="0" statements="96" coveredstatements="55" elements="107" coveredelements="62"/>
         </class>
@@ -2228,7 +2228,7 @@
         <line num="293" type="stmt" count="2"/>
         <metrics loc="295" ncloc="246" classes="1" methods="11" coveredmethods="7" conditionals="0" coveredconditionals="0" statements="96" coveredstatements="55" elements="107" coveredelements="62"/>
       </file>
-      <file name="/var/www/app/src/Service/JAVRenamerService.php">
+      <file name="app/src/Service/JAVRenamerService.php">
         <class name="App\Service\JAVRenamerService" namespace="App\Service">
           <metrics complexity="7" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="20" coveredstatements="20" elements="23" coveredelements="23"/>
         </class>
@@ -2257,7 +2257,7 @@
         <line num="67" type="stmt" count="2"/>
         <metrics loc="69" ncloc="57" classes="1" methods="3" coveredmethods="3" conditionals="0" coveredconditionals="0" statements="20" coveredstatements="20" elements="23" coveredelements="23"/>
       </file>
-      <file name="/var/www/app/src/Service/MediaProcessorService.php">
+      <file name="app/src/Service/MediaProcessorService.php">
         <class name="App\Service\MediaProcessorService" namespace="App\Service">
           <metrics complexity="30" methods="4" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="107" coveredstatements="0" elements="111" coveredelements="0"/>
         </class>
@@ -2376,7 +2376,7 @@
       </file>
     </package>
     <package name="App\Service\FilenameParser">
-      <file name="/var/www/app/src/Service/FilenameParser/BaseParser.php">
+      <file name="app/src/Service/FilenameParser/BaseParser.php">
         <class name="App\Service\FilenameParser\BaseParser" namespace="App\Service\FilenameParser">
           <metrics complexity="24" methods="7" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="60" coveredstatements="40" elements="67" coveredelements="42"/>
         </class>
@@ -2449,7 +2449,7 @@
         <line num="215" type="stmt" count="17"/>
         <metrics loc="217" ncloc="210" classes="1" methods="7" coveredmethods="2" conditionals="0" coveredconditionals="0" statements="60" coveredstatements="40" elements="67" coveredelements="42"/>
       </file>
-      <file name="/var/www/app/src/Service/FilenameParser/CustomMarozParser.php">
+      <file name="app/src/Service/FilenameParser/CustomMarozParser.php">
         <class name="App\Service\FilenameParser\CustomMarozParser" namespace="App\Service\FilenameParser">
           <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="8" coveredstatements="8" elements="9" coveredelements="9"/>
         </class>
@@ -2464,7 +2464,7 @@
         <line num="20" type="stmt" count="2"/>
         <metrics loc="21" ncloc="18" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="8" coveredstatements="8" elements="9" coveredelements="9"/>
       </file>
-      <file name="/var/www/app/src/Service/FilenameParser/CustomParserHjd2048.php">
+      <file name="app/src/Service/FilenameParser/CustomParserHjd2048.php">
         <class name="App\Service\FilenameParser\CustomParserHjd2048" namespace="App\Service\FilenameParser">
           <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="6" elements="7" coveredelements="7"/>
         </class>
@@ -2477,7 +2477,7 @@
         <line num="20" type="stmt" count="2"/>
         <metrics loc="21" ncloc="16" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="6" elements="7" coveredelements="7"/>
       </file>
-      <file name="/var/www/app/src/Service/FilenameParser/CustomSkyParser.php">
+      <file name="app/src/Service/FilenameParser/CustomSkyParser.php">
         <class name="App\Service\FilenameParser\CustomSkyParser" namespace="App\Service\FilenameParser">
           <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="7" elements="8" coveredelements="8"/>
         </class>
@@ -2491,7 +2491,7 @@
         <line num="16" type="stmt" count="1"/>
         <metrics loc="17" ncloc="17" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="7" elements="8" coveredelements="8"/>
       </file>
-      <file name="/var/www/app/src/Service/FilenameParser/Hack1Parser.php">
+      <file name="app/src/Service/FilenameParser/Hack1Parser.php">
         <class name="App\Service\FilenameParser\Hack1Parser" namespace="App\Service\FilenameParser">
           <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="7" elements="8" coveredelements="8"/>
         </class>
@@ -2505,7 +2505,7 @@
         <line num="22" type="stmt" count="1"/>
         <metrics loc="23" ncloc="17" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="7" elements="8" coveredelements="8"/>
       </file>
-      <file name="/var/www/app/src/Service/FilenameParser/Hack2Parser.php">
+      <file name="app/src/Service/FilenameParser/Hack2Parser.php">
         <class name="App\Service\FilenameParser\Hack2Parser" namespace="App\Service\FilenameParser">
           <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="6" elements="7" coveredelements="7"/>
         </class>
@@ -2518,7 +2518,7 @@
         <line num="21" type="stmt" count="1"/>
         <metrics loc="22" ncloc="16" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="6" elements="7" coveredelements="7"/>
       </file>
-      <file name="/var/www/app/src/Service/FilenameParser/Hack3Parser.php">
+      <file name="app/src/Service/FilenameParser/Hack3Parser.php">
         <class name="App\Service\FilenameParser\Hack3Parser" namespace="App\Service\FilenameParser">
           <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="6" elements="7" coveredelements="7"/>
         </class>
@@ -2531,7 +2531,7 @@
         <line num="21" type="stmt" count="1"/>
         <metrics loc="22" ncloc="16" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="6" elements="7" coveredelements="7"/>
       </file>
-      <file name="/var/www/app/src/Service/FilenameParser/Hack4Parser.php">
+      <file name="app/src/Service/FilenameParser/Hack4Parser.php">
         <class name="App\Service\FilenameParser\Hack4Parser" namespace="App\Service\FilenameParser">
           <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="7" elements="8" coveredelements="8"/>
         </class>
@@ -2545,7 +2545,7 @@
         <line num="23" type="stmt" count="1"/>
         <metrics loc="24" ncloc="17" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="7" elements="8" coveredelements="8"/>
       </file>
-      <file name="/var/www/app/src/Service/FilenameParser/Hack5Parser.php">
+      <file name="app/src/Service/FilenameParser/Hack5Parser.php">
         <class name="App\Service\FilenameParser\Hack5Parser" namespace="App\Service\FilenameParser">
           <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="7" elements="8" coveredelements="8"/>
         </class>
@@ -2559,7 +2559,7 @@
         <line num="22" type="stmt" count="1"/>
         <metrics loc="23" ncloc="17" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="7" elements="8" coveredelements="8"/>
       </file>
-      <file name="/var/www/app/src/Service/FilenameParser/Level10Parser.php">
+      <file name="app/src/Service/FilenameParser/Level10Parser.php">
         <class name="App\Service\FilenameParser\Level10Parser" namespace="App\Service\FilenameParser">
           <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="9" coveredstatements="9" elements="10" coveredelements="10"/>
         </class>
@@ -2575,7 +2575,7 @@
         <line num="18" type="stmt" count="1"/>
         <metrics loc="19" ncloc="19" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="9" coveredstatements="9" elements="10" coveredelements="10"/>
       </file>
-      <file name="/var/www/app/src/Service/FilenameParser/Level11Parser.php">
+      <file name="app/src/Service/FilenameParser/Level11Parser.php">
         <class name="App\Service\FilenameParser\Level11Parser" namespace="App\Service\FilenameParser">
           <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="7" elements="8" coveredelements="8"/>
         </class>
@@ -2589,7 +2589,7 @@
         <line num="23" type="stmt" count="1"/>
         <metrics loc="24" ncloc="17" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="7" elements="8" coveredelements="8"/>
       </file>
-      <file name="/var/www/app/src/Service/FilenameParser/Level12Parser.php">
+      <file name="app/src/Service/FilenameParser/Level12Parser.php">
         <class name="App\Service\FilenameParser\Level12Parser" namespace="App\Service\FilenameParser">
           <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="7" elements="8" coveredelements="8"/>
         </class>
@@ -2603,7 +2603,7 @@
         <line num="22" type="stmt" count="1"/>
         <metrics loc="23" ncloc="17" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="7" elements="8" coveredelements="8"/>
       </file>
-      <file name="/var/www/app/src/Service/FilenameParser/Level1Parser.php">
+      <file name="app/src/Service/FilenameParser/Level1Parser.php">
         <class name="App\Service\FilenameParser\Level1Parser" namespace="App\Service\FilenameParser">
           <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="5" elements="6" coveredelements="6"/>
         </class>
@@ -2615,7 +2615,7 @@
         <line num="22" type="stmt" count="6"/>
         <metrics loc="23" ncloc="15" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="5" coveredstatements="5" elements="6" coveredelements="6"/>
       </file>
-      <file name="/var/www/app/src/Service/FilenameParser/Level2Parser.php">
+      <file name="app/src/Service/FilenameParser/Level2Parser.php">
         <class name="App\Service\FilenameParser\Level2Parser" namespace="App\Service\FilenameParser">
           <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="7" elements="8" coveredelements="8"/>
         </class>
@@ -2629,7 +2629,7 @@
         <line num="27" type="stmt" count="6"/>
         <metrics loc="28" ncloc="17" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="7" elements="8" coveredelements="8"/>
       </file>
-      <file name="/var/www/app/src/Service/FilenameParser/Level3Parser.php">
+      <file name="app/src/Service/FilenameParser/Level3Parser.php">
         <class name="App\Service\FilenameParser\Level3Parser" namespace="App\Service\FilenameParser">
           <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="8" coveredstatements="8" elements="9" coveredelements="9"/>
         </class>
@@ -2644,7 +2644,7 @@
         <line num="24" type="stmt" count="5"/>
         <metrics loc="25" ncloc="18" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="8" coveredstatements="8" elements="9" coveredelements="9"/>
       </file>
-      <file name="/var/www/app/src/Service/FilenameParser/Level40Parser.php">
+      <file name="app/src/Service/FilenameParser/Level40Parser.php">
         <class name="App\Service\FilenameParser\Level40Parser" namespace="App\Service\FilenameParser">
           <metrics complexity="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="11" coveredstatements="0" elements="12" coveredelements="0"/>
         </class>
@@ -2662,7 +2662,7 @@
         <line num="18" type="stmt" count="0"/>
         <metrics loc="19" ncloc="19" classes="1" methods="1" coveredmethods="0" conditionals="0" coveredconditionals="0" statements="11" coveredstatements="0" elements="12" coveredelements="0"/>
       </file>
-      <file name="/var/www/app/src/Service/FilenameParser/Level5Parser.php">
+      <file name="app/src/Service/FilenameParser/Level5Parser.php">
         <class name="App\Service\FilenameParser\Level5Parser" namespace="App\Service\FilenameParser">
           <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="7" elements="8" coveredelements="8"/>
         </class>
@@ -2676,7 +2676,7 @@
         <line num="24" type="stmt" count="5"/>
         <metrics loc="25" ncloc="17" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="7" elements="8" coveredelements="8"/>
       </file>
-      <file name="/var/www/app/src/Service/FilenameParser/Level6Parser.php">
+      <file name="app/src/Service/FilenameParser/Level6Parser.php">
         <class name="App\Service\FilenameParser\Level6Parser" namespace="App\Service\FilenameParser">
           <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="6" elements="7" coveredelements="7"/>
         </class>
@@ -2689,7 +2689,7 @@
         <line num="30" type="stmt" count="5"/>
         <metrics loc="31" ncloc="16" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="6" coveredstatements="6" elements="7" coveredelements="7"/>
       </file>
-      <file name="/var/www/app/src/Service/FilenameParser/Level7Parser.php">
+      <file name="app/src/Service/FilenameParser/Level7Parser.php">
         <class name="App\Service\FilenameParser\Level7Parser" namespace="App\Service\FilenameParser">
           <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="7" elements="8" coveredelements="8"/>
         </class>
@@ -2703,7 +2703,7 @@
         <line num="22" type="stmt" count="1"/>
         <metrics loc="23" ncloc="17" classes="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="7" coveredstatements="7" elements="8" coveredelements="8"/>
       </file>
-      <file name="/var/www/app/src/Service/FilenameParser/ProcessedFilenameParser.php">
+      <file name="app/src/Service/FilenameParser/ProcessedFilenameParser.php">
         <class name="App\Service\FilenameParser\ProcessedFilenameParser" namespace="App\Service\FilenameParser">
           <metrics complexity="1" methods="1" coveredmethods="1" conditionals="0" coveredconditionals="0" statements="8" coveredstatements="8" elements="9" coveredelements="9"/>
         </class>
