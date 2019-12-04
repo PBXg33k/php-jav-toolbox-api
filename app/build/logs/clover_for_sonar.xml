@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1575496449">
-  <project timestamp="1575496449">
+<coverage generated="1575496927">
+  <project timestamp="1575496927">
     <package name="App\Command">
       <file name="app/src/Command/CheckCommand.php">
         <class name="App\Command\CheckCommand" namespace="App\Command">
