@@ -18,7 +18,7 @@
         "friendsofphp/php-cs-fixer": "^2.14",
         "mhor/php-mediainfo": "^4.1",
         "pbxg33k/jav-info": "dev-master",
-        "pbxg33k/message-pack": "dev-master",
+        "pbxg33k/message-pack": "dev-dev",
         "sensio/framework-extra-bundle": "^5.1",
         "symfony/amqp-pack": "^1.0",
         "symfony/cache": "^4.0",

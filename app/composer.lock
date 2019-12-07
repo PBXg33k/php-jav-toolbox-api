@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "77f53d65697e3b325937d28cbe4a0e46",
+    "content-hash": "13f5d101d33a6c7371806c8960913545",
     "packages": [
         {
             "name": "colinodell/symfony-lts-or-current",
@@ -2468,16 +2468,16 @@
         },
         {
             "name": "pbxg33k/message-pack",
-            "version": "dev-master",
+            "version": "dev-dev",
             "source": {
                 "type": "git",
                 "url": "https://github.com/PBXg33k/message-pack.git",
-                "reference": "82bb58504c898dfeb93fc0c46a63e7237c4b4d0a"
+                "reference": "85945cb6dececd3df5c8c3518068d49f213652c8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PBXg33k/message-pack/zipball/82bb58504c898dfeb93fc0c46a63e7237c4b4d0a",
-                "reference": "82bb58504c898dfeb93fc0c46a63e7237c4b4d0a",
+                "url": "https://api.github.com/repos/PBXg33k/message-pack/zipball/85945cb6dececd3df5c8c3518068d49f213652c8",
+                "reference": "85945cb6dececd3df5c8c3518068d49f213652c8",
                 "shasum": ""
             },
             "require": {
@@ -2485,7 +2485,7 @@
             },
             "require-dev": {
                 "php-coveralls/php-coveralls": "^2.1",
-                "phpunit/phpunit": "^8.3"
+                "phpunit/phpunit": "^8.4"
             },
             "type": "library",
             "autoload": {
@@ -2504,7 +2504,7 @@
                 }
             ],
             "description": "Collection of Messages for microservices",
-            "time": "2019-12-04T14:33:49+00:00"
+            "time": "2019-12-07T14:24:55+00:00"
         },
         {
             "name": "pbxg33k/pbxg33k-traits",
