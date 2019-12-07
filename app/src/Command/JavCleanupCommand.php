@@ -192,7 +192,7 @@ class JavCleanupCommand extends Command
                     'Title' => $brokenTitle->getCatalognumber(),
                     'File'  => $javFile->getFilename()
                 ]);
-                $javFile = $this->checkFileConsistency($javFile);
+
                 $this->logger->debug('CHECKING RESULT', [
                     'path' => $javFile->getPath(),
                     'consistent' => $javFile->getInode()->isConsistent()
@@ -228,69 +228,5 @@ class JavCleanupCommand extends Command
                 }
             }
         }
-    }
-
-    private function checkFileConsistency(JavFile $file)
-    {
-        $this->logger->debug('CHECK', [
-            'path' => $file->getPath()
-        ]);
-        $starttime = time();
-        $this->updateProgressBarWithMessage($this->stepProgressBar, "Processing title {$file->getTitle()->getCatalognumber()}. File: {$file->getPath()}");
-        $this->cmdSection->clear();
-
-        $ffmpegBuffer = [];
-
-        $length = $file->getInode()->getLength();
-
-        // inode not really processed properly
-        if(!$length) {
-            if($this->fileSystem->exists($file->getPath())) {
-                $fileInfo = new \SplFileInfo($file->getPath());
-                $length = $fileInfo->getSize();
-            } else {
-                throw new FileNotFoundException("Could not find file {$file->getPath()}");
-            }
-
-            if(!$length) {
-                return;
-            }
-        }
-
-        return $this->mediaProcessorService->checkHealth(
-            $file,
-            true,
-            function ($type, $buffer) use ($starttime, $length, $ffmpegBuffer, $file) {
-                $this->logger->debug('FFMPEG BUFFER', [
-                    'filename' => $file->getFilename(),
-                    'buffer'   => $buffer
-                ]);
-                if ((time() - $starttime) >= 30) {
-                    $this->entityManager->getConnection()->ping();
-                }
-
-                if (false !== strpos($buffer, ' time=')) {
-                    // Calculate/estimate progress
-                    if (preg_match('~time=(?<hours>[\d]{1,2})\:(?<minutes>[\d]{2})\:(?<seconds>[\d]{2})?(?:\.(?<millisec>[\d]{0,3}))\sbitrate~', $buffer, $matches)) {
-                        $time = (int)($matches['hours'] * 3600 + $matches['minutes'] * 60 + $matches['seconds']) * 1000 + ($matches['millisec'] * 10);
-
-                        if($time !== 0 && $length !== 0) {
-                            $this->logger->debug('PERC', [
-                                'time' => $time,
-                                'length' => $length,
-                                'perc' => ($time / $length) * 100,
-                                'percInt' => round(($time / $length) * 100)
-                            ]);
-                        }
-
-                        $this->ffmpegProgressBar->setMessage($buffer);
-                        $this->ffmpegProgressBar->setProgress(round(($time / $length) * 100));
-                        $this->ffmpegProgressBar->display();
-                    }
-                }
-                $ffmpegBuffer[] = $buffer;
-            },
-            true
-        );
     }
 }
