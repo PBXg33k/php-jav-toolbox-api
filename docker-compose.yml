@@ -49,6 +49,15 @@ services:
         - "messenger:consume"
         - "scan_file"
         - "-vvv"
+    intermediate:
+      build: ../php-consumer-intermediate
+      links:
+        - rabbitmq
+      depends_on:
+        - rabbitmq
+      restart: always
+      env_file:
+        - .env
     check_video:
       build: ../php-consumer-checkvideo
       links:

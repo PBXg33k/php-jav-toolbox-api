@@ -1,5 +1,5 @@
 # Ignore the following paths when building a docker image
 app/var/cache/*
 app/var/log/*
-app/var/html
-app/vendor # will be created via Dockerfile
+app/var/html/*
+app/vendor/* # will be created via Dockerfile

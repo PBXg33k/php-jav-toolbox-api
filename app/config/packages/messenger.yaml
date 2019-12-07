@@ -8,11 +8,13 @@ framework:
             generate_thumbnail: '%env(MESSENGER_TRANSPORT_DSN)%generate_thumbnail'
             get_video_metadata: '%env(MESSENGER_TRANSPORT_DSN)%get_video_metadata'
             scan_file: '%env(MESSENGER_TRANSPORT_DSN)%scan_file'
+            process_file: '%env(MESSENGER_TRANSPORT_DSN)%process_file'
             failed: 'doctrine://default?queue_name=failed_messages'
         routing:
             # Route your messages to the transports
             # 'App\Message\YourMessage': amqp
             'Pbxg33k\MessagePack\Message\CheckVideoMessage': check_video
+            'Pbxg33k\MessagePack\Message\VideoCheckedMessage': complete_check_video
             'Pbxg33k\MessagePack\Message\GenerateThumbnailMessage': generate_thumbnail
             'Pbxg33k\MessagePack\Message\GetVideoMetadataMessage': get_video_metadata
             'Pbxg33k\MessagePack\Message\ProcessFileMessage': process_file
