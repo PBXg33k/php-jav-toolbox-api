@@ -1891,16 +1891,16 @@
         },
         {
             "name": "guzzlehttp/guzzle",
-            "version": "6.4.1",
+            "version": "6.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/guzzle.git",
-                "reference": "0895c932405407fd3a7368b6910c09a24d26db11"
+                "reference": "dbc2bc3a293ed6b1ae08a3651e2bfd213d19b6a5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/0895c932405407fd3a7368b6910c09a24d26db11",
-                "reference": "0895c932405407fd3a7368b6910c09a24d26db11",
+                "url": "https://api.github.com/repos/guzzle/guzzle/zipball/dbc2bc3a293ed6b1ae08a3651e2bfd213d19b6a5",
+                "reference": "dbc2bc3a293ed6b1ae08a3651e2bfd213d19b6a5",
                 "shasum": ""
             },
             "require": {
@@ -1915,12 +1915,13 @@
                 "psr/log": "^1.1"
             },
             "suggest": {
+                "ext-intl": "Required for Internationalized Domain Name (IDN) support",
                 "psr/log": "Required for using the Log middleware"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "6.3-dev"
+                    "dev-master": "6.5-dev"
                 }
             },
             "autoload": {
@@ -1953,7 +1954,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2019-10-23T15:58:00+00:00"
+            "time": "2019-12-07T18:20:45+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -2472,12 +2473,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PBXg33k/message-pack.git",
-                "reference": "85945cb6dececd3df5c8c3518068d49f213652c8"
+                "reference": "b518507561e00e329625440fbc2221a74c16c1f5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PBXg33k/message-pack/zipball/85945cb6dececd3df5c8c3518068d49f213652c8",
-                "reference": "85945cb6dececd3df5c8c3518068d49f213652c8",
+                "url": "https://api.github.com/repos/PBXg33k/message-pack/zipball/b518507561e00e329625440fbc2221a74c16c1f5",
+                "reference": "b518507561e00e329625440fbc2221a74c16c1f5",
                 "shasum": ""
             },
             "require": {
@@ -2504,7 +2505,7 @@
                 }
             ],
             "description": "Collection of Messages for microservices",
-            "time": "2019-12-07T14:24:55+00:00"
+            "time": "2019-12-07T19:35:54+00:00"
         },
         {
             "name": "pbxg33k/pbxg33k-traits",
