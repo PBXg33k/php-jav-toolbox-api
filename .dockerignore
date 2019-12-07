@@ -3,3 +3,5 @@ app/var/cache/*
 app/var/log/*
 app/var/html/*
 app/vendor/* # will be created via Dockerfile
+media/*
+.git/*

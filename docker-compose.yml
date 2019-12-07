@@ -23,12 +23,11 @@ services:
         - "./.docker/config/php/php.ini:/usr/local/etc/php/conf.d/030-custom.ini:ro"
         - "./app:/var/www/app"
         - "./media:/media"
+      restart: always
       env_file:
         - .env
-    video_processor:
+    scan_file:
       build: .
-      deploy:
-        mode: global
       links:
         - mariadb
         - rabbitmq
@@ -117,12 +116,9 @@ services:
     consumer_thumbnail:
       image: pbxg33k/consumer-php-thumbnails
       links:
-        - mariadb
         - rabbitmq
       depends_on:
         - app
-        - redis
-        - mariadb
         - rabbitmq
       volumes:
         - "./media:/media"
