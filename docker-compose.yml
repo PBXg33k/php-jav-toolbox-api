@@ -50,27 +50,17 @@ services:
         - "scan_file"
         - "-vvv"
     check_video:
-      build: .
+      build: ../php-consumer-checkvideo
       links:
-        - mariadb
         - rabbitmq
       depends_on:
         - app
-        - redis
-        - mariadb
         - rabbitmq
       volumes:
-        - "./.docker/config/php/php.ini:/usr/local/etc/php/conf.d/030-custom.ini:ro"
-        - "./app:/var/www/app"
         - "./media:/media"
       env_file:
         - .env
       restart: always
-      command:
-        - "/var/www/app/bin/console"
-        - "messenger:consume"
-        - "check_video"
-        - "-vvv"
     process_file:
       build: .
       links:

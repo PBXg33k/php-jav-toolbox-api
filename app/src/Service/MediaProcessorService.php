@@ -51,71 +51,6 @@ class MediaProcessorService
         $this->mediaInfo->setConfig('use_oldxml_mediainfo_output_format', true);
     }
 
-    public function checkHealth(JavFile $javFile, bool $strict, callable $cmdCallback, bool $propogateException = false): JavFile
-    {
-        $this->logger->info('Checking video consistency', [
-            'strict' => $strict,
-            'path' => $javFile->getPath(),
-            'filesize' => $javFile->getInode()->getFilesize(),
-        ]);
-
-        // command: "ffmpeg -v verbose -err_detect explode -xerror -i \"{$file->getPath()}\" -map 0:1 -f null -"
-        $processArgs = [
-            'ffmpeg',
-            '-v',
-            'verbose',
-            '-err_detect',
-            'explode',
-            '-xerror',
-            '-i',
-            $javFile->getPath(),
-        ];
-        if (!$strict) {
-            $processArgs = array_merge($processArgs, ['-map', '0:1']);
-        }
-        $processArgs = array_merge($processArgs, [
-            '-f',
-            'null',
-            '-',
-        ]);
-
-        $process = new Process($processArgs);
-        try {
-            $process->setTimeout(3600);
-            $process->mustRun($cmdCallback);
-
-            $consistent = 0 == $process->getExitCode();
-
-            $this->logger->debug('ffmpeg output', [
-                'file' => $javFile->getPath(),
-                'output' => $process->getOutput(),
-            ]);
-        } catch (\Throwable $exception) {
-            $this->logger->error('ffmpeg failed', [
-                'path' => $javFile->getPath(),
-                'exception' => [
-                    'message' => $exception->getMessage(),
-                ],
-            ]);
-            $consistent = false;
-
-            if ($propogateException) {
-                $javFile->getInode()->setChecked(true)->setConsistent(false);
-                throw $exception;
-            }
-        }
-
-        $this->logger->info('video check completed', [
-            'strict' => $strict,
-            'result' => ($process->getExitCode() > 0) ? 'FAILED' : 'SUCCESS',
-            'path' => $javFile->getPath(),
-        ]);
-
-        $javFile->getInode()->setChecked(true)->setConsistent($consistent);
-
-        return $javFile;
-    }
-
     /**
      * Uses mediainfo to retrieve file's metadata such as codec, resolution, length, etc.
      *
@@ -124,6 +59,7 @@ class MediaProcessorService
      * @return JavFile
      *
      * @throws \Mhor\MediaInfo\Exception\UnknownTrackTypeException
+     * @throws MediaException
      */
     public function getMetadata(JavFile $javFile): JavFile
     {
