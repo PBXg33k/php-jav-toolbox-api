@@ -3,11 +3,11 @@ framework:
         failure_transport: failed
         transports:
             # Uncomment the following line to enable a transport named "amqp"
-            check_video: '%env(RABBITMQ_SERVER)%check_video'
-            generate_thumbnail: '%env(RABBITMQ_SERVER)%generate_thumbnail'
-            get_video_metadata: '%env(RABBITMQ_SERVER)%get_video_metadata'
-            scan_file: '%env(RABBITMQ_SERVER)%scan_file'
-            process_file: '%env(RABBITMQ_SERVER)%process_file'
+            check_video: '%env(MESSENGER_TRANSPORT_DSN)%check_video'
+            complete_check_video: '%env(MESSENGER_TRANSPORT_DSN)%complete_check_video'
+            generate_thumbnail: '%env(MESSENGER_TRANSPORT_DSN)%generate_thumbnail'
+            get_video_metadata: '%env(MESSENGER_TRANSPORT_DSN)%get_video_metadata'
+            scan_file: '%env(MESSENGER_TRANSPORT_DSN)%scan_file'
             failed: 'doctrine://default?queue_name=failed_messages'
         routing:
             # Route your messages to the transports
