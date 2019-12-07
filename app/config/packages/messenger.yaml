@@ -10,6 +10,7 @@ framework:
             scan_file: '%env(MESSENGER_TRANSPORT_DSN)%scan_file'
             process_file: '%env(MESSENGER_TRANSPORT_DSN)%process_file'
             failed: 'doctrine://default?queue_name=failed_messages'
+            persist_video_status: '%env(MESSENGER_TRANSPORT_DSN)%persist_video_status'
         routing:
             # Route your messages to the transports
             # 'App\Message\YourMessage': amqp
