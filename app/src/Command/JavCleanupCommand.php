@@ -135,8 +135,7 @@ class JavCleanupCommand extends Command
                 $this->cache->save($brokenTitlesCache);
             }
 
-            $brokenFileCount = 0;
-            $brokenFileCount = array_sum(array_map(function(Title $title) use ($brokenFileCount) {
+            $brokenFileCount = array_sum(array_map(function(Title $title) {
                 return count($title->getFiles());
             }, $brokenTitles));
 
@@ -147,10 +146,10 @@ class JavCleanupCommand extends Command
                 /** @var Title $title */
                 foreach ($brokenTitles as $title) {
                     $this->updateProgressBarWithMessage($this->stepProgressBar, sprintf('%d/%d Processing %s', $i, $brokenFileCount, $title->getCatalognumber()));
-                    foreach ($title->getFiles() as $file) {
+                    $title->getFiles()->forAll(function() use ($i) {
                         $this->stepProgressBar->advance();
-                    }
-                    ++$i;
+                        $i++;
+                    });
                 }
 
                 // Reset step progress bar
@@ -187,16 +186,6 @@ class JavCleanupCommand extends Command
                     $this->mediaProcessorService->delete($javFile);
                     continue;
                 }
-
-                $this->logger->debug('Checking title consistency', [
-                    'Title' => $brokenTitle->getCatalognumber(),
-                    'File'  => $javFile->getFilename()
-                ]);
-
-                $this->logger->debug('CHECKING RESULT', [
-                    'path' => $javFile->getPath(),
-                    'consistent' => $javFile->getInode()->isConsistent()
-                ]);
 
                 if($javFile->getInode()->isConsistent()) {
                     $this->entityManager->merge($javFile->getInode());
