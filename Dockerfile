@@ -12,7 +12,7 @@ RUN apk add --no-cache --update --virtual build-dependencies alpine-sdk git auto
 	&& docker-php-ext-install zip \
 	&& docker-php-ext-install bcmath \
 	&& docker-php-ext-enable redis \
-	&& apk del build-dependencies php-dependencies
+	&& apk del build-dependencies
 
 RUN apk add --no-cache --update xxhash
 
