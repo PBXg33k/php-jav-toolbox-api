@@ -95,6 +95,7 @@ services:
 
     intermediate:
       image: pbxg33k/php-consumer-intermediate
+      #      build: ../php-consumer-intermediate
       links:
         - rabbitmq
       depends_on:
