@@ -8,6 +8,7 @@ framework:
             generate_thumbnail: '%env(MESSENGER_TRANSPORT_DSN)%generate_thumbnail'
             get_video_metadata: '%env(MESSENGER_TRANSPORT_DSN)%get_video_metadata'
             scan_file: '%env(MESSENGER_TRANSPORT_DSN)%scan_file'
+            scan_directory: '%env(MESSENGER_TRANSPORT_DSN)%scan_directory'
             process_file: '%env(MESSENGER_TRANSPORT_DSN)%process_file'
             failed: 'doctrine://default?queue_name=failed_messages'
             persist_video_status: '%env(MESSENGER_TRANSPORT_DSN)%persist_video_status'
@@ -21,3 +22,4 @@ framework:
             'Pbxg33k\MessagePack\Message\GetVideoMetadataMessage': get_video_metadata
             'Pbxg33k\MessagePack\Message\ProcessFileMessage': process_file
             'Pbxg33k\MessagePack\Message\ScanFileMessage': scan_file
+            'Pbxg33k\MessagePack\Message\ScanDirectoryMessage': scan_directory

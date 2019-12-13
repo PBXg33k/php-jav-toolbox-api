@@ -2,11 +2,13 @@
 
 namespace App\Command;
 
-use App\Entity\Company;
-use App\Service\MediaProcessorService;
-use Doctrine\ORM\EntityManagerInterface;
+use Pbxg33k\MessagePack\DTO\InodeDTO;
+use Pbxg33k\MessagePack\DTO\JavFileDTO;
+use App\MessageHandler\PersistEntityMessageHandler;
+use Pbxg33k\MessagePack\Message\PersistEntityMessage;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -15,14 +17,9 @@ class TestCommand extends Command
     protected static $defaultName = 'app:test';
 
     /**
-     * @var MediaProcessorService
+     * @var PersistEntityMessageHandler
      */
-    private $mediaProcessorService;
-
-    /**
-     * @var EntityManagerInterface
-     */
-    private $entityManager;
+    private $handler;
 
     /**
      * @var LoggerInterface
@@ -30,31 +27,36 @@ class TestCommand extends Command
     private $logger;
 
     public function __construct(
-        MediaProcessorService $mediaProcessorService,
-        EntityManagerInterface $entityManager,
+        PersistEntityMessageHandler $handler,
         LoggerInterface $logger,
         ?string $name = null
     ) {
-        $this->mediaProcessorService = $mediaProcessorService;
-        $this->entityManager = $entityManager;
+        $this->handler = $handler;
         $this->logger = $logger;
         parent::__construct($name);
     }
 
     protected function configure()
     {
-        $this->setDescription('Add a short description for your command');
+        $this->setDescription('Add a short description for your command')
+            ->addArgument('path',InputArgument::REQUIRED,'path');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $entity = new Company();
-        $entity->setId(1);
-        $entity->setName('test');
+        $fileInfo =  new \SplFileInfo($input->getArgument('path'));
 
-        $encoded = json_encode($entity);
-        $decoded = (new Company())->hydrateClass(json_decode($encoded));
+        $inodeDTO = new InodeDTO();
+        $inodeDTO->id = $fileInfo->getInode();
+        $inodeDTO->filesize = $fileInfo->getSize();
 
-        var_dump($entity, $encoded, $decoded);
+        $testEntity = new JavFileDTO();
+        $testEntity->inode = $inodeDTO;
+        $testEntity->path = $fileInfo->getRealPath();
+
+
+        $testMessage = new PersistEntityMessage($testEntity);
+
+        $this->handler->__invoke($testMessage);
     }
 }

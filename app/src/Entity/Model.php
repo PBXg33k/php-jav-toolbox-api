@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ModelRepository")
  */
-class Model
+class Model extends BaseEntity
 {
     /**
      * @ORM\Id()
@@ -144,5 +144,22 @@ class Model
     public function getImages(): Collection
     {
         return $this->images;
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize()
+    {
+        // @todo serialize aliases, titles and images
+        return [
+            'id' => $this->id,
+            'name_romaji' => $this->name_romaji,
+            'name_japanese' => $this->name_japanese,
+        ];
     }
 }

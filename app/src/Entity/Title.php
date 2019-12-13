@@ -176,7 +176,17 @@ class Title extends BaseEntity
             'name_romaji' => $this->name_romaji,
             'name_japanese' => $this->name_japanese,
             'catalognumber' => $this->catalognumber,
+            'files' => [],
+            'models' => [],
         ];
+
+        foreach($this->getModels() as $model) {
+            $arr['models'][] = $model->jsonSerialize();
+        }
+
+        foreach($this->getFiles() as $file) {
+            $arr['file'][] = $file->jsonSerialize();
+        }
 
         return $arr;
     }

@@ -9,7 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\FileHashRepository")
  */
-class Inode
+class Inode extends BaseEntity
 {
     /**
      * @ORM\Id()
@@ -421,5 +421,34 @@ class Inode
         }
 
         return $this;
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'id'        => $this->id,
+            'md5'       => $this->md5,
+            'sha1'      => $this->sha1,
+            'sha512'    => $this->sha512,
+            'xxhash'    => $this->xxhash,
+            'checked'   => $this->checked === true,
+            'height'    => $this->height,
+            'width'     => $this->width,
+            'fps'       => $this->fps,
+            'codec'     => $this->codec,
+            'consistent'=> $this->consistent,
+            'meta'      => $this->meta,
+            'length'    => $this->length,
+            'bitrate'   => $this->bitrate,
+            'filesize'  => $this->filesize,
+            'processed' => $this->processed
+        ];
     }
 }

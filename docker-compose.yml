@@ -27,7 +27,8 @@ services:
       env_file:
         - .env
     scan_file:
-      build: .
+      image: pbxg33k/php-consumer-scanfile
+#      build: ../php-consumer-scanfile
       links:
         - mariadb
         - rabbitmq
@@ -37,17 +38,10 @@ services:
         - mariadb
         - rabbitmq
       volumes:
-        - "./.docker/config/php/php.ini:/usr/local/etc/php/conf.d/030-custom.ini:ro"
-        - "./app:/var/www/app"
         - "./media:/media"
       env_file:
         - .env
       restart: always
-      command:
-        - "/var/www/app/bin/console"
-        - "messenger:consume"
-        - "scan_file"
-        - "-vvv"
     process_file:
       build: .
       links:
@@ -92,10 +86,32 @@ services:
         - "messenger:consume"
         - "get_video_metadata"
         - "-vvv"
+    persist_video:
+      build: .
+      links:
+        - mariadb
+        - rabbitmq
+      depends_on:
+        - app
+        - redis
+        - mariadb
+        - rabbitmq
+      volumes:
+        - "./.docker/config/php/php.ini:/usr/local/etc/php/conf.d/030-custom.ini:ro"
+        - "./app:/var/www/app"
+        - "./media:/media"
+      env_file:
+        - .env
+      restart: always
+      command:
+        - "/var/www/app/bin/console"
+        - "messenger:consume"
+        - "persist_video_status"
+        - "-vvv"
 
     intermediate:
-      image: pbxg33k/php-consumer-intermediate
-      #      build: ../php-consumer-intermediate
+#      image: pbxg33k/php-consumer-intermediate
+      build: ../php-consumer-intermediate
       links:
         - rabbitmq
       depends_on:

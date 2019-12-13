@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\JavFileRepository")
  */
-class JavFile
+class JavFile extends BaseEntity
 {
     /**
      * @var int
@@ -121,5 +121,24 @@ class JavFile
         $this->inode = $inode;
 
         return $this;
+    }
+
+    /**
+     * Specify data which should be serialized to JSON
+     * @link https://php.net/manual/en/jsonserializable.jsonserialize.php
+     * @return mixed data which can be serialized by <b>json_encode</b>,
+     * which is a value of any type other than a resource.
+     * @since 5.4.0
+     */
+    public function jsonSerialize()
+    {
+        return [
+            'id' => $this->id,
+            'part' => $this->part,
+            'filename' => $this->filename,
+            'path' => $this->path,
+            'title' => $this->title,
+            'inode' => $this->inode->jsonSerialize()
+        ];
     }
 }

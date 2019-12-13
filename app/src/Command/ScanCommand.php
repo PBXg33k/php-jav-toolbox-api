@@ -6,6 +6,7 @@ use App\Event\DirectoryFoundEvent;
 use App\Event\QualifiedVideoFileFound;
 use App\Event\VideoFileFoundEvent;
 use App\Service\FileScanService;
+use Pbxg33k\MessagePack\Message\ScanDirectoryMessage;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -15,25 +16,14 @@ use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Console\Output\ConsoleSectionOutput;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class ScanCommand extends Command
 {
-    use SectionedCommandTrait;
-
-    /**
-     * @var FileScanService
-     */
-    private $fileScanService;
-
     /**
      * @var LoggerInterface
      */
     private $logger;
-
-    /**
-     * @var EventDispatcherInterface
-     */
-    private $eventDispatcher;
 
     /**
      * @var string default media path
@@ -41,20 +31,18 @@ class ScanCommand extends Command
     private $javMediaFileLocation;
 
     /**
-     * @var ConsoleSectionOutput
+     * @var MessageBusInterface
      */
-    private $lastMatchSection;
+    private $messageBus;
 
     public function __construct(
-        FileScanService $fileScanService,
         LoggerInterface $logger,
-        EventDispatcherInterface $eventDispatcher,
+        MessageBusInterface $messageBus,
         string $javMediaFileLocation
     ) {
-        $this->fileScanService = $fileScanService;
         $this->logger = $logger;
-        $this->eventDispatcher = $eventDispatcher;
         $this->javMediaFileLocation = $javMediaFileLocation;
+        $this->messageBus = $messageBus;
 
         parent::__construct();
     }
@@ -70,51 +58,11 @@ class ScanCommand extends Command
 
     public function execute(InputInterface $input, OutputInterface $output): void
     {
-        $this->initSections($input, $output);
-
-        $silent = $input->getOption('silent');
         $path = $input->getArgument('path') ?: $this->javMediaFileLocation;
-
-        if (!$silent) {
-            if ($output instanceof ConsoleOutput) {
-                $this->lastMatchSection = $output->section();
-                $this->updateLastMatch('none');
-            }
-
-            $this->setEventListeners($this->eventDispatcher);
-
-            $this->updateStateMessage('Scanning');
-            $this->updateProgressOutput("Starting scan for {$path}");
+        if(!is_dir($path)) {
+            throw new \Exception('not a directory');
         }
-
-        $this->fileScanService->scanDir($path);
-
-        if (!$silent) {
-            $this->updateStateMessage('Finished');
-            $this->updateProgressOutput(sprintf('Found %s eligible files', $this->fileScanService->getFiles()->count()));
-        }
-    }
-
-    private function setEventListeners(EventDispatcherInterface $eventDispatcher): void
-    {
-        $this->logger->debug('setting up event listeners');
-
-        // Set event on directory.found
-        $eventDispatcher->addListener(DirectoryFoundEvent::NAME, function (DirectoryFoundEvent $event) {
-            $this->updateProgressOutput("Scanning directory: {$event->getFile()->getPathname()}");
-        });
-
-        $eventDispatcher->addListener(VideoFileFoundEvent::NAME, function (VideoFileFoundEvent $event) {
-            $this->updateProgressOutput("Scanning file: {$event->getFile()->getPathname()}");
-        });
-
-        $eventDispatcher->addListener(QualifiedVideoFileFound::NAME, function (QualifiedVideoFileFound $event) {
-            $this->updateLastMatch($event->getFile()->getPathname());
-        });
-    }
-
-    private function updateLastMatch(string $path): void
-    {
-        $this->writeToSection("Last match: {$path}", $this->lastMatchSection);
+        $this->messageBus->dispatch(new ScanDirectoryMessage($path));
+        return;
     }
 }
