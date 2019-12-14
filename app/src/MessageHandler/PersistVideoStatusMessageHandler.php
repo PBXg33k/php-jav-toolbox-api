@@ -6,6 +6,7 @@ namespace App\MessageHandler;
 
 use App\Entity\Inode;
 use App\Entity\JavFile;
+use App\Repository\FileHashRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Pbxg33k\MessagePack\Message\PersistVideoStatusMessage;
 
@@ -24,6 +25,8 @@ class PersistVideoStatusMessageHandler
     public function __invoke(PersistVideoStatusMessage $message)
     {
         $javFileRepository = $this->entityManager->getRepository(JavFile::class);
+        /** @var FileHashRepository $inodeRepository */
+        $inodeRepository = $this->entityManager->getRepository(Inode::class);
 
         /** @var JavFile $file */
         $file = $javFileRepository->findOneByPath($message->getPath());
@@ -31,7 +34,7 @@ class PersistVideoStatusMessageHandler
         if(!$file) {
             $fileinfo = new \SplFileInfo($message->getPath());
 
-            $inode = (new Inode())
+            $inode = $inodeRepository->find($fileinfo->getInode()) ?? (new Inode())
                 ->setId($fileinfo->getInode())
                 ->setFilesize($fileinfo->getSize())
                 ->setChecked($message->isChecked())
