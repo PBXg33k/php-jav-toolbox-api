@@ -34,7 +34,7 @@ class PersistVideoStatusMessageHandler
             $inode = (new Inode())
                 ->setId($fileinfo->getInode())
                 ->setFilesize($fileinfo->getSize())
-                ->setProcessed($message->isChecked())
+                ->setChecked($message->isChecked())
                 ->setConsistent($message->isConsistent());
 
             $file = (new JavFile())

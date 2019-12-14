@@ -103,7 +103,7 @@ class Inode extends BaseEntity
     private $processed = false;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\JavFile", mappedBy="inodeinfo")
+     * @ORM\OneToMany(targetEntity="App\Entity\JavFile", mappedBy="inode")
      */
     private $javFiles;
 
