@@ -107,6 +107,7 @@ services:
         - "/var/www/app/bin/console"
         - "messenger:consume"
         - "persist_video_status"
+        - "--limit=5"
         - "-vvv"
 
     intermediate:

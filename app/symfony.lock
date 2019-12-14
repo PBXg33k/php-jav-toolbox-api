@@ -128,6 +128,9 @@
     "jdorn/sql-formatter": {
         "version": "v1.2.17"
     },
+    "mhor/php-mediainfo": {
+        "version": "4.1.2"
+    },
     "mikey179/vfsstream": {
         "version": "2.0.x-dev"
     },
