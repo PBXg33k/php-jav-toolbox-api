@@ -20,6 +20,11 @@ server {
         include fastcgi_params;
     }
 
+    location /jav_dl/ {
+        internal;
+        alias /media/;
+    }
+
     error_log /var/log/nginx/sf4_error.log;
     access_log /var/log/nginx/sf4_access.log;
 }

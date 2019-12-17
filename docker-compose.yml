@@ -110,7 +110,6 @@ services:
         - "persist_video_status"
         - "--limit=5"
         - "-vvv"
-
     intermediate:
 #      image: pbxg33k/php-consumer-intermediate
       build: ../php-consumer-intermediate
