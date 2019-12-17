@@ -7,7 +7,7 @@ use App\Repository\JavFileRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -70,7 +70,7 @@ class DownloadController extends AbstractController
      * This results in nginx serving out the download, freeing up resources for PHP
      *
      * @param JavFile $javFile
-     * @return RedirectResponse
+     * @return Response
      */
     private function serveDownloadUsingXSendfile(JavFile $javFile)
     {
@@ -88,7 +88,7 @@ class DownloadController extends AbstractController
             'nginxroute' => $path
         ]);
 
-        return new RedirectResponse('/', 302, [
+        return new Response('', 200, [
             'X-Accel-Redirect'=> '/'.$path,
             'Content-Type' => mime_content_type($javFile->getPath()),
             'Content-Disposition' => $javFile->getFilename(),
