@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\JavFile;
 use App\Repository\JavFileRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -17,17 +18,25 @@ class DownloadController extends AbstractController
      */
     private $fileRepository;
 
+    /**
+     * @var LoggerInterface
+     */
+    private $logger;
+
     private $XSendFileRoot;
 
     private $javToolboxMediaFileLocation;
 
     public function __construct(
         EntityManagerInterface $entityManager,
+        LoggerInterface $logger,
         string $javToolboxMediaFileLocation,
         string $XSendFileRoot
     )
     {
         $this->fileRepository = $entityManager->getRepository(JavFile::class);
+        $this->logger = $logger;
+
         $this->javToolboxMediaFileLocation = $javToolboxMediaFileLocation;
         $this->XSendFileRoot = $XSendFileRoot;
     }
@@ -65,13 +74,19 @@ class DownloadController extends AbstractController
      */
     private function serveDownloadUsingXSendfile(JavFile $javFile)
     {
-        // Replace /media with static_file_root
 
         $path = str_replace(
             $this->javToolboxMediaFileLocation,
             $this->XSendFileRoot,
             $javFile->getPath()
         );
+
+        $this->logger->info('Serve download',[
+            'javid' => $javFile->getId(),
+            'inodeid' => $javFile->getInode()->getId(),
+            'path' => $javFile->getPath(),
+            'nginxroute' => $path
+        ]);
 
         return new RedirectResponse('/', 302, [
             'X-Accel-Redirect'=> '/'.$path,
