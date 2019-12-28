@@ -1,1 +1,345 @@
-<mxfile host="www.draw.io" modified="2019-12-28T19:32:04.621Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36" etag="toT18q5IsTC1jnb_IctN" version="12.4.7" type="github"><diagram name="Page-1" id="74e2e168-ea6b-b213-b513-2b3c1d86103e">7Vzbcps6FP0aP3YGJK6PxzlJ+5DOdCadnmcFZMMpRh6Q67hfX2Ekg5GN8SVIqZWHDNoSAu+12HvpAhP4sHj7XKBl8pXEOJsAK36bwH8nAHi+xf5Xhk1tgBDWhnmRxrXJbgwv6W/Mjfy8+SqNcbnXkBKS0XS5b4xInuOI7tlQUZD1frMZyfavukRzLBleIpTJ1v/SmCbcaltWU/EFp/OEXzpwecUrin7OC7LK+fUmAM62f3X1Aom+ePsyQTFZt0zwcQIfCkJofbR4e8BZ5Vrhtvq8pyO1u/sucE6HnOD72ItCf2aHXoyCAH7iPfxC2Yr74htzPL9ZuhEOKtfpIkM5K00TusiY0WaHUZJm8TPakFV18ZIyZ4jSlJUKypFmNwWnWy/h6j6q0s4RVSFDrzib7lz5QDJSsKqcbC9Y0oL83OFSXXdGcvqEFmlW0e0HLmKUI27mVwxYEWXpPGfHEfMNZv1NZWeJX48Lit9aJu68z5gsMC02rAmvFUTnPHd4cd2QJvS4LWnxxRd8QZyo813PDVjsgOM1EDsgYfdcQQQseyB+Ekayh44S5rTLuI+A7CP7oI/ge/gokHwk+aYhZuWTdZJS/LJEUVW7ZtGu4zIteHuUCoOJDPaJ7LkySNYBkLz3wCg0GA3ByHZVgiRStUGpgxLcR8n1DsS70VACngQKjpnU4UVS0ITMSY6yx8Y63YetBdEpVFj2+KdSXx3bU1rdcJ3mWxnGZWWcx+KMKENlmUbfkzSvK/hpdl1qnfQ/pnTDy2hFCTM1P+SZkOUunV1Ck8EprySrIsL9eYb93Dk+2g/vqEKkl1kFzhBNf+2L09vyxDc8UcITwYFeooS35sn2VOZQtGk1WJI0p2Wr52+VoZV+nMP55+lIe7+3OTuob6Ah7O6XXMjhwHBYCYfDIbEOaBPrRII2PBk71kEVse5ynsjDZsOTUXjifSyeyAMfw5MxeCLGwx9BO3WmV8LOtGx/c+j3N/d7m99eaYnZfMN4HTOo7eoTGkNDFH1DI4DaEMUxmlwRUYZEFOCoIopt+a/I97CDIXRnYfjJaHJFmccfknkCbXhiNLmieAKG8OTm8eQiUe55HVVu98vsbnvX7W/vWL3tr9blEumNLBd3OQHQ2v5d/DjUxUP9jfqkKJvmkMjl3D25dI6o1l1E1GDkgOoazqtRm0OGr7ePjRdxvsNJ75QoCK9sb78z582OEUWcd7TWA/LcXt2nvNtUHnqp2G0qajsZRu3uU7Hb42/fNAfPhQl2g6KM0mh75pxjxJaHVwqJDYFWxAb3QWznbJi02rMrx2wZpYQsXlflaYR0fH/jerw6e9wOvdERjAaXHInMQ3XgoVK8xdqscd5eMIvJpl7BPGhiRJ81TveYrpBn1hTqCifQSlfITvsrQ6B7LkzwdJ4aUVd496YrzsaroyvggcdqPF3hm4dqyEO1W79T81DdyWuQ16KkWP0NeQ3ShL723I7KIRU0q5iaLJGLpbVehc8b9St8Lj40UPjQrBfefig4iChD3hgRskcHophFNkVEGfKuosjpGhBFHljxOQM50iicM/C6s6Zq5wzu5Bsv3rkwaTW8AXeyFHo1SoFSlIBB6QMMQoes6xmUDg49x0MJmm+s3F70CSHdK/qGfIxH5CMNRB80HzJRQ5Tdt0Z7iQK0IYo8j89HB/LwUuHoILB0Gh2AO9lU4Z8L04i5khWbT9zWe5abzwjDxz8=</diagram></mxfile>
+<mxfile host="www.draw.io" modified="2019-12-28T20:04:48.863Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36" etag="1sNnBT598NI1GPPkrqPk" version="12.4.7" type="github">
+  <diagram name="Page-1" id="74e2e168-ea6b-b213-b513-2b3c1d86103e">
+    <mxGraphModel dx="1422" dy="794" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1100" pageHeight="850" background="#ffffff" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="77e6c97f196da883-1" value="Pool" style="swimlane;html=1;childLayout=stackLayout;startSize=20;rounded=0;shadow=0;labelBackgroundColor=none;strokeWidth=1;fontFamily=Verdana;fontSize=8;align=center;" parent="1" vertex="1">
+          <mxGeometry x="70" y="40" width="1440" height="1160" as="geometry">
+            <mxRectangle x="70" y="40" width="50" height="20" as="alternateBounds"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-35" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Verdana;fontSize=10;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="77e6c97f196da883-1" source="qdspiaGit16O1uBQU0Bo-33">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="821.6799999999998" y="575.1176470588236" as="sourcePoint"/>
+            <mxPoint x="240.52941176470586" y="160" as="targetPoint"/>
+            <Array as="points">
+              <mxPoint x="882" y="610"/>
+              <mxPoint x="241" y="610"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-42" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Verdana;fontSize=10;" edge="1" parent="77e6c97f196da883-1" source="qdspiaGit16O1uBQU0Bo-40" target="77e6c97f196da883-11">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="241" y="200"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="77e6c97f196da883-2" value="MAIN APP" style="swimlane;html=1;startSize=20;" parent="77e6c97f196da883-1" vertex="1">
+          <mxGeometry y="20" width="160" height="1140" as="geometry"/>
+        </mxCell>
+        <mxCell id="77e6c97f196da883-8" value="Dispatch ScanDirectoryMessage" style="rounded=1;whiteSpace=wrap;html=1;shadow=0;labelBackgroundColor=none;strokeWidth=1;fontFamily=Verdana;fontSize=10;align=center;" parent="77e6c97f196da883-2" vertex="1">
+          <mxGeometry x="20" y="65" width="120" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="77e6c97f196da883-26" style="edgeStyle=orthogonalEdgeStyle;rounded=1;html=1;labelBackgroundColor=none;startArrow=none;startFill=0;startSize=5;endArrow=classicThin;endFill=1;endSize=5;jettySize=auto;orthogonalLoop=1;strokeWidth=1;fontFamily=Verdana;fontSize=8" parent="77e6c97f196da883-1" source="77e6c97f196da883-8" target="77e6c97f196da883-11" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="77e6c97f196da883-3" value="RabbitMQ" style="swimlane;html=1;startSize=20;" parent="77e6c97f196da883-1" vertex="1">
+          <mxGeometry x="160" y="20" width="160" height="1140" as="geometry"/>
+        </mxCell>
+        <mxCell id="77e6c97f196da883-11" value="Store Message in Queue" style="rounded=1;whiteSpace=wrap;html=1;shadow=0;labelBackgroundColor=none;strokeWidth=1;fontFamily=Verdana;fontSize=10;align=center;" parent="77e6c97f196da883-3" vertex="1">
+          <mxGeometry x="30" y="65" width="100" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="77e6c97f196da883-4" value="Consumer - Scanfile" style="swimlane;html=1;startSize=20;" parent="77e6c97f196da883-1" vertex="1">
+          <mxGeometry x="320" y="20" width="160" height="1140" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-10" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Verdana;fontSize=8;" edge="1" parent="77e6c97f196da883-4" source="qdspiaGit16O1uBQU0Bo-5" target="qdspiaGit16O1uBQU0Bo-9">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-5" value="Poll queue &lt;br style=&quot;font-size: 10px;&quot;&gt;Grab ScanDirectoryMessage ScanFileMessage&lt;br style=&quot;font-size: 10px;&quot;&gt;&lt;br style=&quot;font-size: 10px;&quot;&gt;Scan paths" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Verdana;fontSize=10;" vertex="1" parent="77e6c97f196da883-4">
+          <mxGeometry x="20" y="52.5" width="120" height="85" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-12" value="DIRECTORY" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Verdana;fontSize=10;" edge="1" parent="77e6c97f196da883-4" source="qdspiaGit16O1uBQU0Bo-9" target="qdspiaGit16O1uBQU0Bo-11">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Verdana;fontSize=8;" edge="1" parent="77e6c97f196da883-4" source="qdspiaGit16O1uBQU0Bo-9" target="qdspiaGit16O1uBQU0Bo-18">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="90" y="410" as="targetPoint"/>
+            <Array as="points">
+              <mxPoint x="150" y="200"/>
+              <mxPoint x="150" y="390"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-17" value="FILE" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontSize=10;fontFamily=Verdana;" vertex="1" connectable="0" parent="qdspiaGit16O1uBQU0Bo-16">
+          <mxGeometry x="0.6414" y="2" relative="1" as="geometry">
+            <mxPoint x="-22" y="3" as="offset"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-9" value="Directory or File?" style="rhombus;whiteSpace=wrap;html=1;fontFamily=Verdana;fontSize=10;" vertex="1" parent="77e6c97f196da883-4">
+          <mxGeometry x="40" y="160" width="80" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-11" value="Dispatch ScanDirectoryMessage" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Verdana;fontSize=10;" vertex="1" parent="77e6c97f196da883-4">
+          <mxGeometry x="20" y="270" width="120" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-15" value="Dispatch CheckVideoMessage" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Verdana;fontSize=10;" vertex="1" parent="77e6c97f196da883-4">
+          <mxGeometry x="20" y="460" width="120" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-19" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Verdana;fontSize=10;" edge="1" parent="77e6c97f196da883-4" source="qdspiaGit16O1uBQU0Bo-18" target="qdspiaGit16O1uBQU0Bo-15">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-20" value="YES" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontSize=10;fontFamily=Verdana;" vertex="1" connectable="0" parent="qdspiaGit16O1uBQU0Bo-19">
+          <mxGeometry x="-0.25" y="-1" relative="1" as="geometry">
+            <mxPoint as="offset"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-18" value="Mimetype is video?" style="rhombus;whiteSpace=wrap;html=1;fontFamily=Verdana;fontSize=10;" vertex="1" parent="77e6c97f196da883-4">
+          <mxGeometry x="40" y="350" width="80" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="77e6c97f196da883-5" value="Consumer - Process file" style="swimlane;html=1;startSize=20;" parent="77e6c97f196da883-1" vertex="1">
+          <mxGeometry x="480" y="20" width="160" height="1140" as="geometry">
+            <mxRectangle x="480" y="20" width="30" height="1430" as="alternateBounds"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="77e6c97f196da883-6" value="Consumer - Intermediate" style="swimlane;html=1;startSize=20;" parent="77e6c97f196da883-1" vertex="1">
+          <mxGeometry x="640" y="20" width="160" height="1140" as="geometry">
+            <mxRectangle x="640" y="20" width="30" height="1430" as="alternateBounds"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-41" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Verdana;fontSize=10;" edge="1" parent="77e6c97f196da883-6" source="qdspiaGit16O1uBQU0Bo-38" target="qdspiaGit16O1uBQU0Bo-40">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-38" value="Poll queu&lt;br&gt;Grab VideoCheckedMessage" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Verdana;fontSize=10;" vertex="1" parent="77e6c97f196da883-6">
+          <mxGeometry x="20" y="65" width="120" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-44" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Verdana;fontSize=10;" edge="1" parent="77e6c97f196da883-6" source="qdspiaGit16O1uBQU0Bo-40" target="qdspiaGit16O1uBQU0Bo-43">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-40" value="Dispatch PersistVideoStatusMessage" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Verdana;fontSize=10;" vertex="1" parent="77e6c97f196da883-6">
+          <mxGeometry x="10" y="150" width="140" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-48" value="YES" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Verdana;fontSize=10;" edge="1" parent="77e6c97f196da883-6" source="qdspiaGit16O1uBQU0Bo-43" target="qdspiaGit16O1uBQU0Bo-45">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-43" value="isConsistent?" style="rhombus;whiteSpace=wrap;html=1;fontFamily=Verdana;fontSize=10;" vertex="1" parent="77e6c97f196da883-6">
+          <mxGeometry x="40" y="290" width="80" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-47" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Verdana;fontSize=10;" edge="1" parent="77e6c97f196da883-6" target="qdspiaGit16O1uBQU0Bo-46">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="80.52941176470586" y="474.9999999999998" as="sourcePoint"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-45" value="Dispatch GenerateThumbnailMessage" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Verdana;fontSize=10;" vertex="1" parent="77e6c97f196da883-6">
+          <mxGeometry x="10" y="400" width="140" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-46" value="Dispatch CalculateFileHashMessage" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Verdana;fontSize=10;" vertex="1" parent="77e6c97f196da883-6">
+          <mxGeometry x="10" y="505" width="140" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="77e6c97f196da883-7" value="Consumer - Check-video" style="swimlane;html=1;startSize=20;" parent="77e6c97f196da883-1" vertex="1">
+          <mxGeometry x="800" y="20" width="160" height="1140" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-25" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Verdana;fontSize=10;" edge="1" parent="77e6c97f196da883-7" source="qdspiaGit16O1uBQU0Bo-22" target="qdspiaGit16O1uBQU0Bo-24">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-22" value="Poll queue&lt;br&gt;Grab CheckVideoMessage" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Verdana;fontSize=10;" vertex="1" parent="77e6c97f196da883-7">
+          <mxGeometry x="20" y="65" width="120" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-27" value="ID" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Verdana;fontSize=10;" edge="1" parent="77e6c97f196da883-7" source="qdspiaGit16O1uBQU0Bo-24" target="qdspiaGit16O1uBQU0Bo-26">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Verdana;fontSize=10;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="77e6c97f196da883-7" source="qdspiaGit16O1uBQU0Bo-24" target="qdspiaGit16O1uBQU0Bo-28">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="36.68" y="370" as="targetPoint"/>
+            <Array as="points">
+              <mxPoint x="11.68" y="185"/>
+              <mxPoint x="11.68" y="360"/>
+              <mxPoint x="81.68" y="360"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-32" value="STRING" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontSize=10;fontFamily=Verdana;" vertex="1" connectable="0" parent="qdspiaGit16O1uBQU0Bo-31">
+          <mxGeometry x="-0.6917" y="3" relative="1" as="geometry">
+            <mxPoint x="22" y="153.17" as="offset"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-24" value="Path string&amp;nbsp;&lt;br&gt;or&lt;br&gt;id?" style="rhombus;whiteSpace=wrap;html=1;fontFamily=Verdana;fontSize=10;" vertex="1" parent="77e6c97f196da883-7">
+          <mxGeometry x="36.68" y="140" width="90" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-29" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Verdana;fontSize=10;" edge="1" parent="77e6c97f196da883-7" source="qdspiaGit16O1uBQU0Bo-26" target="qdspiaGit16O1uBQU0Bo-28">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-26" value="Download file from&amp;nbsp;&lt;br&gt;{APP}/download/id/{id}&lt;br&gt;&amp;nbsp;to /tmp" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Verdana;fontSize=10;" vertex="1" parent="77e6c97f196da883-7">
+          <mxGeometry x="16.68" y="260" width="130" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-34" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Verdana;fontSize=10;" edge="1" parent="77e6c97f196da883-7" source="qdspiaGit16O1uBQU0Bo-28" target="qdspiaGit16O1uBQU0Bo-33">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-28" value="Check Video with FFMPEG" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Verdana;fontSize=10;" vertex="1" parent="77e6c97f196da883-7">
+          <mxGeometry x="16.68" y="400" width="130" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-33" value="Dispatch VideoCheckedMessage" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Verdana;fontSize=10;" vertex="1" parent="77e6c97f196da883-7">
+          <mxGeometry x="21.68" y="510" width="120" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-1" value="Consumer - Gen. Thumb" style="swimlane;html=1;startSize=20;" vertex="1" parent="77e6c97f196da883-1">
+          <mxGeometry x="960" y="20" width="160" height="1140" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-55" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Verdana;fontSize=10;" edge="1" parent="qdspiaGit16O1uBQU0Bo-1" source="qdspiaGit16O1uBQU0Bo-52" target="qdspiaGit16O1uBQU0Bo-54">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-52" value="Poll queue&lt;br&gt;Grab GenerateThumbnail" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Verdana;fontSize=10;" vertex="1" parent="qdspiaGit16O1uBQU0Bo-1">
+          <mxGeometry x="20" y="65" width="120" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-54" value="Generate Thumbs with MT" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Verdana;fontSize=10;" vertex="1" parent="qdspiaGit16O1uBQU0Bo-1">
+          <mxGeometry x="20" y="160" width="120" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-6" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Verdana;fontSize=8;" edge="1" parent="77e6c97f196da883-1" source="77e6c97f196da883-11" target="qdspiaGit16O1uBQU0Bo-5">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Verdana;fontSize=8;" edge="1" parent="77e6c97f196da883-1" source="qdspiaGit16O1uBQU0Bo-11" target="77e6c97f196da883-11">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;fontFamily=Verdana;fontSize=10;" edge="1" parent="77e6c97f196da883-1" source="qdspiaGit16O1uBQU0Bo-15" target="77e6c97f196da883-11">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Verdana;fontSize=10;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="77e6c97f196da883-1" source="77e6c97f196da883-11" target="qdspiaGit16O1uBQU0Bo-22">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="240" y="60"/>
+              <mxPoint x="880" y="60"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-39" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontFamily=Verdana;fontSize=10;" edge="1" parent="77e6c97f196da883-1" source="77e6c97f196da883-11" target="qdspiaGit16O1uBQU0Bo-38">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="240" y="60"/>
+              <mxPoint x="720" y="60"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-49" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;fontFamily=Verdana;fontSize=10;" edge="1" parent="77e6c97f196da883-1" source="qdspiaGit16O1uBQU0Bo-45" target="77e6c97f196da883-11">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-50" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Verdana;fontSize=10;" edge="1" parent="77e6c97f196da883-1" source="qdspiaGit16O1uBQU0Bo-46" target="77e6c97f196da883-11">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-53" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;fontFamily=Verdana;fontSize=10;" edge="1" parent="77e6c97f196da883-1" source="77e6c97f196da883-11" target="qdspiaGit16O1uBQU0Bo-52">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="240" y="60"/>
+              <mxPoint x="1040" y="60"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-57" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Verdana;fontSize=10;" edge="1" parent="77e6c97f196da883-1" source="77e6c97f196da883-11" target="qdspiaGit16O1uBQU0Bo-56">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="240" y="60"/>
+              <mxPoint x="1200" y="60"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-3" value="Consumer - filehash" style="swimlane;html=1;startSize=20;" vertex="1" parent="77e6c97f196da883-1">
+          <mxGeometry x="1120" y="20" width="160" height="1140" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-59" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Verdana;fontSize=10;" edge="1" parent="qdspiaGit16O1uBQU0Bo-3" source="qdspiaGit16O1uBQU0Bo-56" target="qdspiaGit16O1uBQU0Bo-58">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-56" value="Poll queue&lt;br&gt;Grab CalculateFileHash" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Verdana;fontSize=10;" vertex="1" parent="qdspiaGit16O1uBQU0Bo-3">
+          <mxGeometry x="20" y="65" width="120" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-72" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Verdana;fontSize=10;" edge="1" parent="qdspiaGit16O1uBQU0Bo-3" source="qdspiaGit16O1uBQU0Bo-58" target="qdspiaGit16O1uBQU0Bo-60">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-58" value="Poll queue&lt;br&gt;Grab CalculateFileHash" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Verdana;fontSize=10;" vertex="1" parent="qdspiaGit16O1uBQU0Bo-3">
+          <mxGeometry x="20" y="160" width="120" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-73" value="YES" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Verdana;fontSize=10;" edge="1" parent="qdspiaGit16O1uBQU0Bo-3" source="qdspiaGit16O1uBQU0Bo-60" target="qdspiaGit16O1uBQU0Bo-61">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-78" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Verdana;fontSize=10;" edge="1" parent="qdspiaGit16O1uBQU0Bo-3" source="qdspiaGit16O1uBQU0Bo-60" target="qdspiaGit16O1uBQU0Bo-62">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="10" y="280"/>
+              <mxPoint x="10" y="480"/>
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-79" value="NO" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];labelBackgroundColor=#ffffff;fontSize=10;fontFamily=Verdana;" vertex="1" connectable="0" parent="qdspiaGit16O1uBQU0Bo-78">
+          <mxGeometry x="0.3385" y="2" relative="1" as="geometry">
+            <mxPoint x="8" y="-144" as="offset"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-60" value="Calculate&lt;br&gt;XXHASH?" style="rhombus;whiteSpace=wrap;html=1;fontFamily=Verdana;fontSize=10;" vertex="1" parent="qdspiaGit16O1uBQU0Bo-3">
+          <mxGeometry x="40" y="240" width="80" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-74" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Verdana;fontSize=10;" edge="1" parent="qdspiaGit16O1uBQU0Bo-3" source="qdspiaGit16O1uBQU0Bo-61" target="qdspiaGit16O1uBQU0Bo-62">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-61" value="Calculate XXHASH" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Verdana;fontSize=10;" vertex="1" parent="qdspiaGit16O1uBQU0Bo-3">
+          <mxGeometry x="20" y="350" width="120" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-75" value="YES" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Verdana;fontSize=10;" edge="1" parent="qdspiaGit16O1uBQU0Bo-3" source="qdspiaGit16O1uBQU0Bo-62" target="qdspiaGit16O1uBQU0Bo-63">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-80" value="NO" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Verdana;fontSize=10;" edge="1" parent="qdspiaGit16O1uBQU0Bo-3" source="qdspiaGit16O1uBQU0Bo-62" target="qdspiaGit16O1uBQU0Bo-64">
+          <mxGeometry x="-0.9231" relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="150" y="480"/>
+              <mxPoint x="150" y="680"/>
+            </Array>
+            <mxPoint as="offset"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-62" value="Calculate MD5?" style="rhombus;whiteSpace=wrap;html=1;fontFamily=Verdana;fontSize=10;" vertex="1" parent="qdspiaGit16O1uBQU0Bo-3">
+          <mxGeometry x="40" y="440" width="80" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-76" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Verdana;fontSize=10;" edge="1" parent="qdspiaGit16O1uBQU0Bo-3" source="qdspiaGit16O1uBQU0Bo-63" target="qdspiaGit16O1uBQU0Bo-64">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-63" value="Calculate MD5" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Verdana;fontSize=10;" vertex="1" parent="qdspiaGit16O1uBQU0Bo-3">
+          <mxGeometry x="20" y="550" width="120" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-77" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Verdana;fontSize=10;" edge="1" parent="qdspiaGit16O1uBQU0Bo-3" source="qdspiaGit16O1uBQU0Bo-64" target="qdspiaGit16O1uBQU0Bo-65">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-81" value="NO" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontFamily=Verdana;fontSize=10;" edge="1" parent="qdspiaGit16O1uBQU0Bo-3" source="qdspiaGit16O1uBQU0Bo-64" target="qdspiaGit16O1uBQU0Bo-66">
+          <mxGeometry x="-0.8462" relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="10" y="680"/>
+              <mxPoint x="10" y="880"/>
+            </Array>
+            <mxPoint as="offset"/>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-64" value="Calculate SHA1?" style="rhombus;whiteSpace=wrap;html=1;fontFamily=Verdana;fontSize=10;" vertex="1" parent="qdspiaGit16O1uBQU0Bo-3">
+          <mxGeometry x="40" y="640" width="80" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-71" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Verdana;fontSize=10;" edge="1" parent="qdspiaGit16O1uBQU0Bo-3" source="qdspiaGit16O1uBQU0Bo-65" target="qdspiaGit16O1uBQU0Bo-66">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-65" value="Calculate SHA1" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Verdana;fontSize=10;" vertex="1" parent="qdspiaGit16O1uBQU0Bo-3">
+          <mxGeometry x="20" y="750" width="120" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-70" value="YES" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Verdana;fontSize=10;" edge="1" parent="qdspiaGit16O1uBQU0Bo-3" source="qdspiaGit16O1uBQU0Bo-66" target="qdspiaGit16O1uBQU0Bo-67">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-66" value="Calculate SHA512?" style="rhombus;whiteSpace=wrap;html=1;fontFamily=Verdana;fontSize=10;" vertex="1" parent="qdspiaGit16O1uBQU0Bo-3">
+          <mxGeometry x="40" y="840" width="80" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-69" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Verdana;fontSize=10;" edge="1" parent="qdspiaGit16O1uBQU0Bo-3" source="qdspiaGit16O1uBQU0Bo-67" target="qdspiaGit16O1uBQU0Bo-68">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-67" value="Calculate SHA512" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Verdana;fontSize=10;" vertex="1" parent="qdspiaGit16O1uBQU0Bo-3">
+          <mxGeometry x="20" y="950" width="120" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-68" value="Persist results" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Verdana;fontSize=10;" vertex="1" parent="qdspiaGit16O1uBQU0Bo-3">
+          <mxGeometry x="20" y="1060" width="120" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-82" value="Consumer - Get Video Meta" style="swimlane;html=1;startSize=20;" vertex="1" parent="77e6c97f196da883-1">
+          <mxGeometry x="1280" y="20" width="160" height="1140" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-83" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontFamily=Verdana;fontSize=10;" edge="1" parent="qdspiaGit16O1uBQU0Bo-82" source="qdspiaGit16O1uBQU0Bo-84" target="qdspiaGit16O1uBQU0Bo-85">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-84" value="Poll queue&lt;br&gt;Grab GetVideoMetadata" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Verdana;fontSize=10;" vertex="1" parent="qdspiaGit16O1uBQU0Bo-82">
+          <mxGeometry x="20" y="65" width="120" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="qdspiaGit16O1uBQU0Bo-85" value="Get video metadata using MediaInfo" style="rounded=1;whiteSpace=wrap;html=1;fontFamily=Verdana;fontSize=10;" vertex="1" parent="qdspiaGit16O1uBQU0Bo-82">
+          <mxGeometry x="20" y="160" width="120" height="60" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
