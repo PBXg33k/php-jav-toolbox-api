@@ -9,7 +9,7 @@ server {
 
     location /jav_dl/ {
         internal;
-        alias /media;
+        alias /media/;
     }
 
     location ~* \.(jpg|jpeg|gif|css|png|js|ico|html|eof|woff|ttf)$ {
