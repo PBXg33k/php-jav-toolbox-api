@@ -71,6 +71,8 @@ class DownloadController extends AbstractController
      *
      * @param JavFile $javFile
      * @return Response
+     *
+     * @todo replace filename with the title id once that has been sorted out
      */
     private function serveDownloadUsingXSendfile(JavFile $javFile)
     {
