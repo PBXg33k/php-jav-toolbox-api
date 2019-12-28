@@ -42,7 +42,12 @@ class DownloadController extends AbstractController
     }
 
     /**
-     * @Route("/download/id/{id}", name="download_id")
+     * @Route(
+     *     "/download/{id}",
+     *     condition="context.getMethod() in ['GET', 'HEAD']",
+     *     name="download_id",
+     *     requirements={"id"="\d+"}
+     * )
      */
     public function downloadUsingId(int $id)
     {
@@ -54,11 +59,22 @@ class DownloadController extends AbstractController
     }
 
     /**
-     * @Route("/download/path/{path}", name="download_path")
+     * @Route(
+     *     "/download/{path}",
+     *     condition="context.getMethod() in ['GET', 'HEAD']",
+     *     name="download_path",
+     *     requirements={"path"="[\/\w\-. ]+"}
+     * )
      */
     public function downloadUsingPath(string $path)
     {
+        $this->logger->info('download by file', [
+            'path' => $path
+        ]);
+
         if($file = $this->fileRepository->findOneByPath($path)) {
+            return $this->serveDownloadUsingXSendfile($file);
+        } elseif ( $file = $this->fileRepository->findOneByPath('/'.$path)) {
             return $this->serveDownloadUsingXSendfile($file);
         }
 
