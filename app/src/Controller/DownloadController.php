@@ -68,13 +68,12 @@ class DownloadController extends AbstractController
      */
     public function downloadUsingPath(string $path)
     {
-        $this->logger->info('download by file', [
-            'path' => $path
-        ]);
 
         if($file = $this->fileRepository->findOneByPath($path)) {
             return $this->serveDownloadUsingXSendfile($file);
-        } elseif ( $file = $this->fileRepository->findOneByPath('/'.$path)) {
+        }
+
+        if ( $file = $this->fileRepository->findOneByPath('/'.$path)) {
             return $this->serveDownloadUsingXSendfile($file);
         }
 
