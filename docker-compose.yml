@@ -1,16 +1,16 @@
 version: '3'
 services:
-    web:
-      image: nginx
-      links:
-        - app
-      depends_on:
-        - app
-      volumes:
-        - "./app:/var/www/app"
-        - "./.docker/config/nginx/vhost/sf4_vhost:/etc/nginx/conf.d/default.conf:ro"
-        - "./media:/media"
-      restart: always
+#    web:
+#      image: nginx:alpine
+#      links:
+#        - app
+#      depends_on:
+#        - app
+#      volumes:
+#        - "./app:/var/www/app"
+#        - "./.docker/config/nginx/vhost/sf4_vhost:/etc/nginx/conf.d/default.conf:ro"
+#        - "./media:/media"
+#      restart: always
     app:
       build: .
       links:
