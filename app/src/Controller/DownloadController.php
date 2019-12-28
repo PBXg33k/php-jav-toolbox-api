@@ -88,11 +88,12 @@ class DownloadController extends AbstractController
             'nginxroute' => $path
         ]);
 
-        return new Response('', 200, [
-            'X-Accel-Redirect'=> '/'.$path,
+        return new Response('Download started',200,[
+            'X-Accel-Redirect'=> $path,
             'Content-Type' => mime_content_type($javFile->getPath()),
-            'Content-Disposition' => $javFile->getFilename(),
+            'Content-Disposition' => sprintf("attachment; filename=%s", $javFile->getFilename()),
             'Content-Length' => $javFile->getInode()->getFilesize()
         ]);
+
     }
 }
